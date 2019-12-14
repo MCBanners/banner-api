@@ -21,5 +21,6 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'net.imagej:ij:1.52s'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 }
