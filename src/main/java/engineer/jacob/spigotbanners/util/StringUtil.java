@@ -10,7 +10,7 @@ import java.util.List;
  * @author Jim Menard, <a href="mailto:jimm@io.com">jimm@io.com</a>
  * @author Jacob Andersen (update to Java 8 only)
  */
-public class StringUtils {
+public class StringUtil {
     /**
      * Returns an array of strings, one for each line in the string after it has
      * been wrapped to fit lines of <var>maxWidth</var>. Lines end with any of

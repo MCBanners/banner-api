@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SpigetResourceRating {
     private int count;
-    private int averageStars;
+    private double average;
 
     public int getCount() {
         return count;
@@ -15,11 +15,11 @@ public class SpigetResourceRating {
         this.count = count;
     }
 
-    public int getAverageStars() {
-        return averageStars;
+    public double getAverage() {
+        return average;
     }
 
-    public void setAverageStars(int averageStars) {
-        this.averageStars = averageStars;
+    public void setAverage(double average) {
+        this.average = average;
     }
 }

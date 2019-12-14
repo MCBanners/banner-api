@@ -1,5 +1,6 @@
 package engineer.jacob.spigotbanners.util;
 
+import engineer.jacob.spigotbanners.BannerTextAlign;
 import engineer.jacob.spigotbanners.FontFace;
 
 import java.awt.*;
@@ -13,6 +14,7 @@ public class ImageTextBuilder {
     private Color color = Color.BLACK;
     private Float fontSize = 12F;
     private TextWrapSettings wrapSettings;
+    private BannerTextAlign textAlign = BannerTextAlign.LEFT;
     private int initialX = 0;
     private int initialY = 0;
 
@@ -50,6 +52,11 @@ public class ImageTextBuilder {
         return this;
     }
 
+    public ImageTextBuilder align(BannerTextAlign textAlign) {
+        this.textAlign = textAlign;
+        return this;
+    }
+
     public ImageTextBuilder initialX(int x) {
         this.initialX = x;
         return this;
@@ -62,19 +69,20 @@ public class ImageTextBuilder {
 
     public ImageBuilder finishText() {
         BufferedImage image = builder.build();
-        Graphics g = image.getGraphics();
+
+        Graphics2D g = image.createGraphics();
         g.setFont(this.font.deriveFont(fontSize));
         g.setColor(this.color);
 
         if (this.wrapSettings != null) {
-            List<String> lines = StringUtils.wrap(this.text, g.getFontMetrics(), this.wrapSettings.lineWidth);
+            List<String> lines = StringUtil.wrap(this.text, g.getFontMetrics(), this.wrapSettings.lineWidth);
 
             for (int i = 0; i < lines.size(); i++) {
                 int yOffset = i * this.wrapSettings.lineHeight;
-                g.drawString(lines.get(i), this.initialX, this.initialY + yOffset);
+                ImageUtil.drawText(image, g, lines.get(i), this.initialX, this.initialY + yOffset, this.textAlign);
             }
         } else {
-            g.drawString(text, this.initialX, this.initialY);
+            ImageUtil.drawText(image, g, text, this.initialX, this.initialY, this.textAlign);
         }
 
         g.dispose();
