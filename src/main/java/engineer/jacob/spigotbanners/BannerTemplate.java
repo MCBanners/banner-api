@@ -6,27 +6,20 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public enum BannerTemplate {
-    BLUE(BannerTextTheme.DARK, BannerTextAlign.LEFT),
-    ORANGE(BannerTextTheme.DARK, BannerTextAlign.LEFT),
-    RED(BannerTextTheme.LIGHT, BannerTextAlign.LEFT),
-    LIGHT_BLOCKS(BannerTextTheme.DARK, BannerTextAlign.RIGHT),
-    ORANGE_BLOCKS(BannerTextTheme.DARK, BannerTextAlign.LEFT),
-    DUAL_LIGHT_BLOCKS(BannerTextTheme.DARK, BannerTextAlign.CENTER);
+    BLUE(BannerTextTheme.DARK),
+    ORANGE(BannerTextTheme.DARK),
+    RED(BannerTextTheme.LIGHT),
+    LIGHT_BLOCKS(BannerTextTheme.DARK),
+    ORANGE_BLOCKS(BannerTextTheme.DARK);
 
     private final BannerTextTheme textTheme;
-    private final BannerTextAlign textAlign;
 
-    BannerTemplate(BannerTextTheme textTheme, BannerTextAlign textAlign) {
+    BannerTemplate(BannerTextTheme textTheme) {
         this.textTheme = textTheme;
-        this.textAlign = textAlign;
     }
 
     public BannerTextTheme getTextTheme() {
         return textTheme;
-    }
-
-    public BannerTextAlign getTextAlign() {
-        return textAlign;
     }
 
     public String getFileName() {
