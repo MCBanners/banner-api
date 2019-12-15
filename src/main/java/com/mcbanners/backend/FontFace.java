@@ -5,25 +5,13 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public enum FontFace {
-    ACTION_MAN,
-    AMADEUS,
-    ARCHITECTS_DAUGHTER,
-    BREE_SERIF_REGULAR,
-    COMFORTAA_REGULAR,
-    ERASER_REGULAR,
-    FORQUE,
-    LATO_REGULAR,
-    LOBSTER_TWO,
-    PERMANENT_MARKER,
-    QARMIC_SANS_ABRIDGED,
-    ROBOTO_REGULAR,
-    ROCK_SALT,
-    TRASH_HAND,
-    UBUNTU_TITLE,
-    VANILLA,
-    COOLVETICA;
+    MONTSERRAT,
+    OPEN_SANS,
+    POPPINS,
+    RALEWAY,
+    SOURCE_SANS_PRO;
 
-    public String getFileName() {
+    public String getFileName(boolean bold) {
         StringBuilder builder = new StringBuilder();
 
         String[] split = name().toLowerCase().split("_");
@@ -31,12 +19,17 @@ public enum FontFace {
             builder.append(piece.substring(0, 1).toUpperCase()).append(piece.substring(1));
         }
 
+        builder.append(bold ? "Bold" : "Regular");
         builder.append(".ttf");
         return builder.toString();
     }
 
     public Font asFont() {
-        InputStream stream = getClass().getResourceAsStream("/fonts/" + getFileName());
+        return asFont(false);
+    }
+
+    public Font asFont(boolean bold) {
+        InputStream stream = getClass().getResourceAsStream("/fonts/" + getFileName(bold));
         try {
             return Font.createFont(Font.TRUETYPE_FONT, stream);
         } catch (FontFormatException | IOException e) {

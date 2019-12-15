@@ -10,7 +10,7 @@ import java.util.List;
 public class ImageTextBuilder {
     private final ImageBuilder builder;
     private String text;
-    private Font font;
+    private FontFace font;
     private Color color = Color.BLACK;
     private boolean bold = false;
     private Float fontSize = 12F;
@@ -24,12 +24,12 @@ public class ImageTextBuilder {
     }
 
     public ImageTextBuilder content(String text) {
-        return content(text, FontFace.LATO_REGULAR);
+        return content(text, FontFace.SOURCE_SANS_PRO);
     }
 
-    public ImageTextBuilder content(String text, FontFace fontFace) {
+    public ImageTextBuilder content(String text, FontFace font) {
         this.text = text;
-        this.font = fontFace.asFont();
+        this.font = font;
         return this;
     }
 
@@ -46,11 +46,6 @@ public class ImageTextBuilder {
     public ImageTextBuilder fontSize(float fontSize) {
         this.fontSize = fontSize;
         return this;
-    }
-
-
-    public ImageTextBuilder wrap(int lineWidth) {
-        return wrap(font.getSize(), lineWidth);
     }
 
     public ImageTextBuilder wrap(int lineHeight, int lineWidth) {
@@ -74,10 +69,17 @@ public class ImageTextBuilder {
     }
 
     public ImageBuilder finishText() {
-        BufferedImage image = builder.build();
+        BufferedImage image = this.builder.build();
 
         Graphics2D g = ImageUtil.setRenderOpts(image.createGraphics());
-        g.setFont(this.font.deriveFont(fontSize).deriveFont(this.bold ? Font.BOLD : Font.PLAIN));
+
+        Font font = this.font.asFont(this.bold);
+        if (font != null) {
+            g.setFont(font.deriveFont(this.fontSize));
+        } else {
+            g.setFont(g.getFont().deriveFont(this.fontSize));
+        }
+
         g.setColor(this.color);
 
         if (this.wrapSettings != null) {
@@ -88,11 +90,11 @@ public class ImageTextBuilder {
                 ImageUtil.drawText(image, g, lines.get(i), this.initialX, this.initialY + yOffset, this.textAlign);
             }
         } else {
-            ImageUtil.drawText(image, g, text, this.initialX, this.initialY, this.textAlign);
+            ImageUtil.drawText(image, g, this.text, this.initialX, this.initialY, this.textAlign);
         }
 
         g.dispose();
-        return builder;
+        return this.builder;
     }
 
     public static ImageTextBuilder create(ImageBuilder builder) {

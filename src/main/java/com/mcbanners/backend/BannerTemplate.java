@@ -6,8 +6,12 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public enum BannerTemplate {
-    BLACK_BRICK(BannerTextTheme.LIGHT),
-    WOOD(BannerTextTheme.LIGHT),
+    BLUE_RADIAL(BannerTextTheme.DARK),
+    BURNING_ORANGE(BannerTextTheme.LIGHT),
+    MANGO(BannerTextTheme.DARK),
+    MOONLIGHT_PURPLE(BannerTextTheme.LIGHT),
+    ORANGE_RADIAL(BannerTextTheme.DARK),
+    VELVET(BannerTextTheme.DARK),
     YELLOW(BannerTextTheme.DARK);
 
     private final BannerTextTheme textTheme;
@@ -32,5 +36,9 @@ public enum BannerTemplate {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static BannerTemplate fromString(String name) {
+        return valueOf(name.toUpperCase());
     }
 }
