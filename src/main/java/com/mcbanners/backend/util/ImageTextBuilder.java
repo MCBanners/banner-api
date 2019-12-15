@@ -76,7 +76,7 @@ public class ImageTextBuilder {
     public ImageBuilder finishText() {
         BufferedImage image = builder.build();
 
-        Graphics2D g = ImageUtil.prepare(image.createGraphics());
+        Graphics2D g = ImageUtil.setRenderOpts(image.createGraphics());
         g.setFont(this.font.deriveFont(fontSize).deriveFont(this.bold ? Font.BOLD : Font.PLAIN));
         g.setColor(this.color);
 

@@ -10,7 +10,7 @@ public class ImageBuilder {
         int width = base.getWidth(), height = base.getHeight();
 
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D graphics = ImageUtil.prepare(image.createGraphics());
+        Graphics2D graphics = ImageUtil.setRenderOpts(image.createGraphics());
         graphics.drawImage(base, 0, 0, width, height, null);
         graphics.dispose();
 
@@ -18,7 +18,7 @@ public class ImageBuilder {
     }
 
     public ImageBuilder overlayImage(BufferedImage overlay, int x, int y) {
-        Graphics2D graphics = ImageUtil.prepare(image.createGraphics());
+        Graphics2D graphics = ImageUtil.setRenderOpts(image.createGraphics());
         graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1F));
         graphics.drawImage(overlay, x, y, overlay.getWidth(), overlay.getHeight(), null);
         graphics.dispose();
