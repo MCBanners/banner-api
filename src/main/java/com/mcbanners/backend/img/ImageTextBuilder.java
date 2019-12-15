@@ -1,7 +1,9 @@
-package com.mcbanners.backend.util;
+package com.mcbanners.backend.img;
 
-import com.mcbanners.backend.FontFace;
-import com.mcbanners.backend.BannerTextAlign;
+import com.mcbanners.backend.banner.BannerFontFace;
+import com.mcbanners.backend.banner.BannerTextAlign;
+import com.mcbanners.backend.util.ImageUtil;
+import com.mcbanners.backend.util.StringUtil;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -10,7 +12,7 @@ import java.util.List;
 public class ImageTextBuilder {
     private final ImageBuilder builder;
     private String text;
-    private FontFace font;
+    private BannerFontFace font;
     private Color color = Color.BLACK;
     private boolean bold = false;
     private Float fontSize = 12F;
@@ -24,10 +26,10 @@ public class ImageTextBuilder {
     }
 
     public ImageTextBuilder content(String text) {
-        return content(text, FontFace.SOURCE_SANS_PRO);
+        return content(text, BannerFontFace.SOURCE_SANS_PRO);
     }
 
-    public ImageTextBuilder content(String text, FontFace font) {
+    public ImageTextBuilder content(String text, BannerFontFace font) {
         this.text = text;
         this.font = font;
         return this;

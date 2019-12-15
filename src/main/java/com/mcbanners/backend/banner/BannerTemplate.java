@@ -1,4 +1,4 @@
-package com.mcbanners.backend;
+package com.mcbanners.backend.banner;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

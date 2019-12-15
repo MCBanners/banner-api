@@ -1,10 +1,10 @@
-package com.mcbanners.backend;
+package com.mcbanners.backend.banner;
 
 import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 
-public enum FontFace {
+public enum BannerFontFace {
     MONTSERRAT,
     OPEN_SANS,
     POPPINS,
@@ -36,5 +36,9 @@ public enum FontFace {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static BannerFontFace fromString(String name) {
+        return valueOf(name.toUpperCase());
     }
 }

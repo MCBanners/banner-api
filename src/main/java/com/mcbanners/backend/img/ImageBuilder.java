@@ -1,4 +1,6 @@
-package com.mcbanners.backend.util;
+package com.mcbanners.backend.img;
+
+import com.mcbanners.backend.util.ImageUtil;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

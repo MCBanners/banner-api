@@ -1,10 +1,12 @@
 package com.mcbanners.backend.controller;
 
-import com.mcbanners.backend.*;
+import com.mcbanners.backend.banner.*;
 import com.mcbanners.backend.spiget.SpigetClient;
 import com.mcbanners.backend.spiget.obj.SpigetAuthor;
 import com.mcbanners.backend.spiget.obj.SpigetResource;
-import com.mcbanners.backend.util.ImageBuilder;
+import com.mcbanners.backend.img.ImageBuilder;
+import com.mcbanners.backend.svc.SpigetAuthorService;
+import com.mcbanners.backend.svc.SpigetResourceService;
 import com.mcbanners.backend.util.ImageUtil;
 import com.mcbanners.backend.util.NumberUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +27,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("resource")
 public class ResourceController {
-    private final SpigetClient client;
+    private final SpigetResourceService resources;
+    private final SpigetAuthorService authors;
 
     @Value("${banner.dark_text_color}")
     private int[] darkTextRgb;
@@ -34,18 +37,19 @@ public class ResourceController {
     private int[] lightTextRgb;
 
     @Autowired
-    public ResourceController(SpigetClient client) {
-        this.client = client;
+    public ResourceController(SpigetResourceService resources, SpigetAuthorService authors) {
+        this.resources = resources;
+        this.authors = authors;
     }
 
     @GetMapping(value = "/{id}/banner.png", produces = "image/png")
     public ResponseEntity<byte[]> getBanner(@PathVariable int id, @RequestParam Map<String, String> raw) {
-        SpigetResource resource = client.getResource(id).getBody();
+        SpigetResource resource = this.resources.getResource(id);
         if (resource == null) {
             return null;
         }
 
-        SpigetAuthor author = client.getAuthor(resource.getAuthor().getId()).getBody();
+        SpigetAuthor author = this.authors.getAuthor(resource.getAuthor().getId());
         if (author == null) {
             return null;
         }
@@ -84,7 +88,7 @@ public class ResourceController {
                 .color(textColor)
                 .bold((boolean) params.get(BannerParameter.RES_NAME_BOLD))
                 .align((BannerTextAlign) params.get(BannerParameter.RES_NAME_TEXT_ALIGN))
-                .content(resource.getName(), (FontFace) params.get(BannerParameter.RES_NAME_FONT))
+                .content(resource.getName(), (BannerFontFace) params.get(BannerParameter.RES_NAME_FONT))
                 .finishText();
 
         // Author Name
@@ -95,7 +99,7 @@ public class ResourceController {
                 .color(textColor)
                 .bold((boolean) params.get(BannerParameter.AUT_NAME_BOLD))
                 .align((BannerTextAlign) params.get(BannerParameter.AUT_NAME_TEXT_ALIGN))
-                .content(String.format("by %s", author.getName()), (FontFace) params.get(BannerParameter.AUT_NAME_FONT))
+                .content(String.format("by %s", author.getName()), (BannerFontFace) params.get(BannerParameter.AUT_NAME_FONT))
                 .finishText();
 
         // Review Count
@@ -106,7 +110,7 @@ public class ResourceController {
                 .color(textColor)
                 .bold((boolean) params.get(BannerParameter.REV_COUNT_BOLD))
                 .align((BannerTextAlign) params.get(BannerParameter.REV_COUNT_TEXT_ALIGN))
-                .content(String.format("%s reviews", NumberUtil.abbreviate(resource.getRating().getCount())), (FontFace) params.get(BannerParameter.REV_COUNT_FONT))
+                .content(String.format("%s reviews", NumberUtil.abbreviate(resource.getRating().getCount())), (BannerFontFace) params.get(BannerParameter.REV_COUNT_FONT))
                 .finishText();
 
         // Stars
@@ -147,7 +151,7 @@ public class ResourceController {
                 .color(textColor)
                 .bold((boolean) params.get(BannerParameter.DL_COUNT_BOLD))
                 .align((BannerTextAlign) params.get(BannerParameter.DL_COUNT_TEXT_ALIGN))
-                .content(String.format("%s downloads", NumberUtil.abbreviate(resource.getDownloads())), (FontFace) params.get(BannerParameter.DL_COUNT_FONT))
+                .content(String.format("%s downloads", NumberUtil.abbreviate(resource.getDownloads())), (BannerFontFace) params.get(BannerParameter.DL_COUNT_FONT))
                 .finishText();
 
         // Price Tag
@@ -159,7 +163,7 @@ public class ResourceController {
                     .color(textColor)
                     .bold((boolean) params.get(BannerParameter.PRICE_BOLD))
                     .align((BannerTextAlign) params.get(BannerParameter.PRICE_TEXT_ALIGN))
-                    .content(String.format("%.2f %s", resource.getPrice(), resource.getCurrency()), (FontFace) params.get(BannerParameter.PRICE_FONT))
+                    .content(String.format("%.2f %s", resource.getPrice(), resource.getCurrency()), (BannerFontFace) params.get(BannerParameter.PRICE_FONT))
                     .finishText();
         }
 
