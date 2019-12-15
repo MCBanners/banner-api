@@ -1,4 +1,4 @@
-package engineer.jacob.spigotbanners;
+package com.mcbanners.backend;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

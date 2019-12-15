@@ -1,7 +1,7 @@
-package engineer.jacob.spigotbanners.controller;
+package com.mcbanners.backend.controller;
 
-import engineer.jacob.spigotbanners.spiget.SpigetClient;
-import engineer.jacob.spigotbanners.spiget.obj.SpigetAuthor;
+import com.mcbanners.backend.spiget.SpigetClient;
+import com.mcbanners.backend.spiget.obj.SpigetAuthor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

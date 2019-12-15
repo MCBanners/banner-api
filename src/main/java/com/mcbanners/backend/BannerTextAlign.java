@@ -1,4 +1,4 @@
-package engineer.jacob.spigotbanners;
+package com.mcbanners.backend;
 
 public enum BannerTextAlign {
     RIGHT,

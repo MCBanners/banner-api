@@ -1,15 +1,15 @@
-package engineer.jacob.spigotbanners.controller;
+package com.mcbanners.backend.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import engineer.jacob.spigotbanners.BannerTemplate;
-import engineer.jacob.spigotbanners.BannerTextAlign;
-import engineer.jacob.spigotbanners.BannerTextTheme;
-import engineer.jacob.spigotbanners.FontFace;
-import engineer.jacob.spigotbanners.spiget.SpigetClient;
-import engineer.jacob.spigotbanners.spiget.obj.SpigetAuthor;
-import engineer.jacob.spigotbanners.spiget.obj.SpigetResource;
-import engineer.jacob.spigotbanners.util.ImageBuilder;
-import engineer.jacob.spigotbanners.util.ImageUtil;
+import com.mcbanners.backend.BannerTemplate;
+import com.mcbanners.backend.BannerTextAlign;
+import com.mcbanners.backend.BannerTextTheme;
+import com.mcbanners.backend.FontFace;
+import com.mcbanners.backend.spiget.SpigetClient;
+import com.mcbanners.backend.spiget.obj.SpigetAuthor;
+import com.mcbanners.backend.spiget.obj.SpigetResource;
+import com.mcbanners.backend.util.ImageBuilder;
+import com.mcbanners.backend.util.ImageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

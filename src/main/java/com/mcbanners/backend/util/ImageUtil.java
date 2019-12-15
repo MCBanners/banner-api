@@ -1,6 +1,6 @@
-package engineer.jacob.spigotbanners.util;
+package com.mcbanners.backend.util;
 
-import engineer.jacob.spigotbanners.BannerTextAlign;
+import com.mcbanners.backend.BannerTextAlign;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

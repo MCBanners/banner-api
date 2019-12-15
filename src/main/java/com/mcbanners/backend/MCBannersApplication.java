@@ -1,11 +1,11 @@
-package engineer.jacob.spigotbanners;
+package com.mcbanners.backend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SpigotBannersApplication {
+public class MCBannersApplication {
 	public static void main(String[] args) {
-		SpringApplication.run(SpigotBannersApplication.class, args);
+		SpringApplication.run(MCBannersApplication.class, args);
 	}
 }

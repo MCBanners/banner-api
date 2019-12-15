@@ -1,4 +1,4 @@
-package engineer.jacob.spigotbanners.spiget.obj;
+package com.mcbanners.backend.spiget.obj;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

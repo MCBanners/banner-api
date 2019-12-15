@@ -1,4 +1,4 @@
-package engineer.jacob.spigotbanners.util;
+package com.mcbanners.backend.util;
 
 import java.awt.*;
 import java.util.ArrayList;
