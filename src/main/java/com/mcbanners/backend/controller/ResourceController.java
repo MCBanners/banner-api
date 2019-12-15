@@ -129,6 +129,7 @@ public class ResourceController {
                     .initialY(62)
                     .fontSize(24)
                     .color(textColor)
+                    .bold(true)
                     .align(BannerTextAlign.LEFT)
                     .content(String.format("%.2f %s", resource.getPrice(), resource.getCurrency()), FontFace.COOLVETICA)
                     .finishText();
