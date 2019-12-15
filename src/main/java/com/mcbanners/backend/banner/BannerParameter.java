@@ -87,7 +87,7 @@ public enum BannerParameter {
                 return BannerTemplate.fromString(value);
             case "BannerTextAlign":
                 return BannerTextAlign.fromString(value);
-            case "FontFace":
+            case "BannerFontFace":
                 return BannerFontFace.fromString(value);
             case "int":
                 return Integer.parseInt(value);

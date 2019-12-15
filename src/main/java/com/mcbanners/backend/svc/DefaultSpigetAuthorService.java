@@ -24,7 +24,6 @@ public class DefaultSpigetAuthorService implements SpigetAuthorService {
     }
 
     private SpigetAuthor loadAuthor(int authorId) {
-        System.out.println("Loading Author from Spiget...");
         return client.getAuthor(authorId).getBody();
     }
 }

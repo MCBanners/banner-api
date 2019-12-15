@@ -24,7 +24,6 @@ public class DefaultSpigetResourceService implements SpigetResourceService {
     }
 
     private SpigetResource loadResource(int resourceId) {
-        System.out.println("Loading resource from Spiget...");
         return client.getResource(resourceId).getBody();
     }
 }
