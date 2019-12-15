@@ -20,7 +20,8 @@ public enum FontFace {
     ROCK_SALT,
     TRASH_HAND,
     UBUNTU_TITLE,
-    VANILLA;
+    VANILLA,
+    COOLVETICA;
 
     public String getFileName() {
         StringBuilder builder = new StringBuilder();

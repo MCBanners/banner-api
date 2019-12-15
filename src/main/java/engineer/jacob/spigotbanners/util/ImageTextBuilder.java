@@ -12,6 +12,7 @@ public class ImageTextBuilder {
     private String text;
     private Font font;
     private Color color = Color.BLACK;
+    private boolean bold = false;
     private Float fontSize = 12F;
     private TextWrapSettings wrapSettings;
     private BannerTextAlign textAlign = BannerTextAlign.LEFT;
@@ -34,6 +35,11 @@ public class ImageTextBuilder {
 
     public ImageTextBuilder color(Color color) {
         this.color = color;
+        return this;
+    }
+
+    public ImageTextBuilder bold(boolean bold) {
+        this.bold = bold;
         return this;
     }
 
@@ -70,8 +76,8 @@ public class ImageTextBuilder {
     public ImageBuilder finishText() {
         BufferedImage image = builder.build();
 
-        Graphics2D g = image.createGraphics();
-        g.setFont(this.font.deriveFont(fontSize));
+        Graphics2D g = ImageUtil.prepare(image.createGraphics());
+        g.setFont(this.font.deriveFont(fontSize).deriveFont(this.bold ? Font.BOLD : Font.PLAIN));
         g.setColor(this.color);
 
         if (this.wrapSettings != null) {

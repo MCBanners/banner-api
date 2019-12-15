@@ -48,8 +48,8 @@ public class ResourceController {
             return null;
         }
 
-        BannerTemplate template = BannerTemplate.ORANGE;
-        Color textColor = template.getTextTheme() == BannerTextTheme.DARK ? Color.BLACK : Color.WHITE;
+        BannerTemplate template = BannerTemplate.BLACK_BRICK;
+        Color textColor = template.getTextTheme() == BannerTextTheme.DARK ? new Color(65, 60, 60) : new Color(230, 224, 224);
 
         ImageBuilder builder = ImageBuilder.create(template.getImage());
 
@@ -67,18 +67,19 @@ public class ResourceController {
                 .initialY(32)
                 .fontSize(23)
                 .color(textColor)
+                .bold(true)
                 .align(BannerTextAlign.LEFT)
-                .content(resource.getName(), FontFace.FORQUE)
+                .content(resource.getName(), FontFace.COOLVETICA)
                 .finishText();
 
         // Author Name
         builder = builder.text()
                 .initialX(80)
-                .initialY(50)
+                .initialY(47)
                 .fontSize(16)
                 .color(textColor)
                 .align(BannerTextAlign.LEFT)
-                .content(String.format("by %s", author.getName()), FontFace.FORQUE)
+                .content(String.format("by %s", author.getName()), FontFace.COOLVETICA)
                 .finishText();
 
         // Stars
@@ -107,8 +108,30 @@ public class ResourceController {
                     toOverlay = emptyStar;
                 }
 
-                builder = builder.overlayImage(toOverlay, 80 + ((int) gap * i), 55);
+                builder = builder.overlayImage(toOverlay, 80 + ((int) gap * i), 53);
             }
+        }
+
+        // Download Count
+        builder = builder.text()
+                .initialX(80)
+                .initialY(87)
+                .fontSize(16)
+                .color(textColor)
+                .align(BannerTextAlign.LEFT)
+                .content(String.format("%d downloads | %d reviews", resource.getDownloads(), resource.getReviews().size()), FontFace.COOLVETICA)
+                .finishText();
+
+        // Price Tag
+        if (resource.isPremium()) {
+            builder = builder.text()
+                    .initialX(210)
+                    .initialY(62)
+                    .fontSize(24)
+                    .color(textColor)
+                    .align(BannerTextAlign.LEFT)
+                    .content(String.format("%.2f %s", resource.getPrice(), resource.getCurrency()), FontFace.COOLVETICA)
+                    .finishText();
         }
 
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {

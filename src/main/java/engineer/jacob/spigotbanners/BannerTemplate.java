@@ -6,11 +6,9 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public enum BannerTemplate {
-    BLUE(BannerTextTheme.DARK),
-    ORANGE(BannerTextTheme.DARK),
-    RED(BannerTextTheme.LIGHT),
-    LIGHT_BLOCKS(BannerTextTheme.DARK),
-    ORANGE_BLOCKS(BannerTextTheme.DARK);
+    BLACK_BRICK(BannerTextTheme.LIGHT),
+    WOOD(BannerTextTheme.LIGHT),
+    YELLOW(BannerTextTheme.DARK);
 
     private final BannerTextTheme textTheme;
 
