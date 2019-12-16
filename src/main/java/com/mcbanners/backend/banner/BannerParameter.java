@@ -13,11 +13,12 @@ public enum BannerParameter {
     RES_NAME_BOLD("res_name_bold", true, boolean.class),
     RES_NAME_TEXT_ALIGN("res_name_text_align", BannerTextAlign.LEFT, BannerTextAlign.class),
     RES_NAME_FONT("res_name_font", BannerFontFace.SOURCE_SANS_PRO, BannerFontFace.class),
+    RES_NAME_DISPLAY("res_name_display", "", String.class),
     AUT_NAME_X("aut_name_x", 104, int.class),
     AUT_NAME_Y("aut_name_y", 42, int.class),
     AUT_NAME_FONT_SIZE("aut_name_font_size", 14, int.class),
     AUT_NAME_BOLD("aut_name_bold", false, boolean.class),
-    AUT_NAME_TEXT_ALIGN("aut_name_text_align",  BannerTextAlign.LEFT, BannerTextAlign.class),
+    AUT_NAME_TEXT_ALIGN("aut_name_text_align", BannerTextAlign.LEFT, BannerTextAlign.class),
     AUT_NAME_FONT("aut_name_font", BannerFontFace.SOURCE_SANS_PRO, BannerFontFace.class),
     REV_COUNT_X("rev_count_x", 104, int.class),
     REV_COUNT_Y("rev_count_y", 62, int.class),
@@ -89,6 +90,8 @@ public enum BannerParameter {
                 return BannerTextAlign.fromString(value);
             case "BannerFontFace":
                 return BannerFontFace.fromString(value);
+            case "String":
+                return value;
             case "int":
                 return Integer.parseInt(value);
             case "double":

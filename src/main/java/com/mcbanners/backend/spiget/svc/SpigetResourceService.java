@@ -1,7 +1,6 @@
-package com.mcbanners.backend.svc;
+package com.mcbanners.backend.spiget.svc;
 
-import com.mcbanners.backend.spiget.obj.SpigetAuthor;
-import com.mcbanners.backend.spiget.obj.SpigetResource;
+import com.mcbanners.backend.obj.SpigetResource;
 
 public interface SpigetResourceService {
     SpigetResource getResource(final int resourceId);

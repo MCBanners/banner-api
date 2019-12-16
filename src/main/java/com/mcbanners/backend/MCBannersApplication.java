@@ -7,7 +7,7 @@ import org.springframework.cache.annotation.EnableCaching;
 @EnableCaching
 @SpringBootApplication
 public class MCBannersApplication {
-	public static void main(String[] args) {
-		SpringApplication.run(MCBannersApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(MCBannersApplication.class, args);
+    }
 }

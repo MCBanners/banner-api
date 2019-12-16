@@ -1,7 +1,7 @@
-package com.mcbanners.backend.svc;
+package com.mcbanners.backend.spiget.svc;
 
+import com.mcbanners.backend.obj.SpigetAuthor;
 import com.mcbanners.backend.spiget.SpigetClient;
-import com.mcbanners.backend.spiget.obj.SpigetAuthor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;

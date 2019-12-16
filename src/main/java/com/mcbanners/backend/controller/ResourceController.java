@@ -1,12 +1,11 @@
 package com.mcbanners.backend.controller;
 
 import com.mcbanners.backend.banner.*;
-import com.mcbanners.backend.spiget.SpigetClient;
-import com.mcbanners.backend.spiget.obj.SpigetAuthor;
-import com.mcbanners.backend.spiget.obj.SpigetResource;
 import com.mcbanners.backend.img.ImageBuilder;
-import com.mcbanners.backend.svc.SpigetAuthorService;
-import com.mcbanners.backend.svc.SpigetResourceService;
+import com.mcbanners.backend.obj.SpigetAuthor;
+import com.mcbanners.backend.obj.SpigetResource;
+import com.mcbanners.backend.spiget.svc.SpigetAuthorService;
+import com.mcbanners.backend.spiget.svc.SpigetResourceService;
 import com.mcbanners.backend.util.ImageUtil;
 import com.mcbanners.backend.util.NumberUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,6 +80,11 @@ public class ResourceController {
         }
 
         // Resource Name
+        String resourceName = (String) params.get(BannerParameter.RES_NAME_DISPLAY);
+        if (resourceName.isEmpty()) {
+            resourceName = resource.getName();
+        }
+
         builder = builder.text()
                 .initialX((int) params.get(BannerParameter.RES_NAME_X))
                 .initialY((int) params.get(BannerParameter.RES_NAME_Y))
@@ -88,7 +92,7 @@ public class ResourceController {
                 .color(textColor)
                 .bold((boolean) params.get(BannerParameter.RES_NAME_BOLD))
                 .align((BannerTextAlign) params.get(BannerParameter.RES_NAME_TEXT_ALIGN))
-                .content(resource.getName(), (BannerFontFace) params.get(BannerParameter.RES_NAME_FONT))
+                .content(resourceName, (BannerFontFace) params.get(BannerParameter.RES_NAME_FONT))
                 .finishText();
 
         // Author Name
@@ -172,7 +176,7 @@ public class ResourceController {
             bos.flush();
             return new ResponseEntity<>(bos.toByteArray(), HttpStatus.OK);
         } catch (IOException ex) {
-            return new ResponseEntity<>(new byte[] {}, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(new byte[]{}, HttpStatus.NO_CONTENT);
         }
     }
 }

@@ -1,7 +1,7 @@
 package com.mcbanners.backend.controller;
 
-import com.mcbanners.backend.spiget.obj.SpigetAuthor;
-import com.mcbanners.backend.svc.SpigetAuthorService;
+import com.mcbanners.backend.obj.SpigetAuthor;
+import com.mcbanners.backend.spiget.svc.SpigetAuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
