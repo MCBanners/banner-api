@@ -6,6 +6,10 @@ public enum BannerTextAlign {
     LEFT;
 
     public static BannerTextAlign fromString(String name) {
-        return valueOf(name.toUpperCase());
+        try {
+            return valueOf(name.toUpperCase());
+        } catch (IllegalArgumentException ex) {
+            return null;
+        }
     }
 }

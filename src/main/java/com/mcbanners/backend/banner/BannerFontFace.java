@@ -39,6 +39,10 @@ public enum BannerFontFace {
     }
 
     public static BannerFontFace fromString(String name) {
-        return valueOf(name.toUpperCase());
+        try {
+            return valueOf(name.toUpperCase());
+        } catch (IllegalArgumentException ex) {
+            return null;
+        }
     }
 }
