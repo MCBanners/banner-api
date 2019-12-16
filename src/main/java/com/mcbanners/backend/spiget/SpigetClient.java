@@ -30,11 +30,15 @@ public class SpigetClient {
 
         HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
 
-        return template.exchange(
-                BASE_URL + endpoint,
-                HttpMethod.GET,
-                entity,
-                type
-        );
+        try {
+            return template.exchange(
+                    BASE_URL + endpoint,
+                    HttpMethod.GET,
+                    entity,
+                    type
+            );
+        } catch (Exception ex) {
+            return null;
+        }
     }
 }

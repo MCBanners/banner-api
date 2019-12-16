@@ -39,6 +39,10 @@ public enum BannerTemplate {
     }
 
     public static BannerTemplate fromString(String name) {
-        return valueOf(name.toUpperCase());
+        try {
+            return valueOf(name.toUpperCase());
+        } catch (IllegalArgumentException ignored) {
+            return null;
+        }
     }
 }

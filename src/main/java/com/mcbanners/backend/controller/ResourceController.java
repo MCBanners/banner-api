@@ -11,6 +11,7 @@ import com.mcbanners.backend.util.NumberUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +22,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.Map;
 
 @RestController
@@ -41,7 +43,13 @@ public class ResourceController {
         this.authors = authors;
     }
 
-    @GetMapping(value = "/{id}/banner.png", produces = "image/png")
+    @GetMapping(value = "/{id}/isValid", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Boolean>> getIsValid(@PathVariable int id) {
+        SpigetResource resource = this.resources.getResource(id);
+        return new ResponseEntity<>(Collections.singletonMap("valid", resource != null), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/{id}/banner.png", produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<byte[]> getBanner(@PathVariable int id, @RequestParam Map<String, String> raw) {
         SpigetResource resource = this.resources.getResource(id);
         if (resource == null) {

@@ -20,7 +20,11 @@ public class DefaultSpigetResourceService implements SpigetResourceService {
     @Cacheable
     @Override
     public SpigetResource getResource(int resourceId) {
-        return loadResource(resourceId);
+        try {
+            return loadResource(resourceId);
+        } catch (NullPointerException ex) {
+            return null;
+        }
     }
 
     private SpigetResource loadResource(int resourceId) {
