@@ -2,13 +2,15 @@ package com.mcbanners.backend.util;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Globally available utility classes, mostly for string manipulation.
  *
  * @author Jim Menard, <a href="mailto:jimm@io.com">jimm@io.com</a>
- * @author Jacob Andersen (update to Java 8 only)
+ * @author Jacob Andersen (update to Java 8 only, some new methods)
  */
 public class StringUtil {
     /**
@@ -154,4 +156,9 @@ public class StringUtil {
         return strings;
     }
 
+    public static String cleanupEnumConstant(String name) {
+        return Arrays.stream(name.toLowerCase().split("_"))
+                .map(piece -> piece.substring(0, 1).toUpperCase().concat(piece.substring(1)))
+                .collect(Collectors.joining(" "));
+    }
 }
