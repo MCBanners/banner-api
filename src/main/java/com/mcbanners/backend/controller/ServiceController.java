@@ -22,7 +22,7 @@ public class ServiceController {
         Map<String, Object> out = new HashMap<>();
         out.put("templates", getEnumValues(BannerTemplate.values()));
         out.put("fonts", getEnumValues(BannerFontFace.values()));
-        out.put("text-alignments", getEnumValues(BannerTextAlign.values()));
+        out.put("text_alignments", getEnumValues(BannerTextAlign.values()));
         return out;
     }
 
