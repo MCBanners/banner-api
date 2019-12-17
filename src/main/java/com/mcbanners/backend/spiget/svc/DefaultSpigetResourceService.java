@@ -1,6 +1,9 @@
 package com.mcbanners.backend.spiget.svc;
 
-import com.mcbanners.backend.obj.SpigetResource;
+import com.mcbanners.backend.obj.PriceInformation;
+import com.mcbanners.backend.obj.RatingInformation;
+import com.mcbanners.backend.obj.Resource;
+import com.mcbanners.backend.obj.spiget.SpigetResource;
 import com.mcbanners.backend.spiget.SpigetClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -19,9 +22,17 @@ public class DefaultSpigetResourceService implements SpigetResourceService {
 
     @Cacheable
     @Override
-    public SpigetResource getResource(int resourceId) {
+    public Resource getResource(int resourceId) {
         try {
-            return loadResource(resourceId);
+            SpigetResource resource = loadResource(resourceId);
+            return new Resource(
+                    resource.getIcon().getData(),
+                    resource.getName(),
+                    resource.getAuthor().getId(),
+                    new RatingInformation(resource.getRating().getCount(), resource.getRating().getAverage()),
+                    resource.getDownloads(),
+                    resource.isPremium() ? new PriceInformation(resource.getPrice(), resource.getCurrency()) : null
+            );
         } catch (NullPointerException ex) {
             return null;
         }

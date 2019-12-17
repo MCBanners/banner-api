@@ -1,7 +1,7 @@
 package com.mcbanners.backend.spiget;
 
-import com.mcbanners.backend.obj.SpigetAuthor;
-import com.mcbanners.backend.obj.SpigetResource;
+import com.mcbanners.backend.obj.spiget.SpigetAuthor;
+import com.mcbanners.backend.obj.spiget.SpigetResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;

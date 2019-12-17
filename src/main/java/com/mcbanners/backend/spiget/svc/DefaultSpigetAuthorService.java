@@ -1,6 +1,7 @@
 package com.mcbanners.backend.spiget.svc;
 
-import com.mcbanners.backend.obj.SpigetAuthor;
+import com.mcbanners.backend.obj.Author;
+import com.mcbanners.backend.obj.spiget.SpigetAuthor;
 import com.mcbanners.backend.spiget.SpigetClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -19,8 +20,9 @@ public class DefaultSpigetAuthorService implements SpigetAuthorService {
 
     @Cacheable
     @Override
-    public SpigetAuthor getAuthor(int authorId) {
-        return loadAuthor(authorId);
+    public Author getAuthor(int authorId) {
+        SpigetAuthor author = loadAuthor(authorId);
+        return new Author(author.getName());
     }
 
     private SpigetAuthor loadAuthor(int authorId) {

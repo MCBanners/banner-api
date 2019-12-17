@@ -1,7 +1,7 @@
 package com.mcbanners.backend.spiget.svc;
 
-import com.mcbanners.backend.obj.SpigetAuthor;
+import com.mcbanners.backend.obj.Author;
 
 public interface SpigetAuthorService {
-    SpigetAuthor getAuthor(final int authorId);
+    Author getAuthor(final int authorId);
 }
