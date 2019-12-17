@@ -3,7 +3,6 @@ package com.mcbanners.backend.controller;
 import com.mcbanners.backend.banner.BannerFontFace;
 import com.mcbanners.backend.banner.BannerTemplate;
 import com.mcbanners.backend.banner.BannerTextAlign;
-import com.mcbanners.backend.img.ImageBuilder;
 import com.mcbanners.backend.util.StringUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

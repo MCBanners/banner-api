@@ -78,7 +78,7 @@ public class ResourceLayout extends Layout {
                     (100 - resourceLogoSize) / 2,
                     resourceLogo
             ));
-        } catch (RuntimeException|IOException ex) {
+        } catch (RuntimeException | IOException ex) {
             ex.printStackTrace();
         }
 

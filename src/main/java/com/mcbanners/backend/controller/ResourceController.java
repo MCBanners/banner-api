@@ -4,11 +4,8 @@ import com.mcbanners.backend.banner.param.res.ResourceParameter;
 import com.mcbanners.backend.img.layout.ResourceLayout;
 import com.mcbanners.backend.obj.Author;
 import com.mcbanners.backend.obj.Resource;
-import com.mcbanners.backend.obj.spiget.SpigetAuthor;
-import com.mcbanners.backend.obj.spiget.SpigetResource;
 import com.mcbanners.backend.spiget.svc.SpigetAuthorService;
 import com.mcbanners.backend.spiget.svc.SpigetResourceService;
-import com.mcbanners.backend.util.ImageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,8 +24,6 @@ import java.util.Map;
 public class ResourceController {
     private final SpigetResourceService resources;
     private final SpigetAuthorService authors;
-
-
 
     @Autowired
     public ResourceController(SpigetResourceService resources, SpigetAuthorService authors) {
