@@ -8,11 +8,11 @@ import com.mcbanners.backend.img.component.TextComponent;
 import java.awt.*;
 import java.util.Map;
 
-public class TextParameterReader {
+public class TextParameterReader<T extends Enum> {
     private final String namespace;
-    private final Map<ResourceParameter, Object> params;
+    private final Map<T, Object> params;
 
-    public TextParameterReader(String namespace, Map<ResourceParameter, Object> params) {
+    public TextParameterReader(String namespace, Map<T, Object> params) {
         this.namespace = namespace;
         this.params = params;
     }

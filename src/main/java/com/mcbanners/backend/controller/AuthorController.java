@@ -9,7 +9,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.util.Map;
 
 @RestController
 @RequestMapping("author")
@@ -21,9 +26,15 @@ public class AuthorController {
         this.authors = authors;
     }
 
-    @GetMapping(value = "/{id}/banner.png", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Author> getBanner(@PathVariable int id) {
+    @GetMapping(value = "/{id}/banner.png", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<byte[]> getBanner(@PathVariable int id, @RequestParam Map<String, String> raw) {
         Author author = this.authors.getAuthorResources(id);
-        return new ResponseEntity<>(author, HttpStatus.OK);
+        if (author == null) {
+            return null;
+        }
+
+        try(ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+            BufferedImage banner = new ResourceL
+        }
     }
 }
