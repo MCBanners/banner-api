@@ -23,7 +23,7 @@ public class SpigetClient {
     }
 
     public ResponseEntity<SpigetResource[]> getAllByAuthor(int id) {
-        return makeRequest("authors/" + id + "/resources", SpigetResource[].class);
+        return makeRequest("authors/" + id + "/resources?size=300", SpigetResource[].class);
     }
 
     private <T> ResponseEntity<T> makeRequest(String endpoint, Class<T> type) {
