@@ -23,13 +23,6 @@ public class DefaultSpigetAuthorService implements SpigetAuthorService {
     @Override
     public Author getAuthor(int authorId) {
         SpigetAuthor author = loadAuthor(authorId);
-        return new Author(author.getName(), 0, author.getIcon().getData(), 0, 0, 0);
-    }
-
-    @Cacheable
-    @Override
-    public Author getAuthorResources(int authorId) {
-        SpigetAuthor author = loadAuthor(authorId);
         SpigetResource[] resources = loadAllByAuthor(authorId);
         int downloads = 0;
         int likes = 0;

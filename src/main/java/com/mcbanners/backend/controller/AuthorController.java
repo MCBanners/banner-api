@@ -3,7 +3,6 @@ package com.mcbanners.backend.controller;
 import com.mcbanners.backend.banner.param.author.AuthorParamter;
 import com.mcbanners.backend.img.layout.AuthorLayout;
 import com.mcbanners.backend.obj.Author;
-import com.mcbanners.backend.obj.Resource;
 import com.mcbanners.backend.spiget.svc.SpigetAuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,7 +39,7 @@ public class AuthorController {
 
     @GetMapping(value = "/{id}/banner.png", produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<byte[]> getBanner(@PathVariable int id, @RequestParam Map<String, String> raw) {
-        Author author = this.authors.getAuthorResources(id);
+        Author author = this.authors.getAuthor(id);
         if (author == null) {
             return null;
         }
