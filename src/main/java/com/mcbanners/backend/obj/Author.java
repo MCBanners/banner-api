@@ -5,12 +5,14 @@ public class Author {
     private final int resources;
     private final String icon;
     private final int downloads;
+    private final int likes;
 
-    public Author(String name, int resources, String icon, int downloads) {
+    public Author(String name, int resources, String icon, int downloads, int likes) {
         this.name = name;
         this.resources = resources;
         this.icon = icon;
         this.downloads = downloads;
+        this.likes = likes;
     }
 
     public String getName() {
@@ -27,5 +29,9 @@ public class Author {
 
     public int getDownloads() {
         return downloads;
+    }
+
+    public int getLikes() {
+        return likes;
     }
 }

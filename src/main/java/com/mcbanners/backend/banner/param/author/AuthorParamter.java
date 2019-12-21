@@ -28,7 +28,13 @@ public enum AuthorParamter {
     DL_COUNT_FONT_SIZE("dl_count_font_size", 14, int.class),
     DL_COUNT_BOLD("dl_count_bold", false, boolean.class),
     DL_COUNT_TEXT_ALIGN("dl_count_text_align", BannerTextAlign.LEFT, BannerTextAlign.class),
-    DL_COUNT_FONT_FACE("dl_count_font_face", BannerFontFace.SOURCE_SANS_PRO, BannerFontFace.class);
+    DL_COUNT_FONT_FACE("dl_count_font_face", BannerFontFace.SOURCE_SANS_PRO, BannerFontFace.class),
+    LIKES_COUNT_X("dl_count_x", 104, int.class),
+    LIKES_COUNT_Y("dl_count_y", 70, int.class),
+    LIKES_COUNT_FONT_SIZE("dl_count_font_size", 14, int.class),
+    LIKES_COUNT_BOLD("dl_count_bold", false, boolean.class),
+    LIKES_COUNT_TEXT_ALIGN("dl_count_text_align", BannerTextAlign.LEFT, BannerTextAlign.class),
+    LIKES_COUNT_FONT_FACE("dl_count_font_face", BannerFontFace.SOURCE_SANS_PRO, BannerFontFace.class);
 
     private final String key;
     private final Object def;

@@ -73,6 +73,9 @@ public class AuthorLayout extends Layout {
         TextParameterReader downloads = parameters.getDlCountParams();
         components.add(downloads.makeComponent(textColor, String.format("%d downloads", author.getDownloads())));
 
+        TextParameterReader likes = parameters.getLikesCountParam();
+        components.add(likes.makeComponent(textColor, String.format("%d total likes", author.getLikes())));
+
         return components;
     }
 

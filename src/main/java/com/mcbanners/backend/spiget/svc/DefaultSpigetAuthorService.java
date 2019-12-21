@@ -23,7 +23,7 @@ public class DefaultSpigetAuthorService implements SpigetAuthorService {
     @Override
     public Author getAuthor(int authorId) {
         SpigetAuthor author = loadAuthor(authorId);
-        return new Author(author.getName(), 0, null, 0);
+        return new Author(author.getName(), 0, null, 0, 0);
     }
 
     @Cacheable
@@ -32,10 +32,12 @@ public class DefaultSpigetAuthorService implements SpigetAuthorService {
         SpigetAuthor author = loadAuthor(authorId);
         SpigetResource[] resources = loadAllByAuthor(authorId);
         int downloads = 0;
+        int likes = 0;
         for(SpigetResource r : resources) {
             downloads += r.getDownloads();
+            likes += r.getLikes();
         }
-        return new Author(author.getName(), resources.length, author.getIcon().getData(), downloads);
+        return new Author(author.getName(), resources.length, author.getIcon().getData(), downloads, likes);
     }
 
     private SpigetAuthor loadAuthor(int authorId) {
