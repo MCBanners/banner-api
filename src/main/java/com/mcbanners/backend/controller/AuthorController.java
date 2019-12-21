@@ -1,11 +1,10 @@
 package com.mcbanners.backend.controller;
 
-import com.mcbanners.backend.banner.param.res.ResourceParameter;
-import com.mcbanners.backend.img.layout.ResourceLayout;
+import com.mcbanners.backend.banner.param.author.AuthorParamter;
+import com.mcbanners.backend.img.layout.AuthorLayout;
 import com.mcbanners.backend.obj.Author;
 import com.mcbanners.backend.obj.Resource;
 import com.mcbanners.backend.spiget.svc.SpigetAuthorService;
-import com.mcbanners.backend.spiget.svc.SpigetResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,37 +23,30 @@ import java.util.Collections;
 import java.util.Map;
 
 @RestController
-@RequestMapping("resource")
-public class ResourceController {
-    private final SpigetResourceService resources;
+@RequestMapping("author")
+public class AuthorController {
     private final SpigetAuthorService authors;
 
     @Autowired
-    public ResourceController(SpigetResourceService resources, SpigetAuthorService authors) {
-        this.resources = resources;
+    public AuthorController(SpigetAuthorService authors) {
         this.authors = authors;
     }
 
     @GetMapping(value = "/{id}/isValid", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Boolean>> getIsValid(@PathVariable int id) {
-        Resource resource = this.resources.getResource(id);
-        return new ResponseEntity<>(Collections.singletonMap("valid", resource != null), HttpStatus.OK);
+        Author author = this.authors.getAuthor(id);
+        return new ResponseEntity<>(Collections.singletonMap("valid", author != null), HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}/banner.png", produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<byte[]> getBanner(@PathVariable int id, @RequestParam Map<String, String> raw) {
-        Resource resource = this.resources.getResource(id);
-        if (resource == null) {
-            return null;
-        }
-
-        Author author = this.authors.getAuthor(resource.getAuthorId());
+        Author author = this.authors.getAuthorResources(id);
         if (author == null) {
             return null;
         }
 
-        try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
-            BufferedImage banner = new ResourceLayout(resource, author, ResourceParameter.parse(raw)).draw();
+        try(ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+            BufferedImage banner = new AuthorLayout(author, AuthorParamter.parse(raw)).draw();
             ImageIO.write(banner, "png", bos);
             bos.flush();
             return new ResponseEntity<>(bos.toByteArray(), HttpStatus.OK);

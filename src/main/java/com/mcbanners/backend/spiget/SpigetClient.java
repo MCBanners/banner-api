@@ -22,6 +22,10 @@ public class SpigetClient {
         return makeRequest("resources/" + id, SpigetResource.class);
     }
 
+    public ResponseEntity<SpigetResource[]> getAllByAuthor(int id) {
+        return makeRequest("authors/" + id + "/resources?size=300", SpigetResource[].class);
+    }
+
     private <T> ResponseEntity<T> makeRequest(String endpoint, Class<T> type) {
         RestTemplate template = new RestTemplate();
 

@@ -2,44 +2,31 @@ package com.mcbanners.backend.banner.param;
 
 import com.mcbanners.backend.banner.BannerFontFace;
 import com.mcbanners.backend.banner.BannerTextAlign;
-import com.mcbanners.backend.banner.param.res.ResourceParameter;
 import com.mcbanners.backend.img.component.TextComponent;
 
 import java.awt.*;
 import java.util.Map;
 
-public class TextParameterReader {
-    private final String namespace;
-    private final Map<ResourceParameter, Object> params;
+public abstract class TextParameterReader<T extends Enum> {
+    protected final String namespace;
+    protected final Map<T, Object> params;
 
-    public TextParameterReader(String namespace, Map<ResourceParameter, Object> params) {
+    public TextParameterReader(String namespace, Map<T, Object> params) {
         this.namespace = namespace;
         this.params = params;
     }
 
-    public int getX() {
-        return (int) params.get(var("x"));
-    }
+    public abstract int getX();
 
-    public int getY() {
-        return (int) params.get(var("y"));
-    }
+    public abstract int getY();
 
-    public int getFontSize() {
-        return (int) params.get(var("font_size"));
-    }
+    public abstract int getFontSize();
 
-    public boolean getBold() {
-        return (boolean) params.get(var("bold"));
-    }
+    public abstract boolean getBold();
 
-    public BannerTextAlign getTextAlign() {
-        return (BannerTextAlign) params.get(var("text_align"));
-    }
+    public abstract BannerTextAlign getTextAlign();
 
-    public BannerFontFace getFontFace() {
-        return (BannerFontFace) params.get(var("font_face"));
-    }
+    public abstract BannerFontFace getFontFace();
 
     public TextComponent makeComponent(Color textColor, String content) {
         return new TextComponent(
@@ -53,8 +40,5 @@ public class TextParameterReader {
                 content
         );
     }
-
-    private ResourceParameter var(String name) {
-        return ResourceParameter.fromKey(String.format("%s_%s", namespace, name));
-    }
 }
+

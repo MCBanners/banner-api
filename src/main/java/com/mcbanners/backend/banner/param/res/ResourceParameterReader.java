@@ -1,11 +1,12 @@
 package com.mcbanners.backend.banner.param.res;
 
 import com.mcbanners.backend.banner.BannerTemplate;
+import com.mcbanners.backend.banner.param.ResTextParameterReader;
 import com.mcbanners.backend.banner.param.TextParameterReader;
 
 import java.util.Map;
 
-public class ResourceParameterReader {
+public class ResourceParameterReader  {
     private final BannerTemplate template;
     private final int logoSize;
     private final int logoX;
@@ -22,14 +23,14 @@ public class ResourceParameterReader {
         this.template = (BannerTemplate) parameters.get(ResourceParameter.TEMPLATE);
         this.logoSize = (int) parameters.get(ResourceParameter.LOGO_SIZE);
         this.logoX = (int) parameters.get(ResourceParameter.LOGO_X);
-        this.resNameParams = new TextParameterReader("res_name", parameters);
-        this.autNameParams = new TextParameterReader("aut_name", parameters);
-        this.revCountParams = new TextParameterReader("rev_count", parameters);
+        this.resNameParams = new ResTextParameterReader("res_name", parameters);
+        this.autNameParams = new ResTextParameterReader("aut_name", parameters);
+        this.revCountParams = new ResTextParameterReader("rev_count", parameters);
         this.starsX = (int) parameters.get(ResourceParameter.STARS_X);
         this.starsY = (int) parameters.get(ResourceParameter.STARS_Y);
         this.starsGap = (double) parameters.get(ResourceParameter.STARS_GAP);
-        this.dlCountParams = new TextParameterReader("dl_count", parameters);
-        this.priceParams = new TextParameterReader("price", parameters);
+        this.dlCountParams = new ResTextParameterReader("dl_count", parameters);
+        this.priceParams = new ResTextParameterReader("price", parameters);
     }
 
     public BannerTemplate getTemplate() {

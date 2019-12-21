@@ -11,6 +11,7 @@ import com.mcbanners.backend.obj.Author;
 import com.mcbanners.backend.obj.PriceInformation;
 import com.mcbanners.backend.obj.Resource;
 import com.mcbanners.backend.util.ImageUtil;
+import com.mcbanners.backend.util.NumberUtil;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.imageio.ImageIO;
@@ -89,7 +90,7 @@ public class ResourceLayout extends Layout {
         components.add(author.makeComponent(textColor, String.format("by %s", this.author.getName())));
 
         TextParameterReader reviews = parameters.getRevCountParams();
-        components.add(reviews.makeComponent(textColor, String.format("%d reviews", resource.getRating().getCount())));
+        components.add(reviews.makeComponent(textColor, NumberUtil.abbreviate(resource.getRating().getCount()) + " reviews"));
 
         BufferedImage starFull = BannerSprite.STAR_FULL.getImage();
         BufferedImage starHalf = BannerSprite.STAR_HALF.getImage();
@@ -119,7 +120,7 @@ public class ResourceLayout extends Layout {
         }
 
         TextParameterReader downloads = parameters.getDlCountParams();
-        components.add(downloads.makeComponent(textColor, String.format("%d downloads", resource.getDownloadCount())));
+        components.add(downloads.makeComponent(textColor, NumberUtil.abbreviate(resource.getDownloadCount()) + " downloads"));
 
         PriceInformation priceInfo = resource.getPrice();
         if (priceInfo != null) {
