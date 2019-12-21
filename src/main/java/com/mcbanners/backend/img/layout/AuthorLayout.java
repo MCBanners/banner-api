@@ -9,6 +9,7 @@ import com.mcbanners.backend.img.component.Component;
 import com.mcbanners.backend.img.component.ImageComponent;
 import com.mcbanners.backend.obj.Author;
 import com.mcbanners.backend.util.ImageUtil;
+import com.mcbanners.backend.util.NumberUtil;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -71,10 +72,10 @@ public class AuthorLayout extends Layout {
         components.add(res.makeComponent(textColor, author.getResources() + " resources"));
 
         TextParameterReader downloads = parameters.getDlCountParams();
-        components.add(downloads.makeComponent(textColor, String.format("%d downloads", author.getDownloads())));
+        components.add(downloads.makeComponent(textColor, NumberUtil.abbreviate(author.getDownloads()) + "total downloads"));
 
         TextParameterReader likes = parameters.getLikesCountParam();
-        components.add(likes.makeComponent(textColor, String.format("%d total likes", author.getLikes())));
+        components.add(likes.makeComponent(textColor, NumberUtil.abbreviate(author.getLikes()) + "total likes"));
 
         return components;
     }
