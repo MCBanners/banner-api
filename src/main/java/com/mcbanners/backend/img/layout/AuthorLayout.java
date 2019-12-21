@@ -66,16 +66,16 @@ public class AuthorLayout extends Layout {
         }
 
         TextParameterReader name = parameters.getAutNameParams();
-        components.add(name.makeComponent(textColor, "Author: " + author.getName()));
+        components.add(name.makeComponent(textColor, author.getName()));
 
         TextParameterReader res = parameters.getResAmountParams();
         components.add(res.makeComponent(textColor, author.getResources() + " resources"));
 
         TextParameterReader downloads = parameters.getDlCountParams();
-        components.add(downloads.makeComponent(textColor, NumberUtil.abbreviate(author.getDownloads()) + "total downloads"));
+        components.add(downloads.makeComponent(textColor, NumberUtil.abbreviate(author.getDownloads()) + " downloads"));
 
         TextParameterReader likes = parameters.getLikesCountParam();
-        components.add(likes.makeComponent(textColor, NumberUtil.abbreviate(author.getLikes()) + "total likes"));
+        components.add(likes.makeComponent(textColor, NumberUtil.abbreviate(author.getLikes()) + " likes"));
 
         return components;
     }
