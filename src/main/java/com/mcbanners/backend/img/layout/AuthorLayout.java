@@ -77,6 +77,9 @@ public class AuthorLayout extends Layout {
         TextParameterReader likes = parameters.getLikesCountParam();
         components.add(likes.makeComponent(textColor, NumberUtil.abbreviate(author.getLikes()) + " likes"));
 
+        TextParameterReader reviews = parameters.getRevCountParams();
+        components.add(reviews.makeComponent(textColor, NumberUtil.abbreviate(author.getRating()) + " reviews"));
+
         return components;
     }
 

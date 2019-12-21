@@ -14,6 +14,7 @@ public class AuthorParameterReader {
     private final TextParameterReader resAmountParams;
     private final TextParameterReader dlCountParams;
     private final TextParameterReader likesCountParam;
+    private final TextParameterReader revCountParams;
 
     public AuthorParameterReader(Map<AuthorParamter, Object> parameters) {
         this.template = (BannerTemplate) parameters.get(AuthorParamter.TEMPLATE);
@@ -23,6 +24,7 @@ public class AuthorParameterReader {
         this.resAmountParams = new AuthorTextParameterReader("res_count", parameters);
         this.dlCountParams = new AuthorTextParameterReader("dl_count", parameters);
         this.likesCountParam = new AuthorTextParameterReader("likes_count", parameters);
+        this.revCountParams = new AuthorTextParameterReader("rev_count", parameters);
     }
 
     public BannerTemplate getTemplate() {
@@ -51,5 +53,9 @@ public class AuthorParameterReader {
 
     public TextParameterReader getLikesCountParam() {
         return likesCountParam;
+    }
+
+    public TextParameterReader getRevCountParams() {
+        return revCountParams;
     }
 }

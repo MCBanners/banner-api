@@ -6,13 +6,15 @@ public class Author {
     private final String icon;
     private final int downloads;
     private final int likes;
+    private final int rating;
 
-    public Author(String name, int resources, String icon, int downloads, int likes) {
+    public Author(String name, int resources, String icon, int downloads, int likes, int rating) {
         this.name = name;
         this.resources = resources;
         this.icon = icon;
         this.downloads = downloads;
         this.likes = likes;
+        this.rating = rating;
     }
 
     public String getName() {
@@ -33,5 +35,9 @@ public class Author {
 
     public int getLikes() {
         return likes;
+    }
+
+    public int getRating() {
+        return rating;
     }
 }
