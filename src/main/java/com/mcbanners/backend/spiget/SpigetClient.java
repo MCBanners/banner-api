@@ -22,8 +22,8 @@ public class SpigetClient {
         return makeRequest("resources/" + id, SpigetResource.class);
     }
 
-    public ResponseEntity<SpigetAuthor> getAllByAuthor(int id) {
-        return makeRequest("authors/" + id + "/resources", SpigetAuthor.class);
+    public ResponseEntity<SpigetResource[]> getAllByAuthor(int id) {
+        return makeRequest("authors/" + id + "/resources", SpigetResource[].class);
     }
 
     private <T> ResponseEntity<T> makeRequest(String endpoint, Class<T> type) {

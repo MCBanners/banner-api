@@ -4,4 +4,6 @@ import com.mcbanners.backend.obj.Author;
 
 public interface SpigetAuthorService {
     Author getAuthor(final int authorId);
+
+    Author getAuthorResources(final int authorId);
 }
