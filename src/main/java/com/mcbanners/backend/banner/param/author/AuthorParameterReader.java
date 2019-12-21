@@ -1,6 +1,7 @@
 package com.mcbanners.backend.banner.param.author;
 
 import com.mcbanners.backend.banner.BannerTemplate;
+import com.mcbanners.backend.banner.param.AuthorTextParameterReader;
 import com.mcbanners.backend.banner.param.TextParameterReader;
 
 import java.util.Map;
@@ -16,8 +17,8 @@ public class AuthorParameterReader {
         this.template = (BannerTemplate) parameters.get(AuthorParamter.TEMPLATE);
         this.logoSize = (int) parameters.get(AuthorParamter.LOGO_SIZE);
         this.logoX = (int) parameters.get(AuthorParamter.LOGO_X);
-        this.autNameParams = new TextParameterReader("aut_name", parameters);
-        this.resAmountParams = new TextParameterReader("res_count", parameters);
+        this.autNameParams = new AuthorTextParameterReader("aut_name", parameters);
+        this.resAmountParams = new AuthorTextParameterReader("res_count", parameters);
     }
 
     public BannerTemplate getTemplate() {

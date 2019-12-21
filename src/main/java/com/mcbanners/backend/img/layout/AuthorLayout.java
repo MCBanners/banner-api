@@ -5,10 +5,9 @@ import com.mcbanners.backend.banner.param.TextParameterReader;
 import com.mcbanners.backend.banner.param.author.AuthorParameterReader;
 import com.mcbanners.backend.banner.param.author.AuthorParamter;
 import com.mcbanners.backend.img.ImageBuilder;
+import com.mcbanners.backend.img.component.Component;
 import com.mcbanners.backend.img.component.ImageComponent;
 import com.mcbanners.backend.obj.Author;
-
-import com.mcbanners.backend.img.component.Component;
 import com.mcbanners.backend.util.ImageUtil;
 
 import javax.imageio.ImageIO;
