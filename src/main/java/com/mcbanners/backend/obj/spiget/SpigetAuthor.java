@@ -7,6 +7,7 @@ public class SpigetAuthor {
     private int id;
     private String name;
     private SpigetIcon icon;
+    private SpigetResource[] resources;
 
     public int getId() {
         return id;
@@ -30,5 +31,13 @@ public class SpigetAuthor {
 
     public void setIcon(SpigetIcon icon) {
         this.icon = icon;
+    }
+
+    public SpigetResource[] getResources() {
+        return resources;
+    }
+
+    public void setResources(SpigetResource[] resources) {
+        this.resources = resources;
     }
 }
