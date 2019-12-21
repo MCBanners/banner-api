@@ -3,7 +3,6 @@ package com.mcbanners.backend.banner.param.author;
 import com.mcbanners.backend.banner.BannerFontFace;
 import com.mcbanners.backend.banner.BannerTemplate;
 import com.mcbanners.backend.banner.BannerTextAlign;
-import com.mcbanners.backend.banner.param.res.ResourceParameter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -74,9 +73,9 @@ public enum AuthorParamter {
         return null;
     }
 
-    public static ResourceParameter fromKey(String key) {
+    public static AuthorParamter fromKey(String key) {
         try {
-            return ResourceParameter.valueOf(key.toUpperCase());
+            return AuthorParamter.valueOf(key.toUpperCase());
         } catch (IllegalArgumentException ex) {
             return null;
         }
