@@ -12,6 +12,7 @@ public class AuthorParameterReader {
     private final int logoX;
     private final TextParameterReader autNameParams;
     private final TextParameterReader resAmountParams;
+    private final TextParameterReader dlCountParams;
 
     public AuthorParameterReader(Map<AuthorParamter, Object> parameters) {
         this.template = (BannerTemplate) parameters.get(AuthorParamter.TEMPLATE);
@@ -19,6 +20,7 @@ public class AuthorParameterReader {
         this.logoX = (int) parameters.get(AuthorParamter.LOGO_X);
         this.autNameParams = new AuthorTextParameterReader("aut_name", parameters);
         this.resAmountParams = new AuthorTextParameterReader("res_count", parameters);
+        this.dlCountParams = new AuthorTextParameterReader("dl_count", parameters);
     }
 
     public BannerTemplate getTemplate() {
@@ -39,5 +41,9 @@ public class AuthorParameterReader {
 
     public TextParameterReader getResAmountParams() {
         return resAmountParams;
+    }
+
+    public TextParameterReader getDlCountParams() {
+        return dlCountParams;
     }
 }

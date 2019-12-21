@@ -68,7 +68,10 @@ public class AuthorLayout extends Layout {
         components.add(name.makeComponent(textColor, "Author: " + author.getName()));
 
         TextParameterReader res = parameters.getResAmountParams();
-        components.add(res.makeComponent(textColor, String.valueOf(author.getResources()) + " resources"));
+        components.add(res.makeComponent(textColor, author.getResources() + " resources"));
+
+        TextParameterReader downloads = parameters.getDlCountParams();
+        components.add(downloads.makeComponent(textColor, String.format("%d downloads", author.getDownloads())));
 
         return components;
     }
