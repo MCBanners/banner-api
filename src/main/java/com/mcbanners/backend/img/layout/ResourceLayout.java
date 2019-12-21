@@ -120,7 +120,7 @@ public class ResourceLayout extends Layout {
         }
 
         TextParameterReader downloads = parameters.getDlCountParams();
-        components.add(downloads.makeComponent(textColor, NumberUtil.abbreviate(resource.getDownloadCount()) + "downloads"));
+        components.add(downloads.makeComponent(textColor, NumberUtil.abbreviate(resource.getDownloadCount()) + " downloads"));
 
         PriceInformation priceInfo = resource.getPrice();
         if (priceInfo != null) {
