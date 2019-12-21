@@ -12,7 +12,7 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class SpigetClient {
     private static final String BASE_URL = "https://api.spiget.org/v2/";
-    private static final String USER_AGENT = "SpigotBanners/0.0.1-SNAPSHOT";
+    private static final String USER_AGENT = "MCBanners";
 
     public ResponseEntity<SpigetAuthor> getAuthor(int id) {
         return makeRequest("authors/" + id, SpigetAuthor.class);
