@@ -40,6 +40,18 @@ public enum ServerParameter {
         this.type = type;
     }
 
+    public String getKey() {
+        return key;
+    }
+
+    public Object getDefault() {
+        return def;
+    }
+
+    public Class<?> getType() {
+        return type;
+    }
+
     public static Map<ServerParameter, Object> parse(Map<String, String> params) {
         Map<ServerParameter, Object> processed = new HashMap<>();
 
@@ -53,6 +65,7 @@ public enum ServerParameter {
 
             processed.put(parameter, out);
         }
+
 
         return processed;
     }
@@ -80,21 +93,9 @@ public enum ServerParameter {
 
     public static ServerParameter fromKey(String key) {
         try {
-            return ServerParameter.valueOf(key.toLowerCase());
+            return ServerParameter.valueOf(key.toUpperCase());
         } catch (IllegalArgumentException ex) {
             return null;
         }
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public Object getDefault() {
-        return def;
-    }
-
-    public Class<?> getType() {
-        return type;
     }
 }

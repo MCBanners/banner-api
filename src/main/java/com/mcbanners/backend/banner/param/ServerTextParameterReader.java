@@ -42,6 +42,7 @@ public class ServerTextParameterReader extends TextParameterReader<ServerParamet
     }
 
     private ServerParameter var(String name) {
+        System.out.println(ServerParameter.fromKey(String.format("%s_%s", namespace, name)));
         return ServerParameter.fromKey(String.format("%s_%s", namespace, name));
     }
 }

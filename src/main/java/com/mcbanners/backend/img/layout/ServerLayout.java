@@ -26,6 +26,7 @@ public class ServerLayout extends Layout {
 
     public ServerLayout(McServer server, Map<ServerParameter, Object> parameters) {
         this.server = server;
+
         this.parameters = new ServerParameterReader(parameters);
     }
 
