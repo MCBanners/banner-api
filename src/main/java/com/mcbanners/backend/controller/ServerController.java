@@ -1,7 +1,7 @@
 package com.mcbanners.backend.controller;
 
 import com.mcbanners.backend.mcapi.svc.McServerService;
-import com.mcbanners.backend.obj.McServer;
+import com.mcbanners.backend.obj.Server;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,15 +24,9 @@ public class ServerController {
         this.servers = servers;
     }
 
-    @GetMapping(value = "/{host}/{port}/isValid", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, Boolean>> getIsValid(@PathVariable String host, @PathVariable(required = false) Integer port) {
-        McServer server;
-        if (port == null) {
-            server = this.servers.getServer(host, 25565);
-        }
-        else {
-            server = this.servers.getServer(host, port);
-        }
+    @GetMapping(value = "/{host}/isValid", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Boolean>> getIsValid(@PathVariable String host) {
+        Server server = this.servers.getServer(host);
         return new ResponseEntity<>(Collections.singletonMap("valid", server != null), HttpStatus.OK);
     }
 }

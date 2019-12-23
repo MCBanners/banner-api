@@ -1,8 +1,7 @@
 package com.mcbanners.backend.mcapi.svc;
 
-import com.mcbanners.backend.obj.McServer;
+import com.mcbanners.backend.obj.Server;
 
 public interface McServerService {
-    McServer getServer(final String host);
-    McServer getServer(final String host, final int port);
+    Server getServer(final String host);
 }

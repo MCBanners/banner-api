@@ -1,5 +1,8 @@
-package com.mcbanners.backend.obj;
+package com.mcbanners.backend.obj.mcapi;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class McPlayerStats {
     private final int online;
     private final int max;

@@ -1,11 +1,10 @@
 package com.mcbanners.backend.mcapi.svc;
 
 import com.mcbanners.backend.mcapi.McAPIClient;
-import com.mcbanners.backend.obj.McServer;
+import com.mcbanners.backend.obj.Server;
+import com.mcbanners.backend.obj.mcapi.McServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,35 +17,21 @@ public class DefaultMcServerService implements McServerService {
         this.client = client;
     }
 
-    @Cacheable
-    @Override
-    public McServer getServer(String host) {
-        McServer server = loadServer(host);
-        return new McServer(server.getHost(), server.getPort(), server.getVersion(), server.getPlayers(), server.getMotd(), server.getIcon());
-    }
 
-    @Cacheable
     @Override
-    public McServer getServer(String host, int port) {
-        McServer server = loadServer(host, port);
-        return new McServer(server.getHost(), server.getPort(), server.getVersion(), server.getPlayers(), server.getMotd(), server.getIcon());
-    }
-
-    private McServer loadServer(String host) {
-        ResponseEntity<McServer> server = client.getServer(host);
-        if (server == null) {
+    public Server getServer(String host) {
+        try {
+            McServer server = loadServer(host);
+            return new Server(
+                    server.getHost(),
+                    server.getPort()
+            );
+        } catch (NullPointerException ex) {
             return null;
-        } else {
-            return server.getBody();
         }
     }
 
-    private McServer loadServer(String host, int port) {
-        ResponseEntity<McServer> server = client.getServer(host, port);
-        if (server == null) {
-            return null;
-        } else {
-            return server.getBody();
-        }
+    private McServer loadServer(String hostAddress) {
+        return client.getServer(hostAddress).getBody();
     }
 }
