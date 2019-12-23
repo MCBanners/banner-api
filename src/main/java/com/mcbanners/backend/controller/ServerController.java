@@ -31,15 +31,15 @@ public class ServerController {
         this.servers = servers;
     }
 
-    @GetMapping(value = "/{host}/isValid", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, Boolean>> getIsValid(@PathVariable String host) {
-        McServer server = this.servers.getServer(host);
+    @GetMapping(value = "/{host}/{port}/isValid", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Boolean>> getIsValid(@PathVariable String host, @PathVariable int port) {
+        McServer server = this.servers.getServer(host, port);
         return new ResponseEntity<>(Collections.singletonMap("valid", server != null), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{host}/banner.png", produces = MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<byte[]> getBanner(@PathVariable String host, @RequestParam Map<String, String> raw) {
-        McServer server = this.servers.getServer(host);
+    @GetMapping(value = "/{host}/{port}/banner.png", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<byte[]> getBanner(@PathVariable String host, @PathVariable int port, @RequestParam Map<String, String> raw) {
+        McServer server = this.servers.getServer(host, port);
         if (server == null) {
             return null;
         }

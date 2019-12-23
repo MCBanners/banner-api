@@ -16,16 +16,6 @@ public class DefaultMcServerService implements McServerService {
         this.client = client;
     }
 
-
-    @Override
-    public McServer getServer(String host) {
-        try {
-            return loadServer(host);
-        } catch (NullPointerException ex) {
-            return null;
-        }
-    }
-
     @Override
     public McServer getServer(String host, int port) {
         try {
@@ -33,10 +23,6 @@ public class DefaultMcServerService implements McServerService {
         } catch (NullPointerException ex) {
             return null;
         }
-    }
-
-    private McServer loadServer(String host) {
-        return client.getServer(host).getBody();
     }
 
     private McServer loadServer(String host, int port) {

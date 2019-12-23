@@ -10,15 +10,11 @@ import org.springframework.web.client.RestTemplate;
 
 @Component
 public class McAPIClient {
-    private static final String BASE_URL = "https://mc.mcbanners.com/server/";
+    private static final String BASE_URL = "http://localhost:8083/server/";
     private static final String USER_AGENT = "MCBanners";
 
-    public ResponseEntity<McServer> getServer(String host) {
-        return makeRequest(host, McServer.class);
-    }
-
     public ResponseEntity<McServer> getServer(String host, int port) {
-        return makeRequest(host + "/" + port, McServer.class);
+        return makeRequest("?host=" + host + "&port=" + port, McServer.class);
     }
 
     private <T> ResponseEntity<T> makeRequest(String endpoint, Class<T> type) {
