@@ -24,11 +24,17 @@ public enum ServerParameter {
     VER_NAME_TEXT_ALIGN("ver_name_text_align", BannerTextAlign.LEFT, BannerTextAlign.class),
     VER_NAME_FONT_FACE("ver_name_font_face", BannerFontFace.SOURCE_SANS_PRO, BannerFontFace.class),
     MOTD_NAME_X("motd_name_x", 104, int.class),
-    MOTD_NAME_Y("motd_name_y", 89, int.class),
+    MOTD_NAME_Y("motd_name_y", 55, int.class),
     MOTD_NAME_FONT_SIZE("motd_name_font_size", 14, int.class),
     MOTD_NAME_BOLD("motd_name_bold", false, boolean.class),
     MOTD_NAME_TEXT_ALIGN("motd_name_text_align", BannerTextAlign.LEFT, BannerTextAlign.class),
-    MOTD_NAME_FONT_FACE("motd_name_font_face", BannerFontFace.SOURCE_SANS_PRO, BannerFontFace.class);
+    MOTD_NAME_FONT_FACE("motd_name_font_face", BannerFontFace.SOURCE_SANS_PRO, BannerFontFace.class),
+    PLAYER_COUNT_X("player_count_x", 104, int.class),
+    PLAYER_COUNT_Y("player_count_y", 85, int.class),
+    PLAYER_COUNT_FONT_SIZE("player_count_font_size", 14, int.class),
+    PLAYER_COUNT_BOLD("player_count_bold", false, boolean.class),
+    PLAYER_COUNT_TEXT_ALIGN("player_count_text_align", BannerTextAlign.LEFT, BannerTextAlign.class),
+    PLAYER_COUNT_FONT_FACE("player_count_font_face", BannerFontFace.SOURCE_SANS_PRO, BannerFontFace.class);
 
     private final String key;
     private final Object def;

@@ -72,6 +72,9 @@ public class ServerLayout extends Layout {
         TextParameterReader motd = parameters.getMotdNameParams();
         components.add(motd.makeComponent(textColor, server.getMotd()));
 
+        TextParameterReader players = parameters.getPlayerCountParams();
+        components.add(players.makeComponent(textColor, String.format("%s / %s players online", server.getPlayers().getOnline(), server.getPlayers().getMax())));
+
         return components;
     }
 

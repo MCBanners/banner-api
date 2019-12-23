@@ -13,6 +13,7 @@ public class ServerParameterReader {
     private final TextParameterReader servNameParams;
     private final TextParameterReader verNameParams;
     private final TextParameterReader motdNameParams;
+    private final TextParameterReader playerCountParams;
 
     public ServerParameterReader(Map<ServerParameter, Object> parameters) {
         this.template = (BannerTemplate) parameters.get(ServerParameter.TEMPLATE);
@@ -21,6 +22,7 @@ public class ServerParameterReader {
         this.servNameParams = new ServerTextParameterReader("serv_name", parameters);
         this.verNameParams = new ServerTextParameterReader("ver_name", parameters);
         this.motdNameParams = new ServerTextParameterReader("motd_name", parameters);
+        this.playerCountParams = new ServerTextParameterReader("player_count", parameters);
     }
 
     public BannerTemplate getTemplate() {
@@ -45,5 +47,9 @@ public class ServerParameterReader {
 
     public TextParameterReader getMotdNameParams() {
         return motdNameParams;
+    }
+
+    public TextParameterReader getPlayerCountParams() {
+        return playerCountParams;
     }
 }
