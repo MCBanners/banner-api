@@ -1,8 +1,5 @@
 package com.mcbanners.backend.obj;
 
-<<<<<<< Updated upstream
-public class Server {
-=======
 public class McServer {
     private final String host;
     private final int port;
@@ -43,5 +40,4 @@ public class McServer {
     public String getIcon() {
         return icon;
     }
->>>>>>> Stashed changes
 }

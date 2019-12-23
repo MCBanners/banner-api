@@ -1,8 +1,6 @@
 package com.mcbanners.backend.obj;
 
 public class McPlayerStats {
-<<<<<<< Updated upstream
-=======
     private final int online;
     private final int max;
 
@@ -18,5 +16,4 @@ public class McPlayerStats {
     public int getMax() {
         return max;
     }
->>>>>>> Stashed changes
 }

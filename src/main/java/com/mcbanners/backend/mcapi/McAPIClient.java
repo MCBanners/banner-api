@@ -1,8 +1,5 @@
 package com.mcbanners.backend.mcapi;
 
-<<<<<<< Updated upstream
-public class McAPIClient {
-=======
 import com.mcbanners.backend.obj.McServer;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -43,5 +40,4 @@ public class McAPIClient {
             return null;
         }
     }
->>>>>>> Stashed changes
 }

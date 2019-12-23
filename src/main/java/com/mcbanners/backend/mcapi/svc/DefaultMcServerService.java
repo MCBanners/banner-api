@@ -1,8 +1,5 @@
 package com.mcbanners.backend.mcapi.svc;
 
-<<<<<<< Updated upstream
-public class DefaultMcServerService {
-=======
 import com.mcbanners.backend.mcapi.McAPIClient;
 import com.mcbanners.backend.obj.McServer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +36,7 @@ public class DefaultMcServerService implements McServerService {
         ResponseEntity<McServer> server = client.getServer(host);
         if (server == null) {
             return null;
-        }
-        else {
+        } else {
             return server.getBody();
         }
     }
@@ -49,10 +45,8 @@ public class DefaultMcServerService implements McServerService {
         ResponseEntity<McServer> server = client.getServer(host, port);
         if (server == null) {
             return null;
-        }
-        else {
+        } else {
             return server.getBody();
         }
     }
->>>>>>> Stashed changes
 }
