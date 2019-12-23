@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Component
 public class McAPIClient {
-    private static final String BASE_URL = "http://localhost:8083/server/";
+    private static final String BASE_URL = "https://mc.banners.com/server/";
     private static final String USER_AGENT = "MCBanners";
 
     public ResponseEntity<McServer> getServer(String host) {
