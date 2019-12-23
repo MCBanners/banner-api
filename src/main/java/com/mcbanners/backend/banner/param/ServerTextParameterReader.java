@@ -2,12 +2,12 @@ package com.mcbanners.backend.banner.param;
 
 import com.mcbanners.backend.banner.BannerFontFace;
 import com.mcbanners.backend.banner.BannerTextAlign;
-import com.mcbanners.backend.banner.param.res.ResourceParameter;
+import com.mcbanners.backend.banner.param.server.ServerParameter;
 
 import java.util.Map;
 
-public class ResTextParameterReader extends TextParameterReader<ResourceParameter> {
-    public ResTextParameterReader(String namespace, Map<ResourceParameter, Object> params) {
+public class ServerTextParameterReader extends TextParameterReader<ServerParameter> {
+    public ServerTextParameterReader(String namespace, Map<ServerParameter, Object> params) {
         super(namespace, params);
     }
 
@@ -41,7 +41,7 @@ public class ResTextParameterReader extends TextParameterReader<ResourceParamete
         return (BannerFontFace) params.get(var("font_face"));
     }
 
-    private ResourceParameter var(String name) {
-        return ResourceParameter.fromKey(String.format("%s_%s", namespace, name));
+    private ServerParameter var(String name) {
+        return ServerParameter.fromKey(String.format("%s_%s", namespace, name));
     }
 }
