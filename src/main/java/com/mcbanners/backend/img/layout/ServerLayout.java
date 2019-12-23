@@ -62,8 +62,14 @@ public class ServerLayout extends Layout {
             ex.printStackTrace();
         }
 
-        TextParameterReader name = parameters.getAutNameParam();
+        TextParameterReader name = parameters.getServNameParams();
         components.add(name.makeComponent(textColor, server.getHost()));
+
+        TextParameterReader version = parameters.getVerNameParams();
+        components.add(version.makeComponent(textColor, server.getVersion()));
+
+        TextParameterReader motd = parameters.getMotdNameParams();
+        components.add(motd.makeComponent(textColor, server.getMotd()));
 
         return components;
     }

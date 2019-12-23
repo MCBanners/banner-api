@@ -7,7 +7,6 @@ import com.mcbanners.backend.banner.param.res.ResourceParameter;
 import java.util.Map;
 
 public class ResTextParameterReader extends TextParameterReader<ResourceParameter> {
-
     public ResTextParameterReader(String namespace, Map<ResourceParameter, Object> params) {
         super(namespace, params);
     }

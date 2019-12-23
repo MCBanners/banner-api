@@ -11,12 +11,24 @@ public enum ServerParameter {
     TEMPLATE("template", BannerTemplate.MOONLIGHT_PURPLE, BannerTemplate.class),
     LOGO_SIZE("logo_size", 80, int.class),
     LOGO_X("logo_x", 12, int.class),
-    AUT_NAME_X("aut_name_x", 104, int.class),
-    AUT_NAME_Y("aut_name_y", 42, int.class),
-    AUT_NAME_FONT_SIZE("aut_name_font_size", 14, int.class),
-    AUT_NAME_BOLD("aut_name_bold", false, boolean.class),
-    AUT_NAME_TEXT_ALIGN("aut_name_text_align", BannerTextAlign.LEFT, BannerTextAlign.class),
-    AUT_NAME_FONT_FACE("aut_name_font_face", BannerFontFace.SOURCE_SANS_PRO, BannerFontFace.class);
+    SERV_NAME_X("serv_name_x", 104, int.class),
+    SERV_NAME_Y("serv_name_y", 22, int.class),
+    SERV_NAME_FONT_SIZE("serv_name_font_size", 18, int.class),
+    SERV_NAME_BOLD("serv_name_bold", true, boolean.class),
+    SERV_NAME_TEXT_ALIGN("serv_name_text_align", BannerTextAlign.LEFT, BannerTextAlign.class),
+    SERV_NAME_FONT_FACE("serv_name_font_face", BannerFontFace.SOURCE_SANS_PRO, BannerFontFace.class),
+    VER_NAME_X("ver_name_x", 104, int.class),
+    VER_NAME_Y("ver_name_y", 38, int.class),
+    VER_NAME_FONT_SIZE("ver_name_font_size", 14, int.class),
+    VER_NAME_BOLD("ver_name_bold", false, boolean.class),
+    VER_NAME_TEXT_ALIGN("ver_name_text_align", BannerTextAlign.LEFT, BannerTextAlign.class),
+    VER_NAME_FONT_FACE("ver_name_font_face", BannerFontFace.SOURCE_SANS_PRO, BannerFontFace.class),
+    MOTD_NAME_X("motd_name_x", 104, int.class),
+    MOTD_NAME_Y("motd_name_y", 89, int.class),
+    MOTD_NAME_FONT_SIZE("motd_name_font_size", 14, int.class),
+    MOTD_NAME_BOLD("motd_name_bold", false, boolean.class),
+    MOTD_NAME_TEXT_ALIGN("motd_name_text_align", BannerTextAlign.LEFT, BannerTextAlign.class),
+    MOTD_NAME_FONT_FACE("motd_name_font_face", BannerFontFace.SOURCE_SANS_PRO, BannerFontFace.class);
 
     private final String key;
     private final Object def;

@@ -10,13 +10,17 @@ public class ServerParameterReader {
     private final BannerTemplate template;
     private final int logoSize;
     private final int logoX;
-    private final TextParameterReader autNameParam;
+    private final TextParameterReader servNameParams;
+    private final TextParameterReader verNameParams;
+    private final TextParameterReader motdNameParams;
 
     public ServerParameterReader(Map<ServerParameter, Object> parameters) {
         this.template = (BannerTemplate) parameters.get(ServerParameter.TEMPLATE);
         this.logoSize = (int) parameters.get(ServerParameter.LOGO_SIZE);
         this.logoX = (int) parameters.get(ServerParameter.LOGO_X);
-        this.autNameParam = new ServerTextParameterReader("aut_name", parameters);
+        this.servNameParams = new ServerTextParameterReader("serv_name", parameters);
+        this.verNameParams = new ServerTextParameterReader("ver_name", parameters);
+        this.motdNameParams = new ServerTextParameterReader("motd_name", parameters);
     }
 
     public BannerTemplate getTemplate() {
@@ -31,7 +35,15 @@ public class ServerParameterReader {
         return logoX;
     }
 
-    public TextParameterReader getAutNameParam() {
-        return autNameParam;
+    public TextParameterReader getServNameParams() {
+        return servNameParams;
+    }
+
+    public TextParameterReader getVerNameParams() {
+        return verNameParams;
+    }
+
+    public TextParameterReader getMotdNameParams() {
+        return motdNameParams;
     }
 }
