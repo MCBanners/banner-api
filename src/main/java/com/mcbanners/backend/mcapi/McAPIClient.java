@@ -17,6 +17,10 @@ public class McAPIClient {
         return makeRequest(host, McServer.class);
     }
 
+    public ResponseEntity<McServer> getServer(String host, int port) {
+        return makeRequest(host + "/" + port, McServer.class);
+    }
+
     private <T> ResponseEntity<T> makeRequest(String endpoint, Class<T> type) {
         RestTemplate template = new RestTemplate();
 

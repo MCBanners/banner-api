@@ -26,7 +26,20 @@ public class DefaultMcServerService implements McServerService {
         }
     }
 
-    private McServer loadServer(String hostAddress) {
-        return client.getServer(hostAddress).getBody();
+    @Override
+    public McServer getServer(String host, int port) {
+        try {
+            return loadServer(host, port);
+        } catch (NullPointerException ex) {
+            return null;
+        }
+    }
+
+    private McServer loadServer(String host) {
+        return client.getServer(host).getBody();
+    }
+
+    private McServer loadServer(String host, int port) {
+        return client.getServer(host, port).getBody();
     }
 }
