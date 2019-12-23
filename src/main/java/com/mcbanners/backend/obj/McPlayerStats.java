@@ -1,16 +1,11 @@
-package com.mcbanners.backend.obj.mcapi;
+package com.mcbanners.backend.obj;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class McPlayerStats {
-    private final int online;
-    private final int max;
-
-    public McPlayerStats(int online, int max) {
-        this.online = online;
-        this.max = max;
-    }
+    private int online;
+    private int max;
 
     public int getOnline() {
         return online;
@@ -18,5 +13,13 @@ public class McPlayerStats {
 
     public int getMax() {
         return max;
+    }
+
+    public void setOnline(int online) {
+        this.online = online;
+    }
+
+    public void setMax(int max) {
+        this.max = max;
     }
 }

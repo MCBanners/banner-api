@@ -1,6 +1,6 @@
 package com.mcbanners.backend.mcapi;
 
-import com.mcbanners.backend.obj.mcapi.McServer;
+import com.mcbanners.backend.obj.McServer;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -33,6 +33,7 @@ public class McAPIClient {
                     type
             );
         } catch (Exception ex) {
+            ex.printStackTrace();
             return null;
         }
     }
