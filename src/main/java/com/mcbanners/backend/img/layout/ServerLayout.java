@@ -23,9 +23,17 @@ import java.util.Map;
 public class ServerLayout extends Layout {
     private final McServer server;
     private final ServerParameterReader parameters;
+    private final String serverName;
 
     public ServerLayout(McServer server, Map<ServerParameter, Object> parameters) {
         this.server = server;
+
+        String serverName = (String) parameters.get(ServerParameter.SERV_NAME_DISPLAY);
+        if (serverName.isEmpty()) {
+            serverName = server.getHost();
+        }
+
+        this.serverName = serverName;
 
         this.parameters = new ServerParameterReader(parameters);
     }
@@ -64,13 +72,13 @@ public class ServerLayout extends Layout {
         }
 
         TextParameterReader name = parameters.getServNameParams();
-        components.add(name.makeComponent(textColor, server.getHost()));
+        components.add(name.makeComponent(textColor, serverName));
 
         TextParameterReader version = parameters.getVerNameParams();
         components.add(version.makeComponent(textColor, server.getVersion()));
 
         TextParameterReader motd = parameters.getMotdNameParams();
-        components.add(motd.makeComponent(textColor, server.getMotd()));
+        components.add(motd.makeComponent(textColor, server.getMotd().getRaw()));
 
         TextParameterReader players = parameters.getPlayerCountParams();
         components.add(players.makeComponent(textColor, String.format("%s / %s players online", server.getPlayers().getOnline(), server.getPlayers().getMax())));
@@ -87,5 +95,9 @@ public class ServerLayout extends Layout {
         }
 
         return builder.build();
+    }
+
+    public String getServerName() {
+        return serverName;
     }
 }

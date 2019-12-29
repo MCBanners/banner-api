@@ -8,7 +8,7 @@ public class McServer {
     private int port;
     private String version;
     private McPlayerStats players;
-    private String motd;
+    private Motd motd;
     private String icon;
 
     public String getHost() {
@@ -43,19 +43,19 @@ public class McServer {
         this.players = players;
     }
 
-    public String getMotd() {
-        return motd;
-    }
-
-    public void setMotd(String motd) {
-        this.motd = motd;
-    }
-
     public String getIcon() {
         return icon;
     }
 
     public void setIcon(String icon) {
         this.icon = icon;
+    }
+
+    public Motd getMotd() {
+        return motd;
+    }
+
+    public void setMotd(Motd motd) {
+        this.motd = motd;
     }
 }

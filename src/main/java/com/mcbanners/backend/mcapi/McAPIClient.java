@@ -33,7 +33,6 @@ public class McAPIClient {
                     type
             );
         } catch (Exception ex) {
-            ex.printStackTrace();
             return null;
         }
     }

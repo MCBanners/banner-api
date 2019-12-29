@@ -17,6 +17,7 @@ public enum ServerParameter {
     SERV_NAME_BOLD("serv_name_bold", true, boolean.class),
     SERV_NAME_TEXT_ALIGN("serv_name_text_align", BannerTextAlign.LEFT, BannerTextAlign.class),
     SERV_NAME_FONT_FACE("serv_name_font_face", BannerFontFace.SOURCE_SANS_PRO, BannerFontFace.class),
+    SERV_NAME_DISPLAY("serv_name_display", "", String.class),
     VER_NAME_X("ver_name_x", 104, int.class),
     VER_NAME_Y("ver_name_y", 38, int.class),
     VER_NAME_FONT_SIZE("ver_name_font_size", 14, int.class),
