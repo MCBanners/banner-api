@@ -1,8 +1,6 @@
 package com.mcbanners.backend.banner.param.author;
 
 import com.mcbanners.backend.banner.BannerTemplate;
-import com.mcbanners.backend.banner.param.AuthorTextParameterReader;
-import com.mcbanners.backend.banner.param.TextParameterReader;
 
 import java.util.Map;
 
@@ -10,16 +8,16 @@ public class AuthorParameterReader {
     private final BannerTemplate template;
     private final int logoSize;
     private final int logoX;
-    private final TextParameterReader autNameParams;
-    private final TextParameterReader resAmountParams;
-    private final TextParameterReader dlCountParams;
-    private final TextParameterReader likesCountParam;
-    private final TextParameterReader revCountParams;
+    private final AuthorTextParameterReader autNameParams;
+    private final AuthorTextParameterReader resAmountParams;
+    private final AuthorTextParameterReader dlCountParams;
+    private final AuthorTextParameterReader likesCountParam;
+    private final AuthorTextParameterReader revCountParams;
 
-    public AuthorParameterReader(Map<AuthorParamter, Object> parameters) {
-        this.template = (BannerTemplate) parameters.get(AuthorParamter.TEMPLATE);
-        this.logoSize = (int) parameters.get(AuthorParamter.LOGO_SIZE);
-        this.logoX = (int) parameters.get(AuthorParamter.LOGO_X);
+    public AuthorParameterReader(Map<AuthorParameter, Object> parameters) {
+        this.template = (BannerTemplate) parameters.get(AuthorParameter.TEMPLATE);
+        this.logoSize = (int) parameters.get(AuthorParameter.LOGO_SIZE);
+        this.logoX = (int) parameters.get(AuthorParameter.LOGO_X);
         this.autNameParams = new AuthorTextParameterReader("aut_name", parameters);
         this.resAmountParams = new AuthorTextParameterReader("res_count", parameters);
         this.dlCountParams = new AuthorTextParameterReader("dl_count", parameters);
@@ -39,23 +37,23 @@ public class AuthorParameterReader {
         return logoX;
     }
 
-    public TextParameterReader getAutNameParams() {
+    public AuthorTextParameterReader getAutNameParams() {
         return autNameParams;
     }
 
-    public TextParameterReader getResAmountParams() {
+    public AuthorTextParameterReader getResAmountParams() {
         return resAmountParams;
     }
 
-    public TextParameterReader getDlCountParams() {
+    public AuthorTextParameterReader getDlCountParams() {
         return dlCountParams;
     }
 
-    public TextParameterReader getLikesCountParam() {
+    public AuthorTextParameterReader getLikesCountParam() {
         return likesCountParam;
     }
 
-    public TextParameterReader getRevCountParams() {
+    public AuthorTextParameterReader getRevCountParams() {
         return revCountParams;
     }
 }

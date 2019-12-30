@@ -2,12 +2,12 @@ package com.mcbanners.backend.banner.param;
 
 import com.mcbanners.backend.banner.BannerFontFace;
 import com.mcbanners.backend.banner.BannerTextAlign;
-import com.mcbanners.backend.img.component.TextComponent;
+import com.mcbanners.backend.image.component.TextComponent;
 
 import java.awt.*;
 import java.util.Map;
 
-public abstract class TextParameterReader<T extends Enum> {
+public abstract class TextParameterReader<T extends Enum<?>> {
     protected final String namespace;
     protected final Map<T, Object> params;
 
