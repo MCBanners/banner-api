@@ -1,6 +1,8 @@
 package com.mcbanners.backend.service.impl;
 
+import com.mcbanners.backend.net.OreClient;
 import com.mcbanners.backend.net.SpigetClient;
+import com.mcbanners.backend.obj.backend.ore.OreAuthor;
 import com.mcbanners.backend.obj.backend.spiget.SpigetAuthor;
 import com.mcbanners.backend.obj.backend.spiget.SpigetResource;
 import com.mcbanners.backend.obj.generic.Author;
@@ -16,10 +18,12 @@ import org.springframework.stereotype.Service;
 @CacheConfig(cacheNames = {"author"})
 public class DefaultAuthorService implements AuthorService {
     private final SpigetClient spigetClient;
+    private final OreClient oreClient;
 
     @Autowired
-    public DefaultAuthorService(SpigetClient client) {
+    public DefaultAuthorService(SpigetClient client, OreClient oreClient) {
         this.spigetClient = client;
+        this.oreClient = oreClient;
     }
 
     @Override
@@ -73,7 +77,20 @@ public class DefaultAuthorService implements AuthorService {
             return null;
         }
 
-        throw new RuntimeException("not yet implemented");
+        OreAuthor author = loadOreAuthor(authorName);
+
+        if (author == null) {
+            return null;
+        }
+
+        return new Author(
+                author.getUsername(),
+                0,
+                author.getAvatarUrl(),
+                0,
+                0,
+                0
+        );
     }
 
     private SpigetAuthor loadSpigetAuthor(int authorId) {
@@ -87,6 +104,15 @@ public class DefaultAuthorService implements AuthorService {
 
     private SpigetResource[] loadAllSpigetResourcesByAuthor(int authorId) {
         ResponseEntity<SpigetResource[]> resp = spigetClient.getAllByAuthor(authorId);
+        if (resp == null) {
+            return null;
+        }
+
+        return resp.getBody();
+    }
+
+    private OreAuthor loadOreAuthor(String authorId) {
+        ResponseEntity<OreAuthor> resp = oreClient.getAuthor(authorId);
         if (resp == null) {
             return null;
         }
