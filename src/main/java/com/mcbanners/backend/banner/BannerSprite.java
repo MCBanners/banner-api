@@ -9,7 +9,10 @@ public enum BannerSprite {
     STAR_FULL,
     STAR_HALF,
     STAR_NONE,
-    DEFAULT_SPIGOT_RES_LOGO;
+    DEFAULT_SPIGOT_RES_LOGO,
+    DEFAULT_SPONGE_RES_LOGO,
+    DEFAULT_AUTHOR_LOGO,
+    DEFAULT_SERVER_LOGO;
 
     public String getFileName() {
         return name().toLowerCase().concat(".png");

@@ -1,8 +1,6 @@
 package com.mcbanners.backend.banner.param.server;
 
 import com.mcbanners.backend.banner.BannerTemplate;
-import com.mcbanners.backend.banner.param.ServerTextParameterReader;
-import com.mcbanners.backend.banner.param.TextParameterReader;
 
 import java.util.Map;
 
@@ -10,10 +8,10 @@ public class ServerParameterReader {
     private final BannerTemplate template;
     private final int logoSize;
     private final int logoX;
-    private final TextParameterReader servNameParams;
-    private final TextParameterReader verNameParams;
-    private final TextParameterReader motdNameParams;
-    private final TextParameterReader playerCountParams;
+    private final ServerTextParameterReader servNameParams;
+    private final ServerTextParameterReader verNameParams;
+    private final ServerTextParameterReader motdNameParams;
+    private final ServerTextParameterReader playerCountParams;
 
     public ServerParameterReader(Map<ServerParameter, Object> parameters) {
         this.template = (BannerTemplate) parameters.get(ServerParameter.TEMPLATE);
@@ -37,19 +35,19 @@ public class ServerParameterReader {
         return logoX;
     }
 
-    public TextParameterReader getServNameParams() {
+    public ServerTextParameterReader getServNameParams() {
         return servNameParams;
     }
 
-    public TextParameterReader getVerNameParams() {
+    public ServerTextParameterReader getVerNameParams() {
         return verNameParams;
     }
 
-    public TextParameterReader getMotdNameParams() {
+    public ServerTextParameterReader getMotdNameParams() {
         return motdNameParams;
     }
 
-    public TextParameterReader getPlayerCountParams() {
+    public ServerTextParameterReader getPlayerCountParams() {
         return playerCountParams;
     }
 }
