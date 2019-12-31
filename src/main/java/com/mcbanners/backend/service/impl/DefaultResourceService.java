@@ -15,6 +15,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Base64;
+
 @Service
 @CacheConfig(cacheNames = {"resource"})
 public class DefaultResourceService implements ResourceService {
@@ -46,6 +48,7 @@ public class DefaultResourceService implements ResourceService {
                 spigetResource.getIcon().getData(),
                 spigetResource.getName(),
                 spigetResource.getAuthor().getId(),
+                spigetResource.getAuthor().getName(),
                 new RatingInformation(
                         spigetResource.getRating().getCount(),
                         spigetResource.getRating().getAverage()
@@ -68,16 +71,21 @@ public class DefaultResourceService implements ResourceService {
         }
 
         OreResource oreResource = loadOreResource(pluginId);
-
         if (oreResource == null) {
             return null;
         }
 
+        String oreResourceIcon = loadOreResourceIcon(oreResource.getHref());
+        if (oreResourceIcon == null) {
+            oreResourceIcon = "";
+        }
+
         return new Resource(
-                oreResource.getIcon(),
+                oreResourceIcon,
                 oreResource.getName(),
-                oreResource.getOwner().getId(),
-                null,
+                -1, // not known
+                oreResource.getOwner(), // username
+                new RatingInformation(oreResource.getStars()),
                 oreResource.getDownloads(),
                 null
         );
@@ -99,5 +107,15 @@ public class DefaultResourceService implements ResourceService {
         }
 
         return resp.getBody();
+    }
+
+    private String loadOreResourceIcon(String href) {
+        ResponseEntity<byte[]> resp = oreClient.getResourceIcon(href);
+        if (resp == null) {
+            return null;
+        }
+
+        byte[] body = resp.getBody();
+        return Base64.getEncoder().encodeToString(body);
     }
 }

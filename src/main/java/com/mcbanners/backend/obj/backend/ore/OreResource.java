@@ -6,12 +6,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class OreResource {
     private String pluginId;
     private String name;
-    private OreAuthor owner;
+    private String owner;
     private String description;
+    private String href;
     private int views;
     private int downloads;
-    private int staars;
-    private String icon;
+    private int stars;
 
     public String getPluginId() {
         return pluginId;
@@ -29,11 +29,11 @@ public class OreResource {
         this.name = name;
     }
 
-    public OreAuthor getOwner() {
+    public String getOwner() {
         return owner;
     }
 
-    public void setOwner(OreAuthor owner) {
+    public void setOwner(String owner) {
         this.owner = owner;
     }
 
@@ -43,6 +43,14 @@ public class OreResource {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getHref() {
+        return href;
+    }
+
+    public void setHref(String href) {
+        this.href = href;
     }
 
     public int getViews() {
@@ -61,19 +69,11 @@ public class OreResource {
         this.downloads = downloads;
     }
 
-    public int getStaars() {
-        return staars;
+    public int getStars() {
+        return stars;
     }
 
-    public void setStaars(int staars) {
-        this.staars = staars;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
+    public void setStars(int stars) {
+        this.stars = stars;
     }
 }

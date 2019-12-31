@@ -50,6 +50,8 @@ public class ResourceLayout extends Layout {
                 defaultLogoOverride = BannerSprite.DEFAULT_SPIGOT_RES_LOGO;
                 break;
             case ORE:
+                defaultLogoOverride = BannerSprite.DEFAULT_SPONGE_RES_LOGO;
+                break;
             default:
                 throw new RuntimeException("not yet implemented");
         }
@@ -69,27 +71,29 @@ public class ResourceLayout extends Layout {
         BufferedImage starHalf = BannerSprite.STAR_HALF.getImage();
         BufferedImage starNone = BannerSprite.STAR_NONE.getImage();
 
-        double ratingAvg = resource.getRating().getAverageRating();
-        double gap = parameters.getStarsGap();
+        Double ratingAvg = resource.getRating().getAverageRating();
+        if (ratingAvg != null) {
+            double gap = parameters.getStarsGap();
 
-        for (int i = 0; i < 5; i++) {
-            BufferedImage toOverlay;
+            for (int i = 0; i < 5; i++) {
+                BufferedImage toOverlay;
 
-            if (ratingAvg >= 1) {
-                ratingAvg--;
-                toOverlay = starFull;
-            } else if (ratingAvg >= 0.5) {
-                ratingAvg -= 0.5;
-                toOverlay = starHalf;
-            } else {
-                toOverlay = starNone;
+                if (ratingAvg >= 1) {
+                    ratingAvg--;
+                    toOverlay = starFull;
+                } else if (ratingAvg >= 0.5) {
+                    ratingAvg -= 0.5;
+                    toOverlay = starHalf;
+                } else {
+                    toOverlay = starNone;
+                }
+
+                addComponent(new ImageComponent(
+                        parameters.getStarsX() + ((int) gap * i),
+                        parameters.getStarsY(),
+                        toOverlay
+                ));
             }
-
-            addComponent(new ImageComponent(
-                    parameters.getStarsX() + ((int) gap * i),
-                    parameters.getStarsY(),
-                    toOverlay
-            ));
         }
 
         ResourceTextParameterReader downloads = parameters.getDlCountParams();

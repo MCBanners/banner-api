@@ -7,6 +7,7 @@ public class OreAuthor {
     private int id;
     private String username;
     private String avatarUrl;
+    private OreResource[] projects;
 
     public int getId() {
         return id;
@@ -30,5 +31,13 @@ public class OreAuthor {
 
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
+    }
+
+    public OreResource[] getProjects() {
+        return projects;
+    }
+
+    public void setProjects(OreResource[] projects) {
+        this.projects = projects;
     }
 }

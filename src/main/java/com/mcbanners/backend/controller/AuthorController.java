@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -34,6 +35,12 @@ public class AuthorController {
         return new ResponseEntity<>(Collections.singletonMap("valid", author != null), HttpStatus.OK);
     }
 
+    @GetMapping(value = "/sponge/{id}/isValid", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Boolean>> getIsValid(@PathVariable String id) {
+        Author author = this.authors.getAuthor(id, ServiceBackend.ORE);
+        return new ResponseEntity<>(Collections.singletonMap("valid", author != null), HttpStatus.OK);
+    }
+
     @GetMapping(value = "/spigot/{id}/banner.png", produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<byte[]> getBanner(@PathVariable int id, @RequestParam Map<String, String> raw) {
         Author author = this.authors.getAuthor(id, ServiceBackend.SPIGET);
@@ -41,6 +48,20 @@ public class AuthorController {
             return null;
         }
 
+        return draw(author, raw);
+    }
+
+    @GetMapping(value = "/sponge/{id}/banner.png", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<byte[]> getBanner(@PathVariable String id, @RequestParam Map<String, String> raw) {
+        Author author = this.authors.getAuthor(id, ServiceBackend.ORE);
+        if (author == null) {
+            return null;
+        }
+
+        return draw(author, raw);
+    }
+
+    private ResponseEntity<byte[]> draw(Author author, Map<String, String> raw) {
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
             BufferedImage banner = new AuthorLayout(author, AuthorParameter.parse(raw)).draw();
             ImageIO.write(banner, "png", bos);

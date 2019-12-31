@@ -3,6 +3,7 @@ package com.mcbanners.backend.service.impl;
 import com.mcbanners.backend.net.OreClient;
 import com.mcbanners.backend.net.SpigetClient;
 import com.mcbanners.backend.obj.backend.ore.OreAuthor;
+import com.mcbanners.backend.obj.backend.ore.OreResource;
 import com.mcbanners.backend.obj.backend.spiget.SpigetAuthor;
 import com.mcbanners.backend.obj.backend.spiget.SpigetResource;
 import com.mcbanners.backend.obj.generic.Author;
@@ -13,6 +14,8 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.Base64;
 
 @Service
 @CacheConfig(cacheNames = {"author"})
@@ -78,18 +81,29 @@ public class DefaultAuthorService implements AuthorService {
         }
 
         OreAuthor author = loadOreAuthor(authorName);
-
-        if (author == null) {
+        if (author == null || author.getProjects() == null) {
             return null;
+        }
+
+        int totalDownloads = 0, totalLikes = 0;
+
+        for (OreResource resource : author.getProjects()) {
+            totalDownloads += resource.getDownloads();
+            totalLikes += resource.getStars();
+        }
+
+        String oreAuthorAvatar = loadOreImageByUrl(author.getAvatarUrl());
+        if (oreAuthorAvatar == null) {
+            oreAuthorAvatar = "";
         }
 
         return new Author(
                 author.getUsername(),
-                0,
-                author.getAvatarUrl(),
-                0,
-                0,
-                0
+                author.getProjects().length,
+                oreAuthorAvatar,
+                totalDownloads,
+                totalLikes,
+                -1 // unknown
         );
     }
 
@@ -118,5 +132,15 @@ public class DefaultAuthorService implements AuthorService {
         }
 
         return resp.getBody();
+    }
+
+    private String loadOreImageByUrl(String url) {
+        ResponseEntity<byte[]> resp = oreClient.getAuthApiImage(url);
+        if (resp == null) {
+            return null;
+        }
+
+        byte[] body = resp.getBody();
+        return Base64.getEncoder().encodeToString(body);
     }
 }
