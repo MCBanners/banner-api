@@ -12,4 +12,6 @@ public interface ResourceService {
      * @return the generic Resource object representing the resource
      */
     Resource getResource(final int resourceId, final ServiceBackend backend);
+
+    Resource getResource(final String pluginId, final ServiceBackend backend);
 }

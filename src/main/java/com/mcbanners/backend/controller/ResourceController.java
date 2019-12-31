@@ -32,28 +32,49 @@ public class ResourceController {
         this.authors = authors;
     }
 
-    @GetMapping(value = "/{backend}/{id}/isValid", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, Boolean>> getIsValid(@PathVariable ServiceBackend backend, @PathVariable int id) {
-        if (backend == null) backend = ServiceBackend.SPIGET;
-
-        Resource resource = this.resources.getResource(id, backend);
+    @GetMapping(value = "/spigot/{id}/isValid", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Boolean>> getIsValid(@PathVariable int id) {
+        Resource resource = this.resources.getResource(id, ServiceBackend.SPIGET);
         return new ResponseEntity<>(Collections.singletonMap("valid", resource != null), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{backend}/{id}/banner.png", produces = MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<byte[]> getBanner(@PathVariable ServiceBackend backend, @PathVariable int id, @RequestParam Map<String, String> raw) {
-        if (backend == null) backend = ServiceBackend.SPIGET;
+    @GetMapping(value = "/sponge/{id}/isValid", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Boolean>> getIsValid(@PathVariable String id) {
+        Resource resource = this.resources.getResource(id, ServiceBackend.ORE);
+        return new ResponseEntity<>(Collections.singletonMap("valid", resource != null), HttpStatus.OK);
+    }
 
-        Resource resource = this.resources.getResource(id, backend);
+    @GetMapping(value = "/spigot/{id}/banner.png", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<byte[]> getBanner(@PathVariable int id, @RequestParam Map<String, String> raw) {
+        Resource resource = this.resources.getResource(id, ServiceBackend.SPIGET);
         if (resource == null) {
             return null;
         }
 
-        Author author = this.authors.getAuthor(resource.getAuthorId(), backend);
+        Author author = this.authors.getAuthor(resource.getAuthorId(), ServiceBackend.SPIGET);
         if (author == null) {
             return null;
         }
 
+        return draw(resource, author, raw, ServiceBackend.SPIGET);
+    }
+
+    @GetMapping(value = "/sponge/{id}/banner.png", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<byte[]> getBanner(@PathVariable String id, @RequestParam Map<String, String> raw) {
+        Resource resource = this.resources.getResource(id, ServiceBackend.ORE);
+        if (resource == null) {
+            return null;
+        }
+
+        Author author = this.authors.getAuthor(resource.getAuthorName(), ServiceBackend.ORE);
+        if (author == null) {
+            return null;
+        }
+
+        return draw(resource, author, raw, ServiceBackend.ORE);
+    }
+
+    private ResponseEntity<byte[]> draw(Resource resource, Author author, Map<String, String> raw, ServiceBackend backend) {
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
             BufferedImage banner = new ResourceLayout(resource, author, ResourceParameter.parse(raw), backend).draw();
             ImageIO.write(banner, "png", bos);
