@@ -1,12 +1,12 @@
-package com.mcbanners.backend.controller;
+package com.mcbanners.bannerapi.controller;
 
-import com.mcbanners.backend.banner.param.resource.ResourceParameter;
-import com.mcbanners.backend.image.layout.ResourceLayout;
-import com.mcbanners.backend.obj.generic.Author;
-import com.mcbanners.backend.obj.generic.Resource;
-import com.mcbanners.backend.service.ServiceBackend;
-import com.mcbanners.backend.service.api.AuthorService;
-import com.mcbanners.backend.service.api.ResourceService;
+import com.mcbanners.bannerapi.banner.param.resource.ResourceParameter;
+import com.mcbanners.bannerapi.image.layout.ResourceLayout;
+import com.mcbanners.bannerapi.obj.generic.Author;
+import com.mcbanners.bannerapi.obj.generic.Resource;
+import com.mcbanners.bannerapi.service.ServiceBackend;
+import com.mcbanners.bannerapi.service.api.AuthorService;
+import com.mcbanners.bannerapi.service.api.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

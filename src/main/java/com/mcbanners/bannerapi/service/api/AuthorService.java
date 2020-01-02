@@ -1,7 +1,7 @@
-package com.mcbanners.backend.service.api;
+package com.mcbanners.bannerapi.service.api;
 
-import com.mcbanners.backend.obj.generic.Author;
-import com.mcbanners.backend.service.ServiceBackend;
+import com.mcbanners.bannerapi.obj.generic.Author;
+import com.mcbanners.bannerapi.service.ServiceBackend;
 
 public interface AuthorService {
     /**

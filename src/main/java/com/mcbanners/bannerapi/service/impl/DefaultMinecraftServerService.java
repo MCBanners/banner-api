@@ -1,8 +1,8 @@
-package com.mcbanners.backend.service.impl;
+package com.mcbanners.bannerapi.service.impl;
 
-import com.mcbanners.backend.net.McAPIClient;
-import com.mcbanners.backend.obj.backend.mcapi.MinecraftServer;
-import com.mcbanners.backend.service.api.MinecraftServerService;
+import com.mcbanners.bannerapi.net.McAPIClient;
+import com.mcbanners.bannerapi.obj.backend.mcapi.MinecraftServer;
+import com.mcbanners.bannerapi.service.api.MinecraftServerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.http.ResponseEntity;

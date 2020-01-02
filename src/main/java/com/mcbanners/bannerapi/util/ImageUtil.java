@@ -1,6 +1,6 @@
-package com.mcbanners.backend.util;
+package com.mcbanners.bannerapi.util;
 
-import com.mcbanners.backend.banner.BannerTextAlign;
+import com.mcbanners.bannerapi.banner.BannerTextAlign;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

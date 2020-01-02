@@ -1,6 +1,6 @@
-package com.mcbanners.backend.util.spring;
+package com.mcbanners.bannerapi.util.spring;
 
-import com.mcbanners.backend.service.ServiceBackend;
+import com.mcbanners.bannerapi.service.ServiceBackend;
 import org.springframework.core.convert.converter.Converter;
 
 public class ServiceBackendStringToEnumConverter implements Converter<String, ServiceBackend> {

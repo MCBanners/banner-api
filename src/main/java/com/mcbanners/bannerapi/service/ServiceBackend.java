@@ -1,4 +1,4 @@
-package com.mcbanners.backend.service;
+package com.mcbanners.bannerapi.service;
 
 /**
  * Represents a list of available service backends where applicable.

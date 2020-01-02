@@ -1,6 +1,6 @@
-package com.mcbanners.backend.net;
+package com.mcbanners.bannerapi.net;
 
-import com.mcbanners.backend.obj.backend.mcapi.MinecraftServer;
+import com.mcbanners.bannerapi.obj.backend.mcapi.MinecraftServer;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 

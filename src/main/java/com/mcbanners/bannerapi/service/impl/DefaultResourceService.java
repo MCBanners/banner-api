@@ -1,14 +1,14 @@
-package com.mcbanners.backend.service.impl;
+package com.mcbanners.bannerapi.service.impl;
 
-import com.mcbanners.backend.net.OreClient;
-import com.mcbanners.backend.net.SpigetClient;
-import com.mcbanners.backend.obj.backend.ore.OreResource;
-import com.mcbanners.backend.obj.backend.spiget.SpigetResource;
-import com.mcbanners.backend.obj.generic.PriceInformation;
-import com.mcbanners.backend.obj.generic.RatingInformation;
-import com.mcbanners.backend.obj.generic.Resource;
-import com.mcbanners.backend.service.ServiceBackend;
-import com.mcbanners.backend.service.api.ResourceService;
+import com.mcbanners.bannerapi.net.OreClient;
+import com.mcbanners.bannerapi.net.SpigetClient;
+import com.mcbanners.bannerapi.obj.backend.ore.OreResource;
+import com.mcbanners.bannerapi.obj.backend.spiget.SpigetResource;
+import com.mcbanners.bannerapi.obj.generic.PriceInformation;
+import com.mcbanners.bannerapi.obj.generic.RatingInformation;
+import com.mcbanners.bannerapi.obj.generic.Resource;
+import com.mcbanners.bannerapi.service.ServiceBackend;
+import com.mcbanners.bannerapi.service.api.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;

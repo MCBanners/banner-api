@@ -1,7 +1,7 @@
-package com.mcbanners.backend.net;
+package com.mcbanners.bannerapi.net;
 
-import com.mcbanners.backend.obj.backend.spiget.SpigetAuthor;
-import com.mcbanners.backend.obj.backend.spiget.SpigetResource;
+import com.mcbanners.bannerapi.obj.backend.spiget.SpigetAuthor;
+import com.mcbanners.bannerapi.obj.backend.spiget.SpigetResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 

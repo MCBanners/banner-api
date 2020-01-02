@@ -1,13 +1,13 @@
-package com.mcbanners.backend.image.layout;
+package com.mcbanners.bannerapi.image.layout;
 
-import com.mcbanners.backend.banner.BannerSprite;
-import com.mcbanners.backend.banner.param.server.ServerParameter;
-import com.mcbanners.backend.banner.param.server.ServerParameterReader;
-import com.mcbanners.backend.banner.param.server.ServerTextParameterReader;
-import com.mcbanners.backend.image.ImageBuilder;
-import com.mcbanners.backend.image.component.Component;
-import com.mcbanners.backend.image.component.LogoComponent;
-import com.mcbanners.backend.obj.backend.mcapi.MinecraftServer;
+import com.mcbanners.bannerapi.banner.BannerSprite;
+import com.mcbanners.bannerapi.banner.param.server.ServerParameter;
+import com.mcbanners.bannerapi.banner.param.server.ServerParameterReader;
+import com.mcbanners.bannerapi.banner.param.server.ServerTextParameterReader;
+import com.mcbanners.bannerapi.image.ImageBuilder;
+import com.mcbanners.bannerapi.image.component.BasicComponent;
+import com.mcbanners.bannerapi.image.component.LogoComponent;
+import com.mcbanners.bannerapi.obj.backend.mcapi.MinecraftServer;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -33,7 +33,7 @@ public class ServerLayout extends Layout {
     }
 
     @Override
-    public List<Component> build() {
+    public List<BasicComponent> build() {
         Color textColor = getTextColor(parameters.getTemplate());
 
         addComponent(new LogoComponent(parameters.getLogoX(), BannerSprite.DEFAULT_SERVER_LOGO, server.getIcon(), parameters.getLogoSize()));
@@ -57,7 +57,7 @@ public class ServerLayout extends Layout {
     public BufferedImage draw() {
         ImageBuilder builder = ImageBuilder.create(parameters.getTemplate().getImage());
 
-        for (Component component : build()) {
+        for (BasicComponent component : build()) {
             builder = component.draw(builder);
         }
 

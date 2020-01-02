@@ -1,8 +1,8 @@
-package com.mcbanners.backend.banner.param.server;
+package com.mcbanners.bannerapi.banner.param.server;
 
-import com.mcbanners.backend.banner.BannerFontFace;
-import com.mcbanners.backend.banner.BannerTemplate;
-import com.mcbanners.backend.banner.BannerTextAlign;
+import com.mcbanners.bannerapi.banner.BannerFontFace;
+import com.mcbanners.bannerapi.banner.BannerTemplate;
+import com.mcbanners.bannerapi.banner.BannerTextAlign;
 
 import java.util.HashMap;
 import java.util.Map;

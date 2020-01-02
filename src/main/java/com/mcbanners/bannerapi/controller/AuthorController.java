@@ -1,10 +1,10 @@
-package com.mcbanners.backend.controller;
+package com.mcbanners.bannerapi.controller;
 
-import com.mcbanners.backend.banner.param.author.AuthorParameter;
-import com.mcbanners.backend.image.layout.AuthorLayout;
-import com.mcbanners.backend.obj.generic.Author;
-import com.mcbanners.backend.service.ServiceBackend;
-import com.mcbanners.backend.service.api.AuthorService;
+import com.mcbanners.bannerapi.banner.param.author.AuthorParameter;
+import com.mcbanners.bannerapi.image.layout.AuthorLayout;
+import com.mcbanners.bannerapi.obj.generic.Author;
+import com.mcbanners.bannerapi.service.ServiceBackend;
+import com.mcbanners.bannerapi.service.api.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

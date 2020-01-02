@@ -1,4 +1,4 @@
-package com.mcbanners.backend.util;
+package com.mcbanners.bannerapi.util;
 
 import java.awt.*;
 import java.util.ArrayList;

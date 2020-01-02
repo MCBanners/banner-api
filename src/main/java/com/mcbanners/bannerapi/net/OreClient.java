@@ -1,7 +1,7 @@
-package com.mcbanners.backend.net;
+package com.mcbanners.bannerapi.net;
 
-import com.mcbanners.backend.obj.backend.ore.OreAuthor;
-import com.mcbanners.backend.obj.backend.ore.OreResource;
+import com.mcbanners.bannerapi.obj.backend.ore.OreAuthor;
+import com.mcbanners.bannerapi.obj.backend.ore.OreResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;

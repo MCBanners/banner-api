@@ -1,4 +1,4 @@
-package com.mcbanners.backend.controller;
+package com.mcbanners.bannerapi.controller;
 
 import org.springframework.boot.autoconfigure.web.servlet.error.AbstractErrorController;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;

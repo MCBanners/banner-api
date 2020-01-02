@@ -1,12 +1,12 @@
-package com.mcbanners.backend.image.component;
+package com.mcbanners.bannerapi.image.component;
 
-import com.mcbanners.backend.banner.BannerFontFace;
-import com.mcbanners.backend.banner.BannerTextAlign;
-import com.mcbanners.backend.image.ImageBuilder;
+import com.mcbanners.bannerapi.banner.BannerFontFace;
+import com.mcbanners.bannerapi.banner.BannerTextAlign;
+import com.mcbanners.bannerapi.image.ImageBuilder;
 
 import java.awt.*;
 
-public class TextComponent extends Component {
+public class TextComponent extends BasicComponent {
     private final int fontSize;
     private final Color fontColor;
     private final boolean bold;

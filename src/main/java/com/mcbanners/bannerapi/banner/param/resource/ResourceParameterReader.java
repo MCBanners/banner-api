@@ -1,6 +1,6 @@
-package com.mcbanners.backend.banner.param.resource;
+package com.mcbanners.bannerapi.banner.param.resource;
 
-import com.mcbanners.backend.banner.BannerTemplate;
+import com.mcbanners.bannerapi.banner.BannerTemplate;
 
 import java.util.Map;
 

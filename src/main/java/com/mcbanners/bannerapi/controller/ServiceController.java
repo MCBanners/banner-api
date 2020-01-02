@@ -1,9 +1,9 @@
-package com.mcbanners.backend.controller;
+package com.mcbanners.bannerapi.controller;
 
-import com.mcbanners.backend.banner.BannerFontFace;
-import com.mcbanners.backend.banner.BannerTemplate;
-import com.mcbanners.backend.banner.BannerTextAlign;
-import com.mcbanners.backend.util.StringUtil;
+import com.mcbanners.bannerapi.banner.BannerFontFace;
+import com.mcbanners.bannerapi.banner.BannerTemplate;
+import com.mcbanners.bannerapi.banner.BannerTextAlign;
+import com.mcbanners.bannerapi.util.StringUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

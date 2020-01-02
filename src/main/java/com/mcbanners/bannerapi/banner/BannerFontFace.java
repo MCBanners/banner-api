@@ -1,4 +1,4 @@
-package com.mcbanners.backend.banner;
+package com.mcbanners.bannerapi.banner;
 
 import java.awt.*;
 import java.io.IOException;

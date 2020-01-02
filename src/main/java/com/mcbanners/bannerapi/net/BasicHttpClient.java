@@ -1,11 +1,12 @@
-package com.mcbanners.backend.net;
+package com.mcbanners.bannerapi.net;
 
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 public abstract class BasicHttpClient {
     private static final String USER_AGENT = "MCBanners";

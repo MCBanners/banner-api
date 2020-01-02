@@ -1,18 +1,18 @@
-package com.mcbanners.backend.image.layout;
+package com.mcbanners.bannerapi.image.layout;
 
-import com.mcbanners.backend.banner.BannerSprite;
-import com.mcbanners.backend.banner.param.resource.ResourceParameter;
-import com.mcbanners.backend.banner.param.resource.ResourceParameterReader;
-import com.mcbanners.backend.banner.param.resource.ResourceTextParameterReader;
-import com.mcbanners.backend.image.ImageBuilder;
-import com.mcbanners.backend.image.component.Component;
-import com.mcbanners.backend.image.component.ImageComponent;
-import com.mcbanners.backend.image.component.LogoComponent;
-import com.mcbanners.backend.obj.generic.Author;
-import com.mcbanners.backend.obj.generic.PriceInformation;
-import com.mcbanners.backend.obj.generic.Resource;
-import com.mcbanners.backend.service.ServiceBackend;
-import com.mcbanners.backend.util.NumberUtil;
+import com.mcbanners.bannerapi.banner.BannerSprite;
+import com.mcbanners.bannerapi.banner.param.resource.ResourceParameter;
+import com.mcbanners.bannerapi.banner.param.resource.ResourceParameterReader;
+import com.mcbanners.bannerapi.banner.param.resource.ResourceTextParameterReader;
+import com.mcbanners.bannerapi.image.ImageBuilder;
+import com.mcbanners.bannerapi.image.component.BasicComponent;
+import com.mcbanners.bannerapi.image.component.ImageComponent;
+import com.mcbanners.bannerapi.image.component.LogoComponent;
+import com.mcbanners.bannerapi.obj.generic.Author;
+import com.mcbanners.bannerapi.obj.generic.PriceInformation;
+import com.mcbanners.bannerapi.obj.generic.Resource;
+import com.mcbanners.bannerapi.service.ServiceBackend;
+import com.mcbanners.bannerapi.util.NumberUtil;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -41,7 +41,7 @@ public class ResourceLayout extends Layout {
     }
 
     @Override
-    public List<Component> build() {
+    public List<BasicComponent> build() {
         Color textColor = getTextColor(parameters.getTemplate());
 
         BannerSprite defaultLogoOverride;
@@ -115,7 +115,7 @@ public class ResourceLayout extends Layout {
     public BufferedImage draw() {
         ImageBuilder builder = ImageBuilder.create(parameters.getTemplate().getImage());
 
-        for (Component component : build()) {
+        for (BasicComponent component : build()) {
             builder = component.draw(builder);
         }
 

@@ -1,4 +1,4 @@
-package com.mcbanners.backend.obj.generic;
+package com.mcbanners.bannerapi.obj.generic;
 
 public class Resource {
     private final String logo;

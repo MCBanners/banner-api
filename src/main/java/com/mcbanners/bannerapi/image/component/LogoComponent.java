@@ -1,8 +1,8 @@
-package com.mcbanners.backend.image.component;
+package com.mcbanners.bannerapi.image.component;
 
-import com.mcbanners.backend.banner.BannerSprite;
-import com.mcbanners.backend.image.ImageBuilder;
-import com.mcbanners.backend.util.ImageUtil;
+import com.mcbanners.bannerapi.banner.BannerSprite;
+import com.mcbanners.bannerapi.image.ImageBuilder;
+import com.mcbanners.bannerapi.util.ImageUtil;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -10,7 +10,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Base64;
 
-public class LogoComponent extends Component {
+public class LogoComponent extends BasicComponent {
     private final BannerSprite defaultOverride;
     private final String base64Image;
     private final int requestedLogoSize;

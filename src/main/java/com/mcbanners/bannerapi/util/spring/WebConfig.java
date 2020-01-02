@@ -1,4 +1,4 @@
-package com.mcbanners.backend.util.spring;
+package com.mcbanners.bannerapi.util.spring;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;

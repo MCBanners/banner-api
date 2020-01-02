@@ -1,6 +1,6 @@
-package com.mcbanners.backend.image.component;
+package com.mcbanners.bannerapi.image.component;
 
-import com.mcbanners.backend.image.ImageBuilder;
+import com.mcbanners.bannerapi.image.ImageBuilder;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -8,7 +8,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Base64;
 
-public class ImageComponent extends Component {
+public class ImageComponent extends BasicComponent {
     private BufferedImage overlay;
 
     public ImageComponent(int x, int y, String b64) throws IOException {

@@ -1,9 +1,9 @@
-package com.mcbanners.backend.controller;
+package com.mcbanners.bannerapi.controller;
 
-import com.mcbanners.backend.banner.param.server.ServerParameter;
-import com.mcbanners.backend.image.layout.ServerLayout;
-import com.mcbanners.backend.obj.backend.mcapi.MinecraftServer;
-import com.mcbanners.backend.service.api.MinecraftServerService;
+import com.mcbanners.bannerapi.banner.param.server.ServerParameter;
+import com.mcbanners.bannerapi.image.layout.ServerLayout;
+import com.mcbanners.bannerapi.obj.backend.mcapi.MinecraftServer;
+import com.mcbanners.bannerapi.service.api.MinecraftServerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

@@ -1,4 +1,4 @@
-package com.mcbanners.backend.obj.backend.ore;
+package com.mcbanners.bannerapi.obj.backend.ore;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

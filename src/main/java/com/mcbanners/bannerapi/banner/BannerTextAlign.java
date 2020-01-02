@@ -1,4 +1,4 @@
-package com.mcbanners.backend.banner;
+package com.mcbanners.bannerapi.banner;
 
 public enum BannerTextAlign {
     RIGHT,
