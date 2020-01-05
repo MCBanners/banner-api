@@ -24,8 +24,8 @@ public class DefaultAuthorService implements AuthorService {
     private final OreClient oreClient;
 
     @Autowired
-    public DefaultAuthorService(SpigetClient client, OreClient oreClient) {
-        this.spigetClient = client;
+    public DefaultAuthorService(SpigetClient spigetClient, OreClient oreClient) {
+        this.spigetClient = spigetClient;
         this.oreClient = oreClient;
     }
 
@@ -65,14 +65,12 @@ public class DefaultAuthorService implements AuthorService {
 
     /**
      * Get an author by its name on the specified service bannerapi.
-     * <strong>This method is not yet implemented.</strong>
      *
      * @param authorName the author name
      * @param backend    the service bannerapi to query
      * @return the Author object or null if the service bannerapi does not support the operation or the author could not be found.
      */
     @Override
-    @Deprecated
     public final Author getAuthor(String authorName, ServiceBackend backend) {
         // At this time, only Ore supports querying by author name
         // Fail fast if ORE is not the specified ServiceBackend
