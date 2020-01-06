@@ -3,6 +3,11 @@ package com.mcbanners.bannerapi.controller;
 import com.mcbanners.bannerapi.banner.BannerFontFace;
 import com.mcbanners.bannerapi.banner.BannerTemplate;
 import com.mcbanners.bannerapi.banner.BannerTextAlign;
+import com.mcbanners.bannerapi.banner.param.AuthorParameter;
+import com.mcbanners.bannerapi.banner.param.BannerParameter;
+import com.mcbanners.bannerapi.banner.param.ResourceParameter;
+import com.mcbanners.bannerapi.banner.param.ServerParameter;
+import com.mcbanners.bannerapi.util.ParamUtil;
 import com.mcbanners.bannerapi.util.StringUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,6 +24,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -32,6 +38,26 @@ public class ServiceController {
         out.put("fonts", getEnumValues(BannerFontFace.values()));
         out.put("text_alignments", getEnumValues(BannerTextAlign.values()));
         return out;
+    }
+
+    @GetMapping(value = "defaults/{type}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Map<String, Object>>> getDefaults(@PathVariable String type) {
+        Class<? extends BannerParameter<Object>> clazz;
+        switch (type.toLowerCase()) {
+            case "author":
+                clazz = AuthorParameter.class;
+                break;
+            case "resource":
+                clazz = ResourceParameter.class;
+                break;
+            case "server":
+                clazz = ServerParameter.class;
+                break;
+            default:
+                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(ParamUtil.makeMap(clazz), HttpStatus.OK);
     }
 
     @GetMapping(value = "template/{template}", produces = MediaType.IMAGE_PNG_VALUE)

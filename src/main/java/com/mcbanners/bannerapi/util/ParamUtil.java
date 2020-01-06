@@ -7,7 +7,9 @@ import com.mcbanners.bannerapi.banner.param.BannerParameter;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ParamUtil {
     public static <T extends BannerParameter<Object>> T fromKey(Class<T> enumConst, String namespace, String name) {
@@ -54,5 +56,35 @@ public class ParamUtil {
         }
 
         return null;
+    }
+
+    public static <T extends BannerParameter<Object>> Map<String, Map<String, Object>> makeMap(Class<T> enumConst) {
+        Map<String, TemporaryObjectHolder> mapped = Arrays.stream(enumConst.getEnumConstants())
+                .collect(Collectors.toMap(BannerParameter::getKey, a -> new TemporaryObjectHolder(a.getType(), a.getDefault())));
+
+        Map<String, Map<String, Object>> out = new HashMap<>();
+        for (Map.Entry<String, TemporaryObjectHolder> entry : mapped.entrySet()) {
+            String[] nameSplit = entry.getKey().split("__");
+            String namespace = nameSplit[0];
+            String name = nameSplit[1];
+
+            TemporaryObjectHolder value = entry.getValue();
+
+            Map<String, Object> target = out.containsKey(namespace) ? out.get(namespace) : new HashMap<>();
+            target.put(name, value.object.getClass().isAssignableFrom(value.clazz) ? value.clazz.cast(value.object) : value.object);
+            out.put(namespace, target);
+        }
+
+        return out;
+    }
+
+    private static class TemporaryObjectHolder {
+        private final Class<?> clazz;
+        private final Object object;
+
+        public TemporaryObjectHolder(Class<?> clazz, Object object) {
+            this.clazz = clazz;
+            this.object = object;
+        }
     }
 }

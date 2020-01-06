@@ -7,13 +7,13 @@ import com.mcbanners.bannerapi.util.ParamUtil;
 import java.util.Map;
 
 public enum ServerParameter implements BannerParameter<Object> {
-    SERVER_NAME_X("server__x", 104, int.class),
-    SERVER_NAME_Y("server__y", 22, int.class),
-    SERVER_NAME_FONT_SIZE("server__font_size", 18, int.class),
-    SERVER_NAME_BOLD("server__bold", true, boolean.class),
-    SERVER_NAME_TEXT_ALIGN("server__text_align", BannerTextAlign.LEFT, BannerTextAlign.class),
-    SERVER_NAME_FONT_FACE("server__font_face", BannerFontFace.SOURCE_SANS_PRO, BannerFontFace.class),
-    SERVER_NAME_DISPLAY("server__display", "", String.class),
+    SERVER_NAME_X("server_name__x", 104, int.class),
+    SERVER_NAME_Y("server_name__y", 22, int.class),
+    SERVER_NAME_FONT_SIZE("server_name__font_size", 18, int.class),
+    SERVER_NAME_BOLD("server_name__bold", true, boolean.class),
+    SERVER_NAME_TEXT_ALIGN("server_name__text_align", BannerTextAlign.LEFT, BannerTextAlign.class),
+    SERVER_NAME_FONT_FACE("server_name__font_face", BannerFontFace.SOURCE_SANS_PRO, BannerFontFace.class),
+    SERVER_NAME_DISPLAY("server_name__display", "UNSET", String.class),
     VERSION_X("version__x", 104, int.class),
     VERSION_Y("version__y", 38, int.class),
     VERSION_FONT_SIZE("version__font_size", 14, int.class),
