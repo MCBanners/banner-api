@@ -63,18 +63,13 @@ public class ResourceController {
     public ResponseEntity<byte[]> getBanner(@PathVariable String id, @RequestParam Map<String, String> raw) {
         Resource resource = this.resources.getResource(id, ServiceBackend.ORE);
         if (resource == null) {
-            System.out.println("Didn't get resource");
             return null;
         }
-        System.out.println("Got resource");
 
         Author author = this.authors.getAuthor(resource.getAuthorName(), ServiceBackend.ORE);
         if (author == null) {
-            System.out.println("Didn't get author");
             return null;
         }
-
-        System.out.println("Got author");
 
         return draw(resource, author, raw, ServiceBackend.ORE);
     }
