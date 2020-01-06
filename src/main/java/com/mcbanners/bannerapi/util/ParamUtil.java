@@ -7,7 +7,6 @@ import com.mcbanners.bannerapi.banner.param.BannerParameter;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -58,21 +57,28 @@ public class ParamUtil {
         return null;
     }
 
-    public static <T extends BannerParameter<Object>> Map<String, Map<String, Object>> makeMap(Class<T> enumConst) {
+    @SuppressWarnings("unchecked")
+    public static <T extends BannerParameter<Object>> Map<String, Object> makeMap(Class<T> enumConst) {
         Map<String, TemporaryObjectHolder> mapped = Arrays.stream(enumConst.getEnumConstants())
                 .collect(Collectors.toMap(BannerParameter::getKey, a -> new TemporaryObjectHolder(a.getType(), a.getDefault())));
 
-        Map<String, Map<String, Object>> out = new HashMap<>();
+        Map<String, Object> out = new HashMap<>();
         for (Map.Entry<String, TemporaryObjectHolder> entry : mapped.entrySet()) {
             String[] nameSplit = entry.getKey().split("__");
             String namespace = nameSplit[0];
-            String name = nameSplit[1];
 
             TemporaryObjectHolder value = entry.getValue();
+            Object resolvedValue = value.object.getClass().isAssignableFrom(value.clazz) ? value.clazz.cast(value.object) : value.object;
 
-            Map<String, Object> target = out.containsKey(namespace) ? out.get(namespace) : new HashMap<>();
-            target.put(name, value.object.getClass().isAssignableFrom(value.clazz) ? value.clazz.cast(value.object) : value.object);
-            out.put(namespace, target);
+            Object insert = resolvedValue;
+            if (nameSplit.length > 1) {
+                String name = nameSplit[1];
+                Map<String, Object> target = out.containsKey(namespace) ? (Map<String, Object>) out.get(namespace) : new HashMap<>();
+                target.put(name, resolvedValue);
+                insert = target;
+            }
+
+            out.put(namespace, insert);
         }
 
         return out;

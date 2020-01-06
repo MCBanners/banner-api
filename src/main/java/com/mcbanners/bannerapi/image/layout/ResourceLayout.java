@@ -44,11 +44,7 @@ public class ResourceLayout extends Layout {
         this.backend = backend;
 
         ParameterReader<ResourceParameter> reader = new ParameterReader<>(ResourceParameter.class, parameters);
-        reader.addTextReader("resource_name");
-        reader.addTextReader("author_name");
-        reader.addTextReader("reviews");
-        reader.addTextReader("downloads");
-        reader.addTextReader("price");
+        reader.addTextReaders("resource_name", "author_name", "reviews", "downloads", "price");
 
         String resourceTitle = (String) reader.getOrDefault(ResourceParameter.RESOURCE_NAME_DISPLAY);
         if (resourceTitle.isEmpty() || resourceTitle.equalsIgnoreCase("unset")) {

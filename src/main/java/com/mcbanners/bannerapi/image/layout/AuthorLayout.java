@@ -31,11 +31,7 @@ public class AuthorLayout extends Layout {
         this.author = author;
 
         ParameterReader<AuthorParameter> reader = new ParameterReader<>(AuthorParameter.class, parameters);
-        reader.addTextReader("author_name");
-        reader.addTextReader("resource_name");
-        reader.addTextReader("likes");
-        reader.addTextReader("downloads");
-        reader.addTextReader("reviews");
+        reader.addTextReaders("author_name", "resource_name", "likes", "downloads", "reviews");
 
         template = reader.getBannerTemplate();
         logoSize = reader.getLogoSize();

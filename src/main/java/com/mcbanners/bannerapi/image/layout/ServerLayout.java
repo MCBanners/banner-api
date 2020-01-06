@@ -30,10 +30,7 @@ public class ServerLayout extends Layout {
         this.server = server;
 
         ParameterReader<ServerParameter> reader = new ParameterReader<>(ServerParameter.class, parameters);
-        reader.addTextReader("server_name");
-        reader.addTextReader("version");
-        reader.addTextReader("motd");
-        reader.addTextReader("players");
+        reader.addTextReaders("server_name", "version", "motd", "players");
 
         String serverTitle = (String) reader.getOrDefault(ServerParameter.SERVER_NAME_DISPLAY);
         if (serverTitle.isEmpty() || serverTitle.equalsIgnoreCase("unset")) {

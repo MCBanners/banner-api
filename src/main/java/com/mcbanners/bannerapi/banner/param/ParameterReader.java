@@ -21,15 +21,15 @@ public class ParameterReader<T extends BannerParameter<Object>> {
     }
 
     public final BannerTemplate getBannerTemplate() {
-        return (BannerTemplate) getOrDefault("template", BannerTemplate.class, BannerTemplate.MOONLIGHT_PURPLE);
+        return (BannerTemplate) getOrDefault(GeneralParameter.TEMPLATE);
     }
 
     public final int getLogoSize() {
-        return (int) getOrDefault("logo_size", int.class, 80);
+        return (int) getOrDefault(GeneralParameter.LOGO_SIZE);
     }
 
     public final int getLogoX() {
-        return (int) getOrDefault("logo_x", int.class, 12);
+        return (int) getOrDefault(GeneralParameter.LOGO_X);
     }
 
     public final void addTextReaders(String... namespaces) {

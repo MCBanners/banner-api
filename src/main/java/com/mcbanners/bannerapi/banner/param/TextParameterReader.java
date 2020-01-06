@@ -19,28 +19,28 @@ public class TextParameterReader<T extends BannerParameter<Object>> {
         this.enumConst = enumConst;
     }
 
-    public int getX() {
-        return (int) params.get(var("x"));
+    public Integer getX() {
+        return get("x", Integer.class);
     }
 
-    public int getY() {
-        return (int) params.get(var("y"));
+    public Integer getY() {
+        return get("y", Integer.class);
     }
 
-    public int getFontSize() {
-        return (int) params.get(var("font_size"));
+    public Integer getFontSize() {
+        return get("font_size", Integer.class);
     }
 
-    public boolean getBold() {
-        return (boolean) params.get(var("bold"));
+    public Boolean getBold() {
+        return get("bold", Boolean.class);
     }
 
     public BannerTextAlign getTextAlign() {
-        return (BannerTextAlign) params.get(var("text_align"));
+        return get("text_align", BannerTextAlign.class);
     }
 
     public BannerFontFace getFontFace() {
-        return (BannerFontFace) params.get(var("font_face"));
+        return get("font_face", BannerFontFace.class);
     }
 
     public final TextComponent makeComponent(Color textColor, String content) {
@@ -54,6 +54,13 @@ public class TextParameterReader<T extends BannerParameter<Object>> {
                 getFontFace(),
                 content
         );
+    }
+
+    private <U> U get(String name, Class<U> type) {
+        T var = var(name);
+        Object found = params.get(var);
+        Object toReturn = found == null ? var.getDefault() : found;
+        return type.cast(toReturn);
     }
 
     private T var(String name) {
