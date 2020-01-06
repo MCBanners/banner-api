@@ -71,7 +71,8 @@ public class DefaultAuthorService implements AuthorService {
      * @return the Author object or null if the service bannerapi does not support the operation or the author could not be found.
      */
     @Override
-    public final Author getAuthor(String authorName, ServiceBackend backend) {
+    @Cacheable
+    public Author getAuthor(String authorName, ServiceBackend backend) {
         // At this time, only Ore supports querying by author name
         // Fail fast if ORE is not the specified ServiceBackend
         if (backend != ServiceBackend.ORE) {
