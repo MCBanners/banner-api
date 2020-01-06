@@ -1,9 +1,10 @@
 package com.mcbanners.bannerapi.image.layout;
 
 import com.mcbanners.bannerapi.banner.BannerSprite;
-import com.mcbanners.bannerapi.banner.param.resource.ResourceParameter;
-import com.mcbanners.bannerapi.banner.param.resource.ResourceParameterReader;
-import com.mcbanners.bannerapi.banner.param.resource.ResourceTextParameterReader;
+import com.mcbanners.bannerapi.banner.BannerTemplate;
+import com.mcbanners.bannerapi.banner.param.ParameterReader;
+import com.mcbanners.bannerapi.banner.param.ResourceParameter;
+import com.mcbanners.bannerapi.banner.param.TextParameterReader;
 import com.mcbanners.bannerapi.image.ImageBuilder;
 import com.mcbanners.bannerapi.image.component.BasicComponent;
 import com.mcbanners.bannerapi.image.component.ImageComponent;
@@ -22,27 +23,55 @@ import java.util.Map;
 public class ResourceLayout extends Layout {
     private final Resource resource;
     private final Author author;
-    private final String resourceName;
-    private final ResourceParameterReader parameters;
     private final ServiceBackend backend;
+    private final String resourceTitle;
+    private final BannerTemplate template;
+    private final int logoSize;
+    private final int logoX;
+    private final TextParameterReader<ResourceParameter> resourceName;
+    private final TextParameterReader<ResourceParameter> authorName;
+    private final TextParameterReader<ResourceParameter> reviews;
+    private final double starsGap;
+    private final int starsX;
+    private final int starsY;
+    private final TextParameterReader<ResourceParameter> downloads;
+    private final TextParameterReader<ResourceParameter> price;
 
-    public ResourceLayout(Resource resource, Author author, Map<ResourceParameter, Object> parameters, ServiceBackend backend) {
+
+    public ResourceLayout(Resource resource, Author author, Map<String, String> parameters, ServiceBackend backend) {
         this.resource = resource;
         this.author = author;
+        this.backend = backend;
 
-        String resourceName = (String) parameters.get(ResourceParameter.RES_NAME_DISPLAY);
-        if (resourceName.isEmpty()) {
-            resourceName = resource.getName();
+        ParameterReader<ResourceParameter> reader = new ParameterReader<>(ResourceParameter.class, parameters);
+        reader.addTextReader("resource_name");
+        reader.addTextReader("author_name");
+        reader.addTextReader("reviews");
+        reader.addTextReader("downloads");
+        reader.addTextReader("price");
+
+        String resourceTitle = (String) reader.getOrDefault(ResourceParameter.RESOURCE_NAME_DISPLAY);
+        if (resourceTitle.isEmpty()) {
+            resourceTitle = resource.getName();
         }
 
-        this.resourceName = resourceName;
-        this.parameters = new ResourceParameterReader(parameters);
-        this.backend = backend;
+        this.resourceTitle = resourceTitle;
+        template = reader.getBannerTemplate();
+        logoSize = reader.getLogoSize();
+        logoX = reader.getLogoX();
+        resourceName = reader.getTextReader("resource_name");
+        authorName = reader.getTextReader("author_name");
+        reviews = reader.getTextReader("reviews");
+        starsGap = (double) reader.getOrDefault(ResourceParameter.STARS_GAP);
+        starsX = (int) reader.getOrDefault(ResourceParameter.STARS_X);
+        starsY = (int) reader.getOrDefault(ResourceParameter.STARS_Y);
+        downloads = reader.getTextReader("downloads");
+        price = reader.getTextReader("price");
     }
 
     @Override
     public List<BasicComponent> build() {
-        Color textColor = getTextColor(parameters.getTemplate());
+        Color textColor = getTextColor(template);
 
         BannerSprite defaultLogoOverride;
         switch (backend) {
@@ -56,15 +85,9 @@ public class ResourceLayout extends Layout {
                 throw new RuntimeException("not yet implemented");
         }
 
-        addComponent(new LogoComponent(parameters.getLogoX(), defaultLogoOverride, resource.getLogo(), parameters.getLogoSize()));
-
-        ResourceTextParameterReader name = parameters.getResNameParams();
-        addComponent(name.makeComponent(textColor, resourceName));
-
-        ResourceTextParameterReader author = parameters.getAutNameParams();
-        addComponent(author.makeComponent(textColor, String.format("by %s", this.author.getName())));
-
-        ResourceTextParameterReader reviews = parameters.getRevCountParams();
+        addComponent(new LogoComponent(logoX, defaultLogoOverride, resource.getLogo(), logoSize));
+        addComponent(resourceName.makeComponent(textColor, resourceTitle));
+        addComponent(authorName.makeComponent(textColor, String.format("by %s", this.author.getName())));
         addComponent(reviews.makeComponent(textColor, NumberUtil.abbreviate(resource.getRating().getCount()) + " reviews"));
 
         BufferedImage starFull = BannerSprite.STAR_FULL.getImage();
@@ -73,8 +96,6 @@ public class ResourceLayout extends Layout {
 
         Double ratingAvg = resource.getRating().getAverageRating();
         if (ratingAvg != null) {
-            double gap = parameters.getStarsGap();
-
             for (int i = 0; i < 5; i++) {
                 BufferedImage toOverlay;
 
@@ -88,20 +109,14 @@ public class ResourceLayout extends Layout {
                     toOverlay = starNone;
                 }
 
-                addComponent(new ImageComponent(
-                        parameters.getStarsX() + ((int) gap * i),
-                        parameters.getStarsY(),
-                        toOverlay
-                ));
+                addComponent(new ImageComponent(starsX + ((int) starsGap * i), starsY, toOverlay));
             }
         }
 
-        ResourceTextParameterReader downloads = parameters.getDlCountParams();
         addComponent(downloads.makeComponent(textColor, NumberUtil.abbreviate(resource.getDownloadCount()) + " downloads"));
 
         PriceInformation priceInfo = resource.getPrice();
         if (priceInfo != null) {
-            ResourceTextParameterReader price = parameters.getPriceParams();
             addComponent(price.makeComponent(
                     textColor,
                     String.format("%.2f %s", priceInfo.getAmount(), priceInfo.getCurrency())
@@ -113,7 +128,7 @@ public class ResourceLayout extends Layout {
 
     @Override
     public BufferedImage draw() {
-        ImageBuilder builder = ImageBuilder.create(parameters.getTemplate().getImage());
+        ImageBuilder builder = ImageBuilder.create(template.getImage());
 
         for (BasicComponent component : build()) {
             builder = component.draw(builder);

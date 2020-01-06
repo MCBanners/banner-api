@@ -1,5 +1,7 @@
 package com.mcbanners.bannerapi.util;
 
+import org.apache.commons.lang.RandomStringUtils;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -160,5 +162,9 @@ public class StringUtil {
         return Arrays.stream(name.toLowerCase().split("_"))
                 .map(piece -> piece.substring(0, 1).toUpperCase().concat(piece.substring(1)))
                 .collect(Collectors.joining(" "));
+    }
+
+    public static String generateMnemonic() {
+        return RandomStringUtils.randomAlphabetic(24);
     }
 }

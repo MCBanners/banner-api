@@ -1,6 +1,5 @@
 package com.mcbanners.bannerapi.controller;
 
-import com.mcbanners.bannerapi.banner.param.author.AuthorParameter;
 import com.mcbanners.bannerapi.image.layout.AuthorLayout;
 import com.mcbanners.bannerapi.obj.generic.Author;
 import com.mcbanners.bannerapi.service.ServiceBackend;
@@ -62,7 +61,7 @@ public class AuthorController {
 
     private ResponseEntity<byte[]> draw(Author author, Map<String, String> raw) {
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
-            BufferedImage banner = new AuthorLayout(author, AuthorParameter.parse(raw)).draw();
+            BufferedImage banner = new AuthorLayout(author, raw).draw();
             ImageIO.write(banner, "png", bos);
             bos.flush();
             return new ResponseEntity<>(bos.toByteArray(), HttpStatus.OK);
