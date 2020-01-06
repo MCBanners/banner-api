@@ -36,7 +36,7 @@ public class ServerLayout extends Layout {
         reader.addTextReader("players");
 
         String serverTitle = (String) reader.getOrDefault(ServerParameter.SERVER_NAME_DISPLAY);
-        if (serverTitle.isEmpty()) {
+        if (serverTitle.isEmpty() || serverTitle.equalsIgnoreCase("unset")) {
             serverTitle = server.getHost();
         }
 

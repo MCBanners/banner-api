@@ -51,7 +51,7 @@ public class ResourceLayout extends Layout {
         reader.addTextReader("price");
 
         String resourceTitle = (String) reader.getOrDefault(ResourceParameter.RESOURCE_NAME_DISPLAY);
-        if (resourceTitle.isEmpty()) {
+        if (resourceTitle.isEmpty() || resourceTitle.equalsIgnoreCase("unset")) {
             resourceTitle = resource.getName();
         }
 
