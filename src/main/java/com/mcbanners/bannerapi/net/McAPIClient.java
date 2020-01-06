@@ -1,16 +1,12 @@
 package com.mcbanners.bannerapi.net;
 
 import com.mcbanners.bannerapi.obj.backend.mcapi.MinecraftServer;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-@Component
-public final class McAPIClient extends BasicHttpClient {
-    public McAPIClient() {
-        super("http://localhost:8083/server/");
-    }
-
-    public final ResponseEntity<MinecraftServer> getServer(String host, int port) {
-        return get(String.format("?host=%s&port=%d", host, port), MinecraftServer.class);
-    }
+@FeignClient(name = "mc-service")
+public interface McAPIClient {
+    @GetMapping(value = "/server")
+    MinecraftServer getMinecraftServer(@RequestParam("host") String host, @RequestParam("port") int port);
 }
