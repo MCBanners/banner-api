@@ -23,6 +23,8 @@ public class DefaultMinecraftServerService implements MinecraftServerService {
     }
 
     private MinecraftServer loadServer(String host, int port) {
+        System.out.println("SERVER: host=" + host + "&port=" + port);
+        System.out.println("SERVER: Going to ask the client...");
         return client.getMinecraftServer(host, port);
     }
 }

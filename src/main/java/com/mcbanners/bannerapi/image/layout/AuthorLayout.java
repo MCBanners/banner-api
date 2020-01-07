@@ -22,7 +22,7 @@ public class AuthorLayout extends Layout {
     private final int logoSize;
     private final int logoX;
     private final TextParameterReader<AuthorParameter> authorName;
-    private final TextParameterReader<AuthorParameter> resourceName;
+    private final TextParameterReader<AuthorParameter> resourceCount;
     private final TextParameterReader<AuthorParameter> downloads;
     private final TextParameterReader<AuthorParameter> likes;
     private final TextParameterReader<AuthorParameter> reviews;
@@ -31,13 +31,13 @@ public class AuthorLayout extends Layout {
         this.author = author;
 
         ParameterReader<AuthorParameter> reader = new ParameterReader<>(AuthorParameter.class, parameters);
-        reader.addTextReaders("author_name", "resource_name", "likes", "downloads", "reviews");
+        reader.addTextReaders("author_name", "resource_count", "likes", "downloads", "reviews");
 
         template = reader.getBannerTemplate();
         logoSize = reader.getLogoSize();
         logoX = reader.getLogoX();
         authorName = reader.getTextReader("author_name");
-        resourceName = reader.getTextReader("resource_name");
+        resourceCount = reader.getTextReader("resource_count");
         likes = reader.getTextReader("likes");
         downloads = reader.getTextReader("downloads");
         reviews = reader.getTextReader("reviews");
@@ -49,7 +49,7 @@ public class AuthorLayout extends Layout {
 
         addComponent(new LogoComponent(logoX, BannerSprite.DEFAULT_AUTHOR_LOGO, author.getIcon(), logoSize));
         addComponent(authorName.makeComponent(textColor, author.getName()));
-        addComponent(resourceName.makeComponent(textColor, author.getResources() + " resources"));
+        addComponent(resourceCount.makeComponent(textColor, author.getResources() + " resources"));
         addComponent(likes.makeComponent(textColor, NumberUtil.abbreviate(author.getLikes()) + " likes"));
         addComponent(downloads.makeComponent(textColor, NumberUtil.abbreviate(author.getDownloads()) + " downloads"));
         if (author.getRating() != -1) {

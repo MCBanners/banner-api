@@ -28,6 +28,8 @@ public class ServerController {
 
     @GetMapping(value = "/{host}/{port}/isValid", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Boolean>> getIsValid(@PathVariable String host, @PathVariable int port) {
+        System.out.println("CONTROLLER: host=" + host + "&port=" + port);
+        System.out.println("CONTROLLER: contacting service for isValid check...");
         MinecraftServer server = this.servers.getServer(host, port);
         return new ResponseEntity<>(Collections.singletonMap("valid", server != null), HttpStatus.OK);
     }

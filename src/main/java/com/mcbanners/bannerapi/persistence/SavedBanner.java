@@ -1,14 +1,20 @@
 package com.mcbanners.bannerapi.persistence;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Map;
+import java.util.UUID;
 
 @Entity
 @Table(name = "saved_banner", uniqueConstraints = {@UniqueConstraint(columnNames = {"mnemonic"})})
-public class SavedBanner {
+public class SavedBanner implements Serializable {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", updatable = false, nullable = false)
     private long id;
+
+    @Column
+    private UUID owner;
 
     @Column
     private String mnemonic;
@@ -21,6 +27,14 @@ public class SavedBanner {
 
     public long getId() {
         return id;
+    }
+
+    public UUID getOwner() {
+        return owner;
+    }
+
+    public void setOwner(UUID owner) {
+        this.owner = owner;
     }
 
     public String getMnemonic() {
