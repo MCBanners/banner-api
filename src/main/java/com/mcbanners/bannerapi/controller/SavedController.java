@@ -32,15 +32,15 @@ import java.io.IOException;
 import java.util.Map;
 
 @RestController
-@RequestMapping("banner")
-public class BannerController {
+@RequestMapping("saved")
+public class SavedController {
     private final ResourceService resources;
     private final AuthorService authors;
     private final MinecraftServerService servers;
     private final SavedBannerRepository repository;
 
     @Autowired
-    public BannerController(ResourceService resources, SavedBannerRepository repository, AuthorService authors, MinecraftServerService servers) {
+    public SavedController(ResourceService resources, SavedBannerRepository repository, AuthorService authors, MinecraftServerService servers) {
         this.resources = resources;
         this.repository = repository;
         this.authors = authors;
@@ -59,7 +59,7 @@ public class BannerController {
             banner.setOwner(user.getId());
         }
 
-        banner.setMnemonic(RandomStringUtils.randomAlphabetic(24));
+        banner.setMnemonic(RandomStringUtils.randomAlphabetic(14));
 
         banner.setSettings(raw);
         banner = repository.save(banner);
@@ -111,23 +111,22 @@ public class BannerController {
                     case SPIGOT_RESOURCE:
                         backend = ServiceBackend.SPIGET;
                         resource = resources.getResource(Integer.parseInt(settings.get("_resource_id")), backend);
-                        author = authors.getAuthor(Integer.parseInt(settings.get("_author_id")), backend);
+                        author = authors.getAuthor(resource.getAuthorId(), backend);
                         break;
                     case SPONGE_RESOURCE:
                         backend = ServiceBackend.ORE;
-                        resource = resources.getResource(settings.get("resource_id"), backend);
-                        author = authors.getAuthor(settings.get("author_id"), backend);
+                        resource = resources.getResource(settings.get("_resource_id"), backend);
+                        author = authors.getAuthor(resource.getAuthorName(), backend);
                         break;
                 }
 
                 settings.remove("_resource_id");
-                settings.remove("_author_id");
 
                 if (backend == null) {
                     throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Backend not set");
                 }
 
-                if (resource == null || author == null) {
+                if (author == null) {
                     throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Either the stored resource or author could not be found!");
                 }
 
