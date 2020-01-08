@@ -1,5 +1,6 @@
 CREATE TABLE IF NOT EXISTS `saved_banner` (
     id BIGINT(20) NOT NULL AUTO_INCREMENT,
+    type INT(5) NOT NULL,
     owner BINARY(16) NULL DEFAULT NULL,
     mnemonic VARCHAR(24) NOT NULL,
     PRIMARY KEY (id),

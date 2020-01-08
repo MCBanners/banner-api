@@ -1,5 +1,7 @@
 package com.mcbanners.bannerapi.persistence;
 
+import com.mcbanners.bannerapi.banner.BannerType;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Map;
@@ -12,6 +14,10 @@ public class SavedBanner implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false, nullable = false)
     private long id;
+
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "type")
+    private BannerType bannerType;
 
     @Column
     private UUID owner;
@@ -27,6 +33,14 @@ public class SavedBanner implements Serializable {
 
     public long getId() {
         return id;
+    }
+
+    public BannerType getBannerType() {
+        return bannerType;
+    }
+
+    public void setBannerType(BannerType bannerType) {
+        this.bannerType = bannerType;
     }
 
     public UUID getOwner() {

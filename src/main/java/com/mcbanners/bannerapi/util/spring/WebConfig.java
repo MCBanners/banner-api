@@ -22,7 +22,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addFormatters(FormatterRegistry registry) {
-        registry.addConverter(new ServiceBackendStringToEnumConverter());
+        registry.addConverter(new BannerTypeEnumToStringConverter());
     }
 
     @Override
@@ -30,8 +30,8 @@ public class WebConfig implements WebMvcConfigurer {
         resolvers.add(new AuthedUserInformationMethodArgumentResolver(jwtHandler));
     }
 
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**").allowedOrigins("*").allowedMethods("*");
-    }
+//    @Override
+//    public void addCorsMappings(CorsRegistry registry) {
+//        registry.addMapping("/**").allowedOrigins("*").allowedMethods("*");
+//    }
 }
