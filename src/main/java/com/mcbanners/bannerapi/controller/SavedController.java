@@ -71,7 +71,7 @@ public class SavedController {
         }
     }
 
-    @GetMapping(value = "/{mnemonic}", produces = MediaType.IMAGE_PNG_VALUE)
+    @GetMapping(value = "/{mnemonic}.png", produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<byte[]> recall(@PathVariable String mnemonic) {
         SavedBanner banner = repository.findByMnemonic(mnemonic);
         if (banner == null) {
