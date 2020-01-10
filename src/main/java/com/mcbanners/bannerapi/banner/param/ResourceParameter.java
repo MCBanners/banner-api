@@ -13,7 +13,7 @@ public enum ResourceParameter implements BannerParameter<Object> {
     RESOURCE_NAME_BOLD("resource_name__bold", true, boolean.class),
     RESOURCE_NAME_TEXT_ALIGN("resource_name__text_align", BannerTextAlign.LEFT, BannerTextAlign.class),
     RESOURCE_NAME_FONT_FACE("resource_name__font_face", BannerFontFace.SOURCE_SANS_PRO, BannerFontFace.class),
-    RESOURCE_NAME_DISPLAY("resource_name__display", "UNSET", String.class),
+    RESOURCE_NAME_DISPLAY("resource_name__display", "", String.class),
     AUTHOR_NAME_X("author_name__x", 104, int.class),
     AUTHOR_NAME_Y("author_name__y", 42, int.class),
     AUTHOR_NAME_FONT_SIZE("author_name__font_size", 14, int.class),
