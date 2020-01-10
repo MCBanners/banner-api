@@ -54,7 +54,7 @@ public class ServerLayout extends Layout {
         addComponent(new LogoComponent(logoX, BannerSprite.DEFAULT_SERVER_LOGO, server.getIcon(), logoSize));
         addComponent(serverName.makeComponent(textColor, serverTitle));
         addComponent(version.makeComponent(textColor, server.getVersion()));
-        addComponent(motd.makeComponent(textColor, server.getMotd().getRaw()));
+        addComponent(motd.makeComponent(textColor, server.getMotd().getStripped()));
         addComponent(players.makeComponent(textColor, String.format("%s / %s players online", server.getPlayers().getOnline(), server.getPlayers().getMax())));
 
         return getComponents();

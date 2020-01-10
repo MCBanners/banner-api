@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MessageOfTheDay {
     private String raw;
+    private String stripped;
     private String formatted;
 
     public String getRaw() {
@@ -21,5 +22,13 @@ public class MessageOfTheDay {
 
     public void setFormatted(String formatted) {
         this.formatted = formatted;
+    }
+
+    public String getStripped() {
+        return stripped;
+    }
+
+    public void setStripped(String stripped) {
+        this.stripped = stripped;
     }
 }
