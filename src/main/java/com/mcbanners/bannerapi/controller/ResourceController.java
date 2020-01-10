@@ -1,6 +1,5 @@
 package com.mcbanners.bannerapi.controller;
 
-import com.mcbanners.bannerapi.banner.param.resource.ResourceParameter;
 import com.mcbanners.bannerapi.image.layout.ResourceLayout;
 import com.mcbanners.bannerapi.obj.generic.Author;
 import com.mcbanners.bannerapi.obj.generic.Resource;
@@ -63,25 +62,20 @@ public class ResourceController {
     public ResponseEntity<byte[]> getBanner(@PathVariable String id, @RequestParam Map<String, String> raw) {
         Resource resource = this.resources.getResource(id, ServiceBackend.ORE);
         if (resource == null) {
-            System.out.println("Didn't get resource");
             return null;
         }
-        System.out.println("Got resource");
 
         Author author = this.authors.getAuthor(resource.getAuthorName(), ServiceBackend.ORE);
         if (author == null) {
-            System.out.println("Didn't get author");
             return null;
         }
-
-        System.out.println("Got author");
 
         return draw(resource, author, raw, ServiceBackend.ORE);
     }
 
     private ResponseEntity<byte[]> draw(Resource resource, Author author, Map<String, String> raw, ServiceBackend backend) {
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
-            BufferedImage banner = new ResourceLayout(resource, author, ResourceParameter.parse(raw), backend).draw();
+            BufferedImage banner = new ResourceLayout(resource, author, raw, backend).draw();
             ImageIO.write(banner, "png", bos);
             bos.flush();
             return new ResponseEntity<>(bos.toByteArray(), HttpStatus.OK);

@@ -1,9 +1,10 @@
 package com.mcbanners.bannerapi.image.layout;
 
 import com.mcbanners.bannerapi.banner.BannerSprite;
-import com.mcbanners.bannerapi.banner.param.author.AuthorParameter;
-import com.mcbanners.bannerapi.banner.param.author.AuthorParameterReader;
-import com.mcbanners.bannerapi.banner.param.author.AuthorTextParameterReader;
+import com.mcbanners.bannerapi.banner.BannerTemplate;
+import com.mcbanners.bannerapi.banner.param.AuthorParameter;
+import com.mcbanners.bannerapi.banner.param.ParameterReader;
+import com.mcbanners.bannerapi.banner.param.TextParameterReader;
 import com.mcbanners.bannerapi.image.ImageBuilder;
 import com.mcbanners.bannerapi.image.component.BasicComponent;
 import com.mcbanners.bannerapi.image.component.LogoComponent;
@@ -17,33 +18,41 @@ import java.util.Map;
 
 public class AuthorLayout extends Layout {
     private final Author author;
-    private final AuthorParameterReader parameters;
+    private final BannerTemplate template;
+    private final int logoSize;
+    private final int logoX;
+    private final TextParameterReader<AuthorParameter> authorName;
+    private final TextParameterReader<AuthorParameter> resourceCount;
+    private final TextParameterReader<AuthorParameter> downloads;
+    private final TextParameterReader<AuthorParameter> likes;
+    private final TextParameterReader<AuthorParameter> reviews;
 
-    public AuthorLayout(Author author, Map<AuthorParameter, Object> parameters) {
+    public AuthorLayout(Author author, Map<String, String> parameters) {
         this.author = author;
-        this.parameters = new AuthorParameterReader(parameters);
+
+        ParameterReader<AuthorParameter> reader = new ParameterReader<>(AuthorParameter.class, parameters);
+        reader.addTextReaders("author_name", "resource_count", "likes", "downloads", "reviews");
+
+        template = reader.getBannerTemplate();
+        logoSize = reader.getLogoSize();
+        logoX = reader.getLogoX();
+        authorName = reader.getTextReader("author_name");
+        resourceCount = reader.getTextReader("resource_count");
+        likes = reader.getTextReader("likes");
+        downloads = reader.getTextReader("downloads");
+        reviews = reader.getTextReader("reviews");
     }
 
     @Override
     public List<BasicComponent> build() {
-        Color textColor = getTextColor(parameters.getTemplate());
+        Color textColor = getTextColor(template);
 
-        addComponent(new LogoComponent(parameters.getLogoX(), BannerSprite.DEFAULT_AUTHOR_LOGO, author.getIcon(), parameters.getLogoSize()));
-
-        AuthorTextParameterReader name = parameters.getAutNameParams();
-        addComponent(name.makeComponent(textColor, author.getName()));
-
-        AuthorTextParameterReader res = parameters.getResAmountParams();
-        addComponent(res.makeComponent(textColor, author.getResources() + " resources"));
-
-        AuthorTextParameterReader downloads = parameters.getDlCountParams();
-        addComponent(downloads.makeComponent(textColor, NumberUtil.abbreviate(author.getDownloads()) + " downloads"));
-
-        AuthorTextParameterReader likes = parameters.getLikesCountParam();
+        addComponent(new LogoComponent(logoX, BannerSprite.DEFAULT_AUTHOR_LOGO, author.getIcon(), logoSize));
+        addComponent(authorName.makeComponent(textColor, author.getName()));
+        addComponent(resourceCount.makeComponent(textColor, author.getResources() + " resources"));
         addComponent(likes.makeComponent(textColor, NumberUtil.abbreviate(author.getLikes()) + " likes"));
-
+        addComponent(downloads.makeComponent(textColor, NumberUtil.abbreviate(author.getDownloads()) + " downloads"));
         if (author.getRating() != -1) {
-            AuthorTextParameterReader reviews = parameters.getRevCountParams();
             addComponent(reviews.makeComponent(textColor, NumberUtil.abbreviate(author.getRating()) + " reviews"));
         }
 
@@ -52,7 +61,7 @@ public class AuthorLayout extends Layout {
 
     @Override
     public BufferedImage draw() {
-        ImageBuilder builder = ImageBuilder.create(parameters.getTemplate().getImage());
+        ImageBuilder builder = ImageBuilder.create(template.getImage());
 
         for (BasicComponent component : build()) {
             builder = component.draw(builder);

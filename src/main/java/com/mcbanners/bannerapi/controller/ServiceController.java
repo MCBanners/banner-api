@@ -3,6 +3,8 @@ package com.mcbanners.bannerapi.controller;
 import com.mcbanners.bannerapi.banner.BannerFontFace;
 import com.mcbanners.bannerapi.banner.BannerTemplate;
 import com.mcbanners.bannerapi.banner.BannerTextAlign;
+import com.mcbanners.bannerapi.banner.param.*;
+import com.mcbanners.bannerapi.util.ParamUtil;
 import com.mcbanners.bannerapi.util.StringUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,10 +19,9 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("svc")
@@ -32,6 +33,30 @@ public class ServiceController {
         out.put("fonts", getEnumValues(BannerFontFace.values()));
         out.put("text_alignments", getEnumValues(BannerTextAlign.values()));
         return out;
+    }
+
+    @GetMapping(value = "defaults/{type}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getDefaults(@PathVariable String type) {
+        Map<String, Class<? extends BannerParameter<Object>>> toSerialize = new HashMap<>();
+        type = type.toLowerCase();
+        boolean bypass = type.equals("all");
+
+        if (bypass || type.equals("author")) toSerialize.put("author", AuthorParameter.class);
+        if (bypass || type.equals("resource")) toSerialize.put("resource", ResourceParameter.class);
+        if (bypass || type.equals("server")) toSerialize.put("server", ServerParameter.class);
+
+        Object out;
+        if (toSerialize.size() > 1) {
+            Map<String, Map<String, Object>> tempOut = new HashMap<>();
+            for (Map.Entry<String, Class<? extends BannerParameter<Object>>> entry : toSerialize.entrySet()) {
+                tempOut.put(entry.getKey(), mergeWithGeneralParameters(entry.getValue()));
+            }
+            out = tempOut;
+        } else {
+            out = mergeWithGeneralParameters(toSerialize.entrySet().iterator().next().getValue());
+        }
+
+        return new ResponseEntity<>(out, HttpStatus.OK);
     }
 
     @GetMapping(value = "template/{template}", produces = MediaType.IMAGE_PNG_VALUE)
@@ -61,8 +86,16 @@ public class ServiceController {
 
     private <T extends Enum<?>> Map<String, String> getEnumValues(T[] values) {
         return Arrays.stream(values).collect(Collectors.toMap(
-                k -> k.name().toLowerCase(),
+                k -> k.name(),
                 v -> StringUtil.cleanupEnumConstant(v.name())
         ));
+    }
+
+    private Map<String, Object> mergeWithGeneralParameters(Class<? extends BannerParameter<Object>> clazz) {
+        return Stream.concat(
+                ParamUtil.makeMap(GeneralParameter.class).entrySet().stream(),
+                ParamUtil.makeMap(clazz).entrySet().stream()
+        )
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 }

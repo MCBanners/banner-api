@@ -1,6 +1,5 @@
 package com.mcbanners.bannerapi.controller;
 
-import com.mcbanners.bannerapi.banner.param.server.ServerParameter;
 import com.mcbanners.bannerapi.image.layout.ServerLayout;
 import com.mcbanners.bannerapi.obj.backend.mcapi.MinecraftServer;
 import com.mcbanners.bannerapi.service.api.MinecraftServerService;
@@ -41,7 +40,7 @@ public class ServerController {
         }
 
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
-            BufferedImage banner = new ServerLayout(server, ServerParameter.parse(raw)).draw();
+            BufferedImage banner = new ServerLayout(server, raw).draw();
             ImageIO.write(banner, "png", bos);
             bos.flush();
             return new ResponseEntity<>(bos.toByteArray(), HttpStatus.OK);
