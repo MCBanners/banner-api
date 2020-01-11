@@ -3,6 +3,7 @@ package com.mcbanners.bannerapi.util;
 import org.apache.commons.lang.RandomStringUtils;
 
 import java.awt.*;
+import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -165,6 +166,12 @@ public class StringUtil {
     }
 
     public static String generateMnemonic() {
-        return RandomStringUtils.randomAlphabetic(24);
+        return RandomStringUtils.randomAlphabetic(14);
+    }
+
+    public static String truncateAfter(String string, int chars) {
+        BreakIterator iterator = BreakIterator.getWordInstance();
+        iterator.setText(string);
+        return string.substring(0, iterator.preceding(chars));
     }
 }

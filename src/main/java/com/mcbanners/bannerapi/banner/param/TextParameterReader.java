@@ -3,6 +3,7 @@ package com.mcbanners.bannerapi.banner.param;
 import com.mcbanners.bannerapi.banner.BannerFontFace;
 import com.mcbanners.bannerapi.banner.BannerTextAlign;
 import com.mcbanners.bannerapi.image.component.TextComponent;
+import com.mcbanners.bannerapi.image.component.WrappableTextComponent;
 import com.mcbanners.bannerapi.util.ParamUtil;
 
 import java.awt.*;
@@ -44,7 +45,11 @@ public class TextParameterReader<T extends BannerParameter<Object>> {
     }
 
     public final TextComponent makeComponent(Color textColor, String content) {
-        return new TextComponent(
+        return makeComponent(textColor, content, false, null);
+    }
+
+    public final TextComponent makeComponent(Color textColor, String content, boolean wrapText, Integer maxLength) {
+        TextComponent component = new TextComponent(
                 getX(),
                 getY(),
                 getFontSize(),
@@ -54,6 +59,8 @@ public class TextParameterReader<T extends BannerParameter<Object>> {
                 getFontFace(),
                 content
         );
+
+        return wrapText ? new WrappableTextComponent(component, maxLength) : component;
     }
 
     private <U> U get(String name, Class<U> type) {
