@@ -2,7 +2,9 @@ package com.mcbanners.bannerapi.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mcbanners.bannerapi.banner.BannerOutputType;
 import com.mcbanners.bannerapi.banner.BannerType;
+import com.mcbanners.bannerapi.image.BannerImageWriter;
 import com.mcbanners.bannerapi.image.layout.AuthorLayout;
 import com.mcbanners.bannerapi.image.layout.Layout;
 import com.mcbanners.bannerapi.image.layout.ResourceLayout;
@@ -18,7 +20,6 @@ import com.mcbanners.bannerapi.service.api.AuthorService;
 import com.mcbanners.bannerapi.service.api.MinecraftServerService;
 import com.mcbanners.bannerapi.service.api.ResourceService;
 import com.mcbanners.bannerapi.util.StringUtil;
-import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -26,10 +27,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.Map;
 
 @RestController
@@ -72,8 +69,8 @@ public class SavedController {
         }
     }
 
-    @GetMapping(value = "/{mnemonic}.png", produces = MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<byte[]> recall(@PathVariable String mnemonic) {
+    @GetMapping(value = "/{mnemonic}.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<byte[]> recall(@PathVariable String mnemonic, @PathVariable BannerOutputType outputType) {
         SavedBanner banner = repository.findByMnemonic(mnemonic);
         if (banner == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Banner not found");
@@ -142,7 +139,8 @@ public class SavedController {
                 int port = 25565;
                 try {
                     port = Integer.parseInt(settings.get("_server_port"));
-                } catch (NumberFormatException ignored) {}
+                } catch (NumberFormatException ignored) {
+                }
 
                 MinecraftServer server = servers.getServer(host, port);
                 if (server == null) {
@@ -155,13 +153,6 @@ public class SavedController {
                 layout = new ServerLayout(server, settings);
         }
 
-        try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
-            BufferedImage rendered = layout.draw();
-            ImageIO.write(rendered, "png", bos);
-            bos.flush();
-            return new ResponseEntity<>(bos.toByteArray(), HttpStatus.OK);
-        } catch (IOException ex) {
-            return new ResponseEntity<>(new byte[]{}, HttpStatus.NO_CONTENT);
-        }
+        return BannerImageWriter.write(layout.draw(), outputType);
     }
 }

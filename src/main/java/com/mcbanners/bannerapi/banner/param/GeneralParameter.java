@@ -14,7 +14,7 @@ public enum GeneralParameter implements BannerParameter<Object> {
     private final Object def;
     private final Class<?> type;
 
-    GeneralParameter(String  key, Object def, Class<?> type) {
+    GeneralParameter(String key, Object def, Class<?> type) {
         this.key = key;
         this.def = def;
         this.type = type;

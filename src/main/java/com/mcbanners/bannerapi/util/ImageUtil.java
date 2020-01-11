@@ -18,7 +18,7 @@ public class ImageUtil {
     public static BufferedImage resize(BufferedImage original, int newWidth, int newHeight) {
         Image temp = original.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
 
-        BufferedImage resized = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage resized = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
         Graphics2D graphics = setRenderOpts(resized.createGraphics());
         graphics.drawImage(temp, 0, 0, null);
         graphics.dispose();
