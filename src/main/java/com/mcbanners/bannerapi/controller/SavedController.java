@@ -17,6 +17,7 @@ import com.mcbanners.bannerapi.service.ServiceBackend;
 import com.mcbanners.bannerapi.service.api.AuthorService;
 import com.mcbanners.bannerapi.service.api.MinecraftServerService;
 import com.mcbanners.bannerapi.service.api.ResourceService;
+import com.mcbanners.bannerapi.util.StringUtil;
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -59,7 +60,7 @@ public class SavedController {
             banner.setOwner(user.getId());
         }
 
-        banner.setMnemonic(RandomStringUtils.randomAlphabetic(14));
+        banner.setMnemonic(StringUtil.generateMnemonic());
 
         banner.setSettings(raw);
         banner = repository.save(banner);

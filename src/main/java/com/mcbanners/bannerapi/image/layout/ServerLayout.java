@@ -23,6 +23,8 @@ public class ServerLayout extends Layout {
     private final int logoX;
     private final TextParameterReader<ServerParameter> serverName;
     private final TextParameterReader<ServerParameter> version;
+    private final boolean enableMotd;
+    private final int motdMaxChars;
     private final TextParameterReader<ServerParameter> motd;
     private final TextParameterReader<ServerParameter> players;
 
@@ -43,6 +45,8 @@ public class ServerLayout extends Layout {
         logoX = reader.getLogoX();
         serverName = reader.getTextReader("server_name");
         version = reader.getTextReader("version");
+        enableMotd = (boolean) reader.getOrDefault(ServerParameter.MOTD_ENABLE);
+        motdMaxChars = (int) reader.getOrDefault(ServerParameter.MOTD_MAX_CHARS);
         motd = reader.getTextReader("motd");
         players = reader.getTextReader("players");
     }
@@ -54,7 +58,11 @@ public class ServerLayout extends Layout {
         addComponent(new LogoComponent(logoX, BannerSprite.DEFAULT_SERVER_LOGO, server.getIcon(), logoSize));
         addComponent(serverName.makeComponent(textColor, serverTitle));
         addComponent(version.makeComponent(textColor, server.getVersion()));
-        addComponent(motd.makeComponent(textColor, server.getMotd().getStripped()));
+
+        if (enableMotd) {
+            addComponent(motd.makeComponent(textColor, server.getMotd().getFormatted(), true, motdMaxChars));
+        }
+
         addComponent(players.makeComponent(textColor, String.format("%s / %s players online", server.getPlayers().getOnline(), server.getPlayers().getMax())));
 
         return getComponents();

@@ -20,6 +20,8 @@ public enum ServerParameter implements BannerParameter<Object> {
     VERSION_BOLD("version__bold", false, boolean.class),
     VERSION_TEXT_ALIGN("version__text_align", BannerTextAlign.LEFT, BannerTextAlign.class),
     VERSION_FONT_FACE("version__font_face", BannerFontFace.SOURCE_SANS_PRO, BannerFontFace.class),
+    MOTD_ENABLE("motd__enable", true, boolean.class),
+    MOTD_MAX_CHARS("motd__max_chars", 9999, int.class),
     MOTD_X("motd__x", 104, int.class),
     MOTD_Y("motd__y", 55, int.class),
     MOTD_FONT_SIZE("motd__font_size", 14, int.class),
