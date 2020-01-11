@@ -172,6 +172,11 @@ public class StringUtil {
     public static String truncateAfter(String string, int chars) {
         BreakIterator iterator = BreakIterator.getWordInstance();
         iterator.setText(string);
-        return string.substring(0, iterator.preceding(chars));
+
+        try {
+            return string.substring(0, iterator.preceding(chars));
+        } catch (IllegalArgumentException ignored) {
+            return string;
+        }
     }
 }
