@@ -1,5 +1,7 @@
 package com.mcbanners.bannerapi.controller;
 
+import com.mcbanners.bannerapi.banner.BannerOutputType;
+import com.mcbanners.bannerapi.image.BannerImageWriter;
 import com.mcbanners.bannerapi.image.layout.ResourceLayout;
 import com.mcbanners.bannerapi.obj.generic.Author;
 import com.mcbanners.bannerapi.obj.generic.Resource;
@@ -12,10 +14,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
 
@@ -43,8 +41,8 @@ public class ResourceController {
         return new ResponseEntity<>(Collections.singletonMap("valid", resource != null), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/spigot/{id}/banner.png", produces = MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<byte[]> getBanner(@PathVariable int id, @RequestParam Map<String, String> raw) {
+    @GetMapping(value = "/spigot/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<byte[]> getBanner(@PathVariable int id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
         Resource resource = this.resources.getResource(id, ServiceBackend.SPIGET);
         if (resource == null) {
             return null;
@@ -55,11 +53,11 @@ public class ResourceController {
             return null;
         }
 
-        return draw(resource, author, raw, ServiceBackend.SPIGET);
+        return draw(resource, author, raw, ServiceBackend.SPIGET, outputType);
     }
 
-    @GetMapping(value = "/sponge/{id}/banner.png", produces = MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<byte[]> getBanner(@PathVariable String id, @RequestParam Map<String, String> raw) {
+    @GetMapping(value = "/sponge/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<byte[]> getBanner(@PathVariable String id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
         Resource resource = this.resources.getResource(id, ServiceBackend.ORE);
         if (resource == null) {
             return null;
@@ -70,17 +68,10 @@ public class ResourceController {
             return null;
         }
 
-        return draw(resource, author, raw, ServiceBackend.ORE);
+        return draw(resource, author, raw, ServiceBackend.ORE, outputType);
     }
 
-    private ResponseEntity<byte[]> draw(Resource resource, Author author, Map<String, String> raw, ServiceBackend backend) {
-        try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
-            BufferedImage banner = new ResourceLayout(resource, author, raw, backend).draw();
-            ImageIO.write(banner, "png", bos);
-            bos.flush();
-            return new ResponseEntity<>(bos.toByteArray(), HttpStatus.OK);
-        } catch (IOException ex) {
-            return new ResponseEntity<>(new byte[]{}, HttpStatus.NO_CONTENT);
-        }
+    private ResponseEntity<byte[]> draw(Resource resource, Author author, Map<String, String> raw, ServiceBackend backend, BannerOutputType outputType) {
+        return BannerImageWriter.write(new ResourceLayout(resource, author, raw, backend).draw(), outputType);
     }
 }

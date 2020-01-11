@@ -3,7 +3,6 @@ package com.mcbanners.bannerapi.banner.param;
 import com.mcbanners.bannerapi.banner.BannerTemplate;
 import com.mcbanners.bannerapi.util.ParamUtil;
 
-import java.awt.*;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;

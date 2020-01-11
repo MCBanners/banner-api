@@ -11,7 +11,7 @@ public class ImageBuilder {
     private ImageBuilder(BufferedImage base) {
         int width = base.getWidth(), height = base.getHeight();
 
-        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics2D graphics = ImageUtil.setRenderOpts(image.createGraphics());
         graphics.drawImage(base, 0, 0, width, height, null);
         graphics.dispose();
