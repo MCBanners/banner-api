@@ -1,7 +1,6 @@
 package com.mcbanners.bannerapi.image.component;
 
 import com.mcbanners.bannerapi.image.ImageBuilder;
-import com.mcbanners.bannerapi.image.ImageTextBuilder;
 import com.mcbanners.bannerapi.util.StringUtil;
 
 public class WrappableTextComponent extends TextComponent {
