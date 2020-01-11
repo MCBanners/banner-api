@@ -23,7 +23,6 @@ public class WrappableTextComponent extends TextComponent {
                 component.content
         );
 
-        System.out.println("maxLength is " + maxLength);
         this.maxLength = maxLength;
     }
 
