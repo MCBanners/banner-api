@@ -37,6 +37,6 @@ public class ServerController {
             return null;
         }
 
-        return BannerImageWriter.write(new ServerLayout(server, raw).draw(), outputType);
+        return BannerImageWriter.write(new ServerLayout(server, raw).draw(outputType), outputType);
     }
 }

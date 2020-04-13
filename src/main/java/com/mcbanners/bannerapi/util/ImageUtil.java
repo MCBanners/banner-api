@@ -1,5 +1,6 @@
 package com.mcbanners.bannerapi.util;
 
+import com.mcbanners.bannerapi.banner.BannerOutputType;
 import com.mcbanners.bannerapi.banner.BannerTextAlign;
 
 import java.awt.*;
@@ -15,10 +16,15 @@ public class ImageUtil {
         return graphics;
     }
 
-    public static BufferedImage resize(BufferedImage original, int newWidth, int newHeight) {
+    public static BufferedImage resize(BufferedImage original, BannerOutputType outputType, int newWidth, int newHeight) {
         Image temp = original.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
 
-        BufferedImage resized = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
+        int colorDepth = BufferedImage.TYPE_INT_ARGB;
+        if (outputType == BannerOutputType.JPEG) {
+            colorDepth = BufferedImage.TYPE_INT_RGB;
+        }
+
+        BufferedImage resized = new BufferedImage(newWidth, newHeight, colorDepth);
         Graphics2D graphics = setRenderOpts(resized.createGraphics());
         graphics.drawImage(temp, 0, 0, null);
         graphics.dispose();

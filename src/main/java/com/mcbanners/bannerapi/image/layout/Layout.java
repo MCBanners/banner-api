@@ -1,5 +1,6 @@
 package com.mcbanners.bannerapi.image.layout;
 
+import com.mcbanners.bannerapi.banner.BannerOutputType;
 import com.mcbanners.bannerapi.banner.BannerTemplate;
 import com.mcbanners.bannerapi.banner.BannerTextTheme;
 import com.mcbanners.bannerapi.image.component.BasicComponent;
@@ -28,5 +29,5 @@ public abstract class Layout {
 
     public abstract List<BasicComponent> build();
 
-    public abstract BufferedImage draw();
+    public abstract BufferedImage draw(BannerOutputType outputType);
 }

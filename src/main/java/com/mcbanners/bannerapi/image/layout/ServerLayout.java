@@ -1,5 +1,6 @@
 package com.mcbanners.bannerapi.image.layout;
 
+import com.mcbanners.bannerapi.banner.BannerOutputType;
 import com.mcbanners.bannerapi.banner.BannerSprite;
 import com.mcbanners.bannerapi.banner.BannerTemplate;
 import com.mcbanners.bannerapi.banner.param.ParameterReader;
@@ -69,11 +70,11 @@ public class ServerLayout extends Layout {
     }
 
     @Override
-    public BufferedImage draw() {
-        ImageBuilder builder = ImageBuilder.create(template.getImage());
+    public BufferedImage draw(BannerOutputType outputType) {
+        ImageBuilder builder = ImageBuilder.create(template.getImage(), outputType);
 
         for (BasicComponent component : build()) {
-            builder = component.draw(builder);
+            builder = component.draw(builder, outputType);
         }
 
         return builder.build();

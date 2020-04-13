@@ -153,6 +153,6 @@ public class SavedController {
                 layout = new ServerLayout(server, settings);
         }
 
-        return BannerImageWriter.write(layout.draw(), outputType);
+        return BannerImageWriter.write(layout.draw(outputType), outputType);
     }
 }
