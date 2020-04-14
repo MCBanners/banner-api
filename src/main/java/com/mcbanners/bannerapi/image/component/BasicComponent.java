@@ -1,5 +1,6 @@
 package com.mcbanners.bannerapi.image.component;
 
+import com.mcbanners.bannerapi.banner.BannerOutputType;
 import com.mcbanners.bannerapi.image.ImageBuilder;
 
 public abstract class BasicComponent {
@@ -11,5 +12,5 @@ public abstract class BasicComponent {
         this.y = y;
     }
 
-    public abstract ImageBuilder draw(ImageBuilder builder);
+    public abstract ImageBuilder draw(ImageBuilder builder, BannerOutputType outputType);
 }

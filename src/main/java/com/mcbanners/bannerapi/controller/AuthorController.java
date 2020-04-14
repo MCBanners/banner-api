@@ -58,6 +58,6 @@ public class AuthorController {
     }
 
     private ResponseEntity<byte[]> draw(Author author, Map<String, String> raw, BannerOutputType outputType) {
-        return BannerImageWriter.write(new AuthorLayout(author, raw).draw(), outputType);
+        return BannerImageWriter.write(new AuthorLayout(author, raw).draw(outputType), outputType);
     }
 }

@@ -72,6 +72,6 @@ public class ResourceController {
     }
 
     private ResponseEntity<byte[]> draw(Resource resource, Author author, Map<String, String> raw, ServiceBackend backend, BannerOutputType outputType) {
-        return BannerImageWriter.write(new ResourceLayout(resource, author, raw, backend).draw(), outputType);
+        return BannerImageWriter.write(new ResourceLayout(resource, author, raw, backend).draw(outputType), outputType);
     }
 }

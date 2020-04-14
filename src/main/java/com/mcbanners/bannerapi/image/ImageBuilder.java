@@ -1,5 +1,6 @@
 package com.mcbanners.bannerapi.image;
 
+import com.mcbanners.bannerapi.banner.BannerOutputType;
 import com.mcbanners.bannerapi.util.ImageUtil;
 
 import java.awt.*;
@@ -8,10 +9,15 @@ import java.awt.image.BufferedImage;
 public class ImageBuilder {
     private final BufferedImage image;
 
-    private ImageBuilder(BufferedImage base) {
+    private ImageBuilder(BufferedImage base, BannerOutputType outputType) {
         int width = base.getWidth(), height = base.getHeight();
 
-        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        int colorDepth = BufferedImage.TYPE_INT_ARGB;
+        if (outputType == BannerOutputType.JPEG) {
+            colorDepth = BufferedImage.TYPE_INT_RGB;
+        }
+
+        BufferedImage image = new BufferedImage(width, height, colorDepth);
         Graphics2D graphics = ImageUtil.setRenderOpts(image.createGraphics());
         graphics.drawImage(base, 0, 0, width, height, null);
         graphics.dispose();
@@ -36,7 +42,7 @@ public class ImageBuilder {
         return image;
     }
 
-    public static ImageBuilder create(BufferedImage image) {
-        return new ImageBuilder(image);
+    public static ImageBuilder create(BufferedImage image, BannerOutputType outputType) {
+        return new ImageBuilder(image, outputType);
     }
 }

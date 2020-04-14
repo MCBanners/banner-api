@@ -1,5 +1,6 @@
 package com.mcbanners.bannerapi.image.component;
 
+import com.mcbanners.bannerapi.banner.BannerOutputType;
 import com.mcbanners.bannerapi.banner.BannerSprite;
 import com.mcbanners.bannerapi.image.ImageBuilder;
 import com.mcbanners.bannerapi.util.ImageUtil;
@@ -30,7 +31,7 @@ public class LogoComponent extends BasicComponent {
     }
 
     @Override
-    public ImageBuilder draw(ImageBuilder builder) {
+    public ImageBuilder draw(ImageBuilder builder, BannerOutputType outputType) {
         BufferedImage logo = defaultOverride.getImage();
 
         try {
@@ -47,10 +48,10 @@ public class LogoComponent extends BasicComponent {
 
             int logoSize = Math.min(requestedLogoSize, maxLogoSize);
             if (logoSize < maxLogoSize) {
-                logo = ImageUtil.resize(logo, logoSize, logoSize);
+                logo = ImageUtil.resize(logo, outputType, logoSize, logoSize);
             }
 
-            return new ImageComponent(x, (100 - logoSize) / 2, logo).draw(builder);
+            return new ImageComponent(x, (100 - logoSize) / 2, logo).draw(builder, outputType);
         } catch (IOException | RuntimeException ex) {
             ex.printStackTrace();
             return null;

@@ -1,5 +1,6 @@
 package com.mcbanners.bannerapi.image.component;
 
+import com.mcbanners.bannerapi.banner.BannerOutputType;
 import com.mcbanners.bannerapi.image.ImageBuilder;
 
 import javax.imageio.ImageIO;
@@ -29,7 +30,7 @@ public class ImageComponent extends BasicComponent {
     }
 
     @Override
-    public ImageBuilder draw(ImageBuilder builder) {
+    public ImageBuilder draw(ImageBuilder builder, BannerOutputType outputType) {
         return builder.overlayImage(this.overlay, this.x, this.y);
     }
 }

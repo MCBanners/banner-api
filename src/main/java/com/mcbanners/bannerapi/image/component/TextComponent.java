@@ -1,6 +1,7 @@
 package com.mcbanners.bannerapi.image.component;
 
 import com.mcbanners.bannerapi.banner.BannerFontFace;
+import com.mcbanners.bannerapi.banner.BannerOutputType;
 import com.mcbanners.bannerapi.banner.BannerTextAlign;
 import com.mcbanners.bannerapi.image.ImageBuilder;
 import com.mcbanners.bannerapi.image.ImageTextBuilder;
@@ -37,7 +38,7 @@ public class TextComponent extends BasicComponent {
     }
 
     @Override
-    public ImageBuilder draw(ImageBuilder builder) {
+    public ImageBuilder draw(ImageBuilder builder, BannerOutputType outputType) {
         return build(builder).finishText();
     }
 }

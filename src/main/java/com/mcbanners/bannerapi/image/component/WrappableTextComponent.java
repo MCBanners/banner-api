@@ -1,5 +1,6 @@
 package com.mcbanners.bannerapi.image.component;
 
+import com.mcbanners.bannerapi.banner.BannerOutputType;
 import com.mcbanners.bannerapi.image.ImageBuilder;
 import com.mcbanners.bannerapi.util.StringUtil;
 
@@ -26,7 +27,7 @@ public class WrappableTextComponent extends TextComponent {
     }
 
     @Override
-    public ImageBuilder draw(ImageBuilder builder) {
+    public ImageBuilder draw(ImageBuilder builder, BannerOutputType outputType) {
         return build(builder)
                 .content(StringUtil.truncateAfter(this.content, this.maxLength), this.font)
                 .wrap(this.fontSize, 295 - this.x)
