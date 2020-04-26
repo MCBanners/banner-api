@@ -43,8 +43,17 @@ public class DefaultResourceService implements ResourceService {
             return null;
         }
 
+        String rawURL = "https://www.spigotmc.org/data/resource_icons/%s/%s.jpg";
+        int imageFolder = (int) Math.floor(Double.parseDouble(spigotResource.getId()) / 1000);
+        String finalUrl = String.format(rawURL, imageFolder, spigotResource.getId());
+
+        String spigotResourceIcon = loadSpigotResourceIcon(finalUrl);
+        if (spigotResourceIcon == null) {
+            spigotResourceIcon = "";
+        }
+
         return new Resource(
-                "",
+                spigotResourceIcon,
                 spigotResource.getTitle(),
                 Integer.parseInt(spigotResource.getAuthor().getId()),
                 spigotResource.getAuthor().getUsername(),
@@ -94,6 +103,16 @@ public class DefaultResourceService implements ResourceService {
         }
 
         return resp.getBody();
+    }
+
+    private String loadSpigotResourceIcon(String url) {
+        ResponseEntity<byte[]> resp = spigotClient.getResourceIcon(url);
+        if (resp == null) {
+            return null;
+        }
+
+        byte[] body = resp.getBody();
+        return Base64.getEncoder().encodeToString(body);
     }
 
     private OreResource loadOreResource(String pluginId) {

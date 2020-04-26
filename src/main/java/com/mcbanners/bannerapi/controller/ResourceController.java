@@ -48,19 +48,10 @@ public class ResourceController {
             return null;
         }
 
-        System.out.println(resource.getName());
-        System.out.println(resource.getAuthorId());
-        System.out.println(resource.getAuthorName());
-        System.out.println(resource.getRating().getAverageRating());
-        System.out.println(resource.getDownloadCount());
-
         Author author = this.authors.getAuthor(resource.getAuthorId(), ServiceBackend.SPIGOT);
         if (author == null) {
             return null;
         }
-
-        System.out.println(author.getName());
-        System.out.println(author.getResources());
 
         return draw(resource, author, raw, ServiceBackend.SPIGOT, outputType);
     }
