@@ -62,7 +62,7 @@ public class DefaultResourceService implements ResourceService {
                 Integer.parseInt(spigotResource.getAuthor().getId()),
                 spigotResource.getAuthor().getUsername(),
                 new RatingInformation(
-                        0,
+                        Integer.parseInt(spigotResource.getStats().getReviews()),
                         Double.parseDouble(spigotResource.getStats().getRating())
                 ),
                 Integer.parseInt(spigotResource.getStats().getDownloads()),
