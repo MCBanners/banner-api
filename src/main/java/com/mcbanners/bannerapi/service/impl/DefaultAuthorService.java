@@ -32,8 +32,8 @@ public class DefaultAuthorService implements AuthorService {
     @Override
     @Cacheable
     public Author getAuthor(int authorId, ServiceBackend backend) {
-        // At this time, only Spiget supports querying by author ID
-        // Fail fast if SPIGET is not the specified ServiceBackend
+        // At this time, only Spigot supports querying by author ID
+        // Fail fast if SPIGOT is not the specified ServiceBackend
         if (backend != ServiceBackend.SPIGOT) {
             return null;
         }
@@ -52,10 +52,29 @@ public class DefaultAuthorService implements AuthorService {
             totalReviews += Integer.parseInt(resource.getStats().getReviews());
         }
 
+        String hash = author.getAvatar().getHash();
+        String info = author.getAvatar().getInfo();
+
+        String authorAvatarUrl = "";
+
+        if (hash != null && !hash.isEmpty()) {
+            authorAvatarUrl = String.format("http://gravatar.com/avatar/%s.jpg?s=96", author.getAvatar().getHash());
+        }
+        else if (info != null && !info.isEmpty()) {
+            int imageFolder = authorId / 1000;
+            authorAvatarUrl = String.format("https://www.spigotmc.org/data/avatars/l/%d/%d.jpg?%s", imageFolder, authorId, info);
+        }
+
+        String spigotAuthorIcon = loadSpigotAuthorIcon(authorAvatarUrl);
+        if (spigotAuthorIcon == null) {
+            spigotAuthorIcon = "";
+        }
+
+
         return new Author(
                 author.getUsername(),
                 Integer.parseInt(author.getResource_count()),
-                "",
+                spigotAuthorIcon,
                 totalDownloads,
                 totalLikes,
                 totalReviews
@@ -134,6 +153,16 @@ public class DefaultAuthorService implements AuthorService {
 
     private String loadOreImageByUrl(String url) {
         ResponseEntity<byte[]> resp = oreClient.getAuthApiImage(url);
+        if (resp == null) {
+            return null;
+        }
+
+        byte[] body = resp.getBody();
+        return Base64.getEncoder().encodeToString(body);
+    }
+
+    private String loadSpigotAuthorIcon(String url) {
+        ResponseEntity<byte[]> resp = spigotClient.getResourceIcon(url);
         if (resp == null) {
             return null;
         }
