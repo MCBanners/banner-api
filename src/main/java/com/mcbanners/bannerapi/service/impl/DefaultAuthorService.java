@@ -39,14 +39,18 @@ public class DefaultAuthorService implements AuthorService {
         }
 
         SpigotAuthor author = loadSpigotAuthor(authorId);
+        SpigotResource[] resources = loadAllSpigotResourcesByAuthor(authorId);
 
-        if (author == null) {
+        if (author == null || resources == null) {
             return null;
         }
 
-        System.out.println("Not Null");
-
         int totalDownloads = 0, totalLikes = 0, totalReviews = 0;
+
+        for (SpigotResource resource : resources) {
+            totalDownloads += Integer.parseInt(resource.getStats().getDownloads());
+            totalReviews += Integer.parseInt(resource.getStats().getReviews());
+        }
 
         return new Author(
                 author.getUsername(),
