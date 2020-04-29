@@ -3,7 +3,9 @@ package com.mcbanners.bannerapi.service.impl;
 import com.mcbanners.bannerapi.net.OreClient;
 import com.mcbanners.bannerapi.net.SpigotClient;
 import com.mcbanners.bannerapi.obj.backend.ore.OreResource;
+import com.mcbanners.bannerapi.obj.backend.spigot.SpigotPremium;
 import com.mcbanners.bannerapi.obj.backend.spigot.SpigotResource;
+import com.mcbanners.bannerapi.obj.generic.PriceInformation;
 import com.mcbanners.bannerapi.obj.generic.RatingInformation;
 import com.mcbanners.bannerapi.obj.generic.Resource;
 import com.mcbanners.bannerapi.service.ServiceBackend;
@@ -52,6 +54,8 @@ public class DefaultResourceService implements ResourceService {
             spigotResourceIcon = "";
         }
 
+        SpigotPremium premium = spigotResource.getPremium();
+
         return new Resource(
                 spigotResourceIcon,
                 spigotResource.getTitle(),
@@ -62,7 +66,7 @@ public class DefaultResourceService implements ResourceService {
                         Double.parseDouble(spigotResource.getStats().getRating())
                 ),
                 Integer.parseInt(spigotResource.getStats().getDownloads()),
-                null
+                premium != null ? new PriceInformation(Double.parseDouble(premium.getPrice()), premium.getCurrency().toUpperCase()) : null
         );
     }
 
