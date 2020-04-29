@@ -45,7 +45,7 @@ public class DefaultAuthorService implements AuthorService {
             return null;
         }
 
-        int totalDownloads = 0, totalLikes = 0, totalReviews = 0;
+        int totalDownloads = 0, totalReviews = 0;
 
         for (SpigotResource resource : resources) {
             totalDownloads += Integer.parseInt(resource.getStats().getDownloads());
@@ -76,7 +76,7 @@ public class DefaultAuthorService implements AuthorService {
                 Integer.parseInt(author.getResource_count()),
                 spigotAuthorIcon,
                 totalDownloads,
-                totalLikes,
+                -1,
                 totalReviews
         );
     }

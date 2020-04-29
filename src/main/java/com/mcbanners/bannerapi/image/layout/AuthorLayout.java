@@ -51,7 +51,9 @@ public class AuthorLayout extends Layout {
         addComponent(new LogoComponent(logoX, BannerSprite.DEFAULT_AUTHOR_LOGO, author.getIcon(), logoSize));
         addComponent(authorName.makeComponent(textColor, author.getName()));
         addComponent(resourceCount.makeComponent(textColor, author.getResources() + " resources"));
-        addComponent(likes.makeComponent(textColor, NumberUtil.abbreviate(author.getLikes()) + " likes"));
+        if (author.getLikes() != -1) {
+            addComponent(likes.makeComponent(textColor, NumberUtil.abbreviate(author.getLikes()) + " likes"));
+        }
         addComponent(downloads.makeComponent(textColor, NumberUtil.abbreviate(author.getDownloads()) + " downloads"));
         if (author.getRating() != -1) {
             addComponent(reviews.makeComponent(textColor, NumberUtil.abbreviate(author.getRating()) + " reviews"));
