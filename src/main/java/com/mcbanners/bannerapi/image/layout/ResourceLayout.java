@@ -72,7 +72,7 @@ public class ResourceLayout extends Layout {
 
         BannerSprite defaultLogoOverride;
         switch (backend) {
-            case SPIGET:
+            case SPIGOT:
                 defaultLogoOverride = BannerSprite.DEFAULT_SPIGOT_RES_LOGO;
                 break;
             case ORE:

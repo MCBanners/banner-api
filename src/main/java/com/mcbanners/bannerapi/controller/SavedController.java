@@ -85,7 +85,7 @@ public class SavedController {
                 Author author = null;
                 switch (banner.getBannerType()) {
                     case SPIGOT_AUTHOR:
-                        author = authors.getAuthor(Integer.parseInt(settings.get("_author_id")), ServiceBackend.SPIGET);
+                        author = authors.getAuthor(Integer.parseInt(settings.get("_author_id")), ServiceBackend.SPIGOT);
                         break;
                     case SPONGE_AUTHOR:
                         author = authors.getAuthor(settings.get("_author_id"), ServiceBackend.ORE);
@@ -107,7 +107,7 @@ public class SavedController {
                 author = null;
                 switch (banner.getBannerType()) {
                     case SPIGOT_RESOURCE:
-                        backend = ServiceBackend.SPIGET;
+                        backend = ServiceBackend.SPIGOT;
                         resource = resources.getResource(Integer.parseInt(settings.get("_resource_id")), backend);
                         author = authors.getAuthor(resource.getAuthorId(), backend);
                         break;

@@ -1,9 +1,10 @@
 package com.mcbanners.bannerapi.service.impl;
 
 import com.mcbanners.bannerapi.net.OreClient;
-import com.mcbanners.bannerapi.net.SpigetClient;
+import com.mcbanners.bannerapi.net.SpigotClient;
 import com.mcbanners.bannerapi.obj.backend.ore.OreResource;
-import com.mcbanners.bannerapi.obj.backend.spiget.SpigetResource;
+import com.mcbanners.bannerapi.obj.backend.spigot.SpigotPremium;
+import com.mcbanners.bannerapi.obj.backend.spigot.SpigotResource;
 import com.mcbanners.bannerapi.obj.generic.PriceInformation;
 import com.mcbanners.bannerapi.obj.generic.RatingInformation;
 import com.mcbanners.bannerapi.obj.generic.Resource;
@@ -20,12 +21,12 @@ import java.util.Base64;
 @Service
 @CacheConfig(cacheNames = {"resource"})
 public class DefaultResourceService implements ResourceService {
-    private final SpigetClient spigetClient;
+    private final SpigotClient spigotClient;
     private final OreClient oreClient;
 
     @Autowired
-    public DefaultResourceService(SpigetClient spigetClient, OreClient oreClient) {
-        this.spigetClient = spigetClient;
+    public DefaultResourceService(SpigotClient spigotClient, OreClient oreClient) {
+        this.spigotClient = spigotClient;
         this.oreClient = oreClient;
     }
 
@@ -34,30 +35,38 @@ public class DefaultResourceService implements ResourceService {
     public Resource getResource(int resourceId, ServiceBackend backend) {
         // At this time, only Spiget supports querying by resource ID
         // Fail fast if SPIGET is not the specified ServiceBackend
-        if (backend != ServiceBackend.SPIGET) {
+        if (backend != ServiceBackend.SPIGOT) {
             return null;
         }
 
-        SpigetResource spigetResource = loadSpigetResource(resourceId);
+        SpigotResource spigotResource = loadSpigotResource(resourceId);
 
-        if (spigetResource == null) {
+        if (spigotResource == null) {
             return null;
         }
+
+        String rawURL = "https://www.spigotmc.org/data/resource_icons/%s/%s.jpg";
+        int imageFolder = (int) Math.floor(Double.parseDouble(spigotResource.getId()) / 1000);
+        String finalUrl = String.format(rawURL, imageFolder, spigotResource.getId());
+
+        String spigotResourceIcon = loadSpigotResourceIcon(finalUrl);
+        if (spigotResourceIcon == null) {
+            spigotResourceIcon = "";
+        }
+
+        SpigotPremium premium = spigotResource.getPremium();
 
         return new Resource(
-                spigetResource.getIcon().getData(),
-                spigetResource.getName(),
-                spigetResource.getAuthor().getId(),
-                spigetResource.getAuthor().getName(),
+                spigotResourceIcon,
+                spigotResource.getTitle(),
+                Integer.parseInt(spigotResource.getAuthor().getId()),
+                spigotResource.getAuthor().getUsername(),
                 new RatingInformation(
-                        spigetResource.getRating().getCount(),
-                        spigetResource.getRating().getAverage()
+                        Integer.parseInt(spigotResource.getStats().getReviews()),
+                        Double.parseDouble(spigotResource.getStats().getRating())
                 ),
-                spigetResource.getDownloads(),
-                spigetResource.isPremium() ? new PriceInformation(
-                        spigetResource.getPrice(),
-                        spigetResource.getCurrency()
-                ) : null
+                Integer.parseInt(spigotResource.getStats().getDownloads()),
+                premium != null ? new PriceInformation(Double.parseDouble(premium.getPrice()), premium.getCurrency().toUpperCase()) : null
         );
     }
 
@@ -91,13 +100,23 @@ public class DefaultResourceService implements ResourceService {
         );
     }
 
-    private SpigetResource loadSpigetResource(int resourceId) {
-        ResponseEntity<SpigetResource> resp = spigetClient.getResource(resourceId);
+    private SpigotResource loadSpigotResource(int resourceId) {
+        ResponseEntity<SpigotResource> resp = spigotClient.getResource(resourceId);
         if (resp == null) {
             return null;
         }
 
         return resp.getBody();
+    }
+
+    private String loadSpigotResourceIcon(String url) {
+        ResponseEntity<byte[]> resp = spigotClient.getResourceIcon(url);
+        if (resp == null) {
+            return null;
+        }
+
+        byte[] body = resp.getBody();
+        return Base64.getEncoder().encodeToString(body);
     }
 
     private OreResource loadOreResource(String pluginId) {

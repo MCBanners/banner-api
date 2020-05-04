@@ -5,6 +5,6 @@ package com.mcbanners.bannerapi.service;
  * Applicable use-cases: querying resources or querying authors
  */
 public enum ServiceBackend {
-    SPIGET,
+    SPIGOT,
     ORE
 }

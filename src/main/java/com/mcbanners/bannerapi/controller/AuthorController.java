@@ -27,7 +27,7 @@ public class AuthorController {
 
     @GetMapping(value = "/spigot/{id}/isValid", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Boolean>> getIsValid(@PathVariable int id) {
-        Author author = this.authors.getAuthor(id, ServiceBackend.SPIGET);
+        Author author = this.authors.getAuthor(id, ServiceBackend.SPIGOT);
         return new ResponseEntity<>(Collections.singletonMap("valid", author != null), HttpStatus.OK);
     }
 
@@ -39,7 +39,7 @@ public class AuthorController {
 
     @GetMapping(value = "/spigot/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<byte[]> getBanner(@PathVariable int id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
-        Author author = this.authors.getAuthor(id, ServiceBackend.SPIGET);
+        Author author = this.authors.getAuthor(id, ServiceBackend.SPIGOT);
         if (author == null) {
             return null;
         }

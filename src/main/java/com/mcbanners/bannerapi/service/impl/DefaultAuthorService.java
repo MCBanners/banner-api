@@ -1,11 +1,11 @@
 package com.mcbanners.bannerapi.service.impl;
 
 import com.mcbanners.bannerapi.net.OreClient;
-import com.mcbanners.bannerapi.net.SpigetClient;
+import com.mcbanners.bannerapi.net.SpigotClient;
 import com.mcbanners.bannerapi.obj.backend.ore.OreAuthor;
 import com.mcbanners.bannerapi.obj.backend.ore.OreResource;
-import com.mcbanners.bannerapi.obj.backend.spiget.SpigetAuthor;
-import com.mcbanners.bannerapi.obj.backend.spiget.SpigetResource;
+import com.mcbanners.bannerapi.obj.backend.spigot.SpigotAuthor;
+import com.mcbanners.bannerapi.obj.backend.spigot.SpigotResource;
 import com.mcbanners.bannerapi.obj.generic.Author;
 import com.mcbanners.bannerapi.service.ServiceBackend;
 import com.mcbanners.bannerapi.service.api.AuthorService;
@@ -20,45 +20,63 @@ import java.util.Base64;
 @Service
 @CacheConfig(cacheNames = {"author"})
 public class DefaultAuthorService implements AuthorService {
-    private final SpigetClient spigetClient;
+    private final SpigotClient spigotClient;
     private final OreClient oreClient;
 
     @Autowired
-    public DefaultAuthorService(SpigetClient spigetClient, OreClient oreClient) {
-        this.spigetClient = spigetClient;
+    public DefaultAuthorService(SpigotClient spigotClient, OreClient oreClient) {
+        this.spigotClient = spigotClient;
         this.oreClient = oreClient;
     }
 
     @Override
     @Cacheable
     public Author getAuthor(int authorId, ServiceBackend backend) {
-        // At this time, only Spiget supports querying by author ID
-        // Fail fast if SPIGET is not the specified ServiceBackend
-        if (backend != ServiceBackend.SPIGET) {
+        // At this time, only Spigot supports querying by author ID
+        // Fail fast if SPIGOT is not the specified ServiceBackend
+        if (backend != ServiceBackend.SPIGOT) {
             return null;
         }
 
-        SpigetAuthor author = loadSpigetAuthor(authorId);
-        SpigetResource[] resources = loadAllSpigetResourcesByAuthor(authorId);
+        SpigotAuthor author = loadSpigotAuthor(authorId);
+        SpigotResource[] resources = loadAllSpigotResourcesByAuthor(authorId);
 
         if (author == null || resources == null) {
             return null;
         }
 
-        int totalDownloads = 0, totalLikes = 0, totalReviews = 0;
+        int totalDownloads = 0, totalReviews = 0;
 
-        for (SpigetResource resource : resources) {
-            totalDownloads += resource.getDownloads();
-            totalLikes += resource.getLikes();
-            totalReviews += resource.getRating().getCount();
+        for (SpigotResource resource : resources) {
+            totalDownloads += Integer.parseInt(resource.getStats().getDownloads());
+            totalReviews += Integer.parseInt(resource.getStats().getReviews());
         }
 
+        String hash = author.getAvatar().getHash();
+        String info = author.getAvatar().getInfo();
+
+        String authorAvatarUrl = "";
+
+        if (hash != null && !hash.isEmpty()) {
+            authorAvatarUrl = String.format("http://gravatar.com/avatar/%s.jpg?s=96", author.getAvatar().getHash());
+        }
+        else if (info != null && !info.isEmpty()) {
+            int imageFolder = authorId / 1000;
+            authorAvatarUrl = String.format("https://www.spigotmc.org/data/avatars/l/%d/%d.jpg?%s", imageFolder, authorId, info);
+        }
+
+        String spigotAuthorIcon = loadSpigotAuthorIcon(authorAvatarUrl);
+        if (spigotAuthorIcon == null) {
+            spigotAuthorIcon = "";
+        }
+
+
         return new Author(
-                author.getName(),
-                resources.length,
-                author.getIcon().getData(),
+                author.getUsername(),
+                Integer.parseInt(author.getResource_count()),
+                spigotAuthorIcon,
                 totalDownloads,
-                totalLikes,
+                -1,
                 totalReviews
         );
     }
@@ -106,8 +124,8 @@ public class DefaultAuthorService implements AuthorService {
         );
     }
 
-    private SpigetAuthor loadSpigetAuthor(int authorId) {
-        ResponseEntity<SpigetAuthor> resp = spigetClient.getAuthor(authorId);
+    private SpigotAuthor loadSpigotAuthor(int authorId) {
+        ResponseEntity<SpigotAuthor> resp = spigotClient.getAuthor(authorId);
         if (resp == null) {
             return null;
         }
@@ -115,8 +133,8 @@ public class DefaultAuthorService implements AuthorService {
         return resp.getBody();
     }
 
-    private SpigetResource[] loadAllSpigetResourcesByAuthor(int authorId) {
-        ResponseEntity<SpigetResource[]> resp = spigetClient.getAllByAuthor(authorId);
+    private SpigotResource[] loadAllSpigotResourcesByAuthor(int authorId) {
+        ResponseEntity<SpigotResource[]> resp = spigotClient.getAllByAuthor(authorId);
         if (resp == null) {
             return null;
         }
@@ -135,6 +153,16 @@ public class DefaultAuthorService implements AuthorService {
 
     private String loadOreImageByUrl(String url) {
         ResponseEntity<byte[]> resp = oreClient.getAuthApiImage(url);
+        if (resp == null) {
+            return null;
+        }
+
+        byte[] body = resp.getBody();
+        return Base64.getEncoder().encodeToString(body);
+    }
+
+    private String loadSpigotAuthorIcon(String url) {
+        ResponseEntity<byte[]> resp = spigotClient.getResourceIcon(url);
         if (resp == null) {
             return null;
         }

@@ -31,7 +31,7 @@ public class ResourceController {
 
     @GetMapping(value = "/spigot/{id}/isValid", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Boolean>> getIsValid(@PathVariable int id) {
-        Resource resource = this.resources.getResource(id, ServiceBackend.SPIGET);
+        Resource resource = this.resources.getResource(id, ServiceBackend.SPIGOT);
         return new ResponseEntity<>(Collections.singletonMap("valid", resource != null), HttpStatus.OK);
     }
 
@@ -43,17 +43,17 @@ public class ResourceController {
 
     @GetMapping(value = "/spigot/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<byte[]> getBanner(@PathVariable int id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
-        Resource resource = this.resources.getResource(id, ServiceBackend.SPIGET);
+        Resource resource = this.resources.getResource(id, ServiceBackend.SPIGOT);
         if (resource == null) {
             return null;
         }
 
-        Author author = this.authors.getAuthor(resource.getAuthorId(), ServiceBackend.SPIGET);
+        Author author = this.authors.getAuthor(resource.getAuthorId(), ServiceBackend.SPIGOT);
         if (author == null) {
             return null;
         }
 
-        return draw(resource, author, raw, ServiceBackend.SPIGET, outputType);
+        return draw(resource, author, raw, ServiceBackend.SPIGOT, outputType);
     }
 
     @GetMapping(value = "/sponge/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
