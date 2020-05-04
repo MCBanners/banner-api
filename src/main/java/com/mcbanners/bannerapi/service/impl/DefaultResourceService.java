@@ -55,6 +55,7 @@ public class DefaultResourceService implements ResourceService {
         }
 
         SpigotPremium premium = spigotResource.getPremium();
+        boolean isPremium = !premium.getPrice().equals("0.00");
 
         return new Resource(
                 spigotResourceIcon,
@@ -66,7 +67,7 @@ public class DefaultResourceService implements ResourceService {
                         Double.parseDouble(spigotResource.getStats().getRating())
                 ),
                 Integer.parseInt(spigotResource.getStats().getDownloads()),
-                premium != null ? new PriceInformation(Double.parseDouble(premium.getPrice()), premium.getCurrency().toUpperCase()) : null
+                isPremium ? new PriceInformation(Double.parseDouble(premium.getPrice()), premium.getCurrency().toUpperCase()) : null
         );
     }
 
