@@ -110,10 +110,12 @@ public class ResourceLayout extends Layout {
             }
         }
 
-        addComponent(downloads.makeComponent(textColor, NumberUtil.abbreviate(resource.getDownloadCount()) + " downloads"));
-
         PriceInformation priceInfo = resource.getPrice();
-        if (priceInfo != null) {
+        boolean isPremium = priceInfo != null;
+
+        addComponent(downloads.makeComponent(textColor, NumberUtil.abbreviate(resource.getDownloadCount()) + " " + (isPremium ? "purchases" : "downloads")));
+
+        if (isPremium) {
             addComponent(price.makeComponent(
                     textColor,
                     String.format("%.2f %s", priceInfo.getAmount(), priceInfo.getCurrency())
