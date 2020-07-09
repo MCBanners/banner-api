@@ -10,8 +10,8 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableFeignClients
-public class MCBannersApplication {
+public class BannerApiApplication {
     public static void main(String[] args) {
-        SpringApplication.run(MCBannersApplication.class, args);
+        SpringApplication.run(BannerApiApplication.class, args);
     }
 }
