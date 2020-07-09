@@ -1,6 +1,7 @@
 package com.mcbanners.bannerapi.banner;
 
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -24,14 +25,17 @@ public enum BannerFontFace {
         return builder.toString();
     }
 
+    public File getFile(boolean bold) {
+        return new File("fonts", getFileName(bold));
+    }
+
     public Font asFont() {
         return asFont(false);
     }
 
     public Font asFont(boolean bold) {
-        InputStream stream = getClass().getResourceAsStream("/fonts/" + getFileName(bold));
         try {
-            return Font.createFont(Font.TRUETYPE_FONT, stream);
+            return Font.createFont(Font.TRUETYPE_FONT, getFile(bold));
         } catch (FontFormatException | IOException e) {
             e.printStackTrace();
             return null;

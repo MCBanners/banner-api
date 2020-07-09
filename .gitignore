@@ -33,3 +33,6 @@ out/
 
 ### MacOS ###
 .DS_Store
+
+### Project ###
+fonts/
