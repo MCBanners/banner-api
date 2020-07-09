@@ -109,7 +109,7 @@ public abstract class BasicHttpClient {
      * @return the successfully deserialized T or null
      */
     public final <T> ResponseEntity<T> put(String endpoint, Class<T> responseType) {
-        return get(endpoint, responseType, null);
+        return put(endpoint, responseType, null);
     }
 
     /**
