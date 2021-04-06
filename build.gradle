@@ -1,6 +1,6 @@
 plugins {
-	id 'org.springframework.boot' version '2.3.4.RELEASE'
-	id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+	id 'org.springframework.boot' version '2.3.9.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
 }
 
@@ -24,7 +24,7 @@ repositories {
 }
 
 ext {
-	set('springCloudVersion', "Hoxton.SR8")
+	set('springCloudVersion', "Hoxton.SR10")
 }
 
 dependencies {
@@ -33,9 +33,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
-	implementation 'com.github.ben-manes.caffeine:caffeine:2.8.5'
-	implementation 'org.mariadb.jdbc:mariadb-java-client:2.6.2'
-	implementation 'org.flywaydb:flyway-core:6.5.5'
+	implementation 'com.github.ben-manes.caffeine:caffeine:2.9.0'
+	implementation 'org.mariadb.jdbc:mariadb-java-client:2.7.2'
+	implementation 'org.flywaydb:flyway-core:6.5.7'
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
 
 	runtime 'io.jsonwebtoken:jjwt-impl:0.11.2'
