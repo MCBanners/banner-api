@@ -1,7 +1,9 @@
 package com.mcbanners.bannerapi.service.impl;
 
+import com.mcbanners.bannerapi.net.HangarClient;
 import com.mcbanners.bannerapi.net.OreClient;
 import com.mcbanners.bannerapi.net.SpigotClient;
+import com.mcbanners.bannerapi.obj.backend.hangar.HangarAuthor;
 import com.mcbanners.bannerapi.obj.backend.ore.OreAuthor;
 import com.mcbanners.bannerapi.obj.backend.ore.OreResource;
 import com.mcbanners.bannerapi.obj.backend.spigot.SpigotAuthor;
@@ -22,11 +24,13 @@ import java.util.Base64;
 public class DefaultAuthorService implements AuthorService {
     private final SpigotClient spigotClient;
     private final OreClient oreClient;
+    private final HangarClient hangarClient;
 
     @Autowired
-    public DefaultAuthorService(SpigotClient spigotClient, OreClient oreClient) {
+    public DefaultAuthorService(SpigotClient spigotClient, OreClient oreClient, HangarClient hangarClient) {
         this.spigotClient = spigotClient;
         this.oreClient = oreClient;
+        this.hangarClient = hangarClient;
     }
 
     @Override
@@ -93,10 +97,14 @@ public class DefaultAuthorService implements AuthorService {
     public Author getAuthor(String authorName, ServiceBackend backend) {
         // At this time, only Ore supports querying by author name
         // Fail fast if ORE is not the specified ServiceBackend
-        if (backend != ServiceBackend.ORE) {
+        if (backend != ServiceBackend.ORE && backend != ServiceBackend.HANGAR) {
             return null;
         }
 
+        return backend == ServiceBackend.ORE ? getFromOre(authorName) : getFromHangar(authorName);
+    }
+
+    private Author getFromOre(String authorName) {
         OreAuthor author = loadOreAuthor(authorName);
         if (author == null || author.getProjects() == null) {
             return null;
@@ -122,6 +130,15 @@ public class DefaultAuthorService implements AuthorService {
                 totalLikes,
                 -1 // unknown
         );
+    }
+
+    private Author getFromHangar(String authorName) {
+        HangarAuthor author = loadHangarAuthor(authorName);
+        if (author == null) {
+            return  null;
+        }
+
+        return new Author(author.getName(), author.getProjectCount(), loadHangarImageByUrl("https://paper.readthedocs.io/en/latest/_images/papermc_logomark_500.png"), 0, 0, -1);
     }
 
     private SpigotAuthor loadSpigotAuthor(int authorId) {
@@ -163,6 +180,25 @@ public class DefaultAuthorService implements AuthorService {
 
     private String loadSpigotAuthorIcon(String url) {
         ResponseEntity<byte[]> resp = spigotClient.getResourceIcon(url);
+        if (resp == null) {
+            return null;
+        }
+
+        byte[] body = resp.getBody();
+        return Base64.getEncoder().encodeToString(body);
+    }
+
+    private HangarAuthor loadHangarAuthor(String user) {
+        ResponseEntity<HangarAuthor> resp = hangarClient.getAuthor(user);
+        if (resp == null) {
+            return null;
+        }
+
+        return resp.getBody();
+    }
+
+    private String loadHangarImageByUrl(String url) {
+        ResponseEntity<byte[]> resp = hangarClient.getAuthApiImage(url);
         if (resp == null) {
             return null;
         }

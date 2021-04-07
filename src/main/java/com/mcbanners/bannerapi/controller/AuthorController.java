@@ -37,6 +37,12 @@ public class AuthorController {
         return new ResponseEntity<>(Collections.singletonMap("valid", author != null), HttpStatus.OK);
     }
 
+    @GetMapping(value = "/hangar/{user}/isValid", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Boolean>> checkValid(@PathVariable String user) {
+        Author author = this.authors.getAuthor(user, ServiceBackend.HANGAR);
+        return new ResponseEntity<>(Collections.singletonMap("valid", author != null), HttpStatus.OK);
+    }
+
     @GetMapping(value = "/spigot/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<byte[]> getBanner(@PathVariable int id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
         Author author = this.authors.getAuthor(id, ServiceBackend.SPIGOT);
@@ -50,6 +56,16 @@ public class AuthorController {
     @GetMapping(value = "/sponge/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<byte[]> getBanner(@PathVariable String id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
         Author author = this.authors.getAuthor(id, ServiceBackend.ORE);
+        if (author == null) {
+            return null;
+        }
+
+        return draw(author, raw, outputType);
+    }
+
+    @GetMapping(value = "/hangar/{user}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<byte[]> getHangarBanner(@PathVariable String user, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
+        Author author = this.authors.getAuthor(user, ServiceBackend.HANGAR);
         if (author == null) {
             return null;
         }
