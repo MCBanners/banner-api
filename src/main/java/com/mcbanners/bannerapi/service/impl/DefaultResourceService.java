@@ -1,7 +1,9 @@
 package com.mcbanners.bannerapi.service.impl;
 
+import com.mcbanners.bannerapi.net.HangarClient;
 import com.mcbanners.bannerapi.net.OreClient;
 import com.mcbanners.bannerapi.net.SpigotClient;
+import com.mcbanners.bannerapi.obj.backend.hangar.HangarResource;
 import com.mcbanners.bannerapi.obj.backend.ore.OreResource;
 import com.mcbanners.bannerapi.obj.backend.spigot.SpigotPremium;
 import com.mcbanners.bannerapi.obj.backend.spigot.SpigotResource;
@@ -23,11 +25,13 @@ import java.util.Base64;
 public class DefaultResourceService implements ResourceService {
     private final SpigotClient spigotClient;
     private final OreClient oreClient;
+    private final HangarClient hangarClient;
 
     @Autowired
-    public DefaultResourceService(SpigotClient spigotClient, OreClient oreClient) {
+    public DefaultResourceService(SpigotClient spigotClient, OreClient oreClient, HangarClient hangarClient) {
         this.spigotClient = spigotClient;
         this.oreClient = oreClient;
+        this.hangarClient = hangarClient;
     }
 
     @Override
@@ -101,6 +105,23 @@ public class DefaultResourceService implements ResourceService {
         );
     }
 
+    @Override
+    @Cacheable
+    public Resource getResource(final String user, final String project) {
+        HangarResource hangarResource = loadHangarResource(user, project);
+
+        if (hangarResource == null) {
+            return null;
+        }
+
+        String hangarResourceIcon = loadHangarResourceIcon(user, project);
+        if (hangarResourceIcon == null) {
+            hangarResourceIcon = "";
+        }
+
+        return new Resource(hangarResourceIcon, hangarResource.getName(), -1, hangarResource.getNamespace().getOwner(), new RatingInformation(hangarResource.getStats().getStars()), hangarResource.getStats().getDownloads(), null);
+    }
+
     private SpigotResource loadSpigotResource(int resourceId) {
         ResponseEntity<SpigotResource> resp = spigotClient.getResource(resourceId);
         if (resp == null) {
@@ -127,6 +148,25 @@ public class DefaultResourceService implements ResourceService {
         }
 
         return resp.getBody();
+    }
+
+    private HangarResource loadHangarResource(String user, String project) {
+        ResponseEntity<HangarResource> resp = hangarClient.getResource(user, project);
+        if (resp == null) {
+            return  null;
+        }
+
+        return resp.getBody();
+    }
+
+    private String loadHangarResourceIcon(String user, String project) {
+        ResponseEntity<byte[]> resp = hangarClient.getResourceIcon(user, project);
+        if (resp == null) {
+            return null;
+        }
+
+        byte[] body = resp.getBody();
+        return Base64.getEncoder().encodeToString(body);
     }
 
     private String loadOreResourceIcon(String href) {

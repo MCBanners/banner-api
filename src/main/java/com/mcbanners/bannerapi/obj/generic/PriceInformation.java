@@ -16,4 +16,12 @@ public class PriceInformation {
     public String getCurrency() {
         return currency;
     }
+
+    @Override
+    public String toString() {
+        return "PriceInformation{" +
+                "amount=" + amount +
+                ", currency='" + currency + '\'' +
+                '}';
+    }
 }

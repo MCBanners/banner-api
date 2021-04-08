@@ -41,6 +41,15 @@ public class ResourceController {
         return new ResponseEntity<>(Collections.singletonMap("valid", resource != null), HttpStatus.OK);
     }
 
+    @GetMapping(value = "/hangar/{user}/{project}/isValid", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Boolean>> getIsValid(@PathVariable String user, @PathVariable String project) {
+        Resource resource = this.resources.getResource(user, project);
+        if (resource == null) {
+            return null;
+        }
+        return new ResponseEntity<>(Collections.singletonMap("valid", resource != null), HttpStatus.OK);
+    }
+
     @GetMapping(value = "/spigot/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<byte[]> getBanner(@PathVariable int id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
         Resource resource = this.resources.getResource(id, ServiceBackend.SPIGOT);
@@ -69,6 +78,21 @@ public class ResourceController {
         }
 
         return draw(resource, author, raw, ServiceBackend.ORE, outputType);
+    }
+
+    @GetMapping(value = "/hangar/{user}/{project}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<byte[]> getBanner(@PathVariable String user, @PathVariable String project, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
+        Resource resource = this.resources.getResource(user, project);
+        if (resource == null) {
+            return null;
+        }
+
+//        Author author = this.authors.getAuthor(user, ServiceBackend.HANGAR);
+//        if (author == null) {
+//            return null;
+//        }
+
+        return draw(resource, new Author("test", 0, null, 0, 0, 0 ), raw, ServiceBackend.HANGAR, outputType);
     }
 
     private ResponseEntity<byte[]> draw(Resource resource, Author author, Map<String, String> raw, ServiceBackend backend, BannerOutputType outputType) {

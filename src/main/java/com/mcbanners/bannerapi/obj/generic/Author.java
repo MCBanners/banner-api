@@ -40,4 +40,16 @@ public class Author {
     public int getRating() {
         return rating;
     }
+
+    @Override
+    public String toString() {
+        return "Author{" +
+                "name='" + name + '\'' +
+                ", resources=" + resources +
+                ", icon='" + icon + '\'' +
+                ", downloads=" + downloads +
+                ", likes=" + likes +
+                ", rating=" + rating +
+                '}';
+    }
 }

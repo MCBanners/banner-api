@@ -20,4 +20,12 @@ public class RatingInformation {
     public Double getAverageRating() {
         return averageRating;
     }
+
+    @Override
+    public String toString() {
+        return "RatingInformation{" +
+                "count=" + count +
+                ", averageRating=" + averageRating +
+                '}';
+    }
 }

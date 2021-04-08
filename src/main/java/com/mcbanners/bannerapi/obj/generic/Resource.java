@@ -46,4 +46,17 @@ public class Resource {
     public PriceInformation getPrice() {
         return price;
     }
+
+    @Override
+    public String toString() {
+        return "Resource{" +
+                "logo='" + logo + '\'' +
+                ", name='" + name + '\'' +
+                ", authorId=" + authorId +
+                ", authorName='" + authorName + '\'' +
+                ", rating=" + rating +
+                ", downloadCount=" + downloadCount +
+                ", price=" + price +
+                '}';
+    }
 }

@@ -76,6 +76,7 @@ public class ResourceLayout extends Layout {
                 defaultLogoOverride = BannerSprite.DEFAULT_SPIGOT_RES_LOGO;
                 break;
             case ORE:
+            case HANGAR:
                 defaultLogoOverride = BannerSprite.DEFAULT_SPONGE_RES_LOGO;
                 break;
             default:
