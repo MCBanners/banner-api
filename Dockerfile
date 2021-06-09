@@ -1,0 +1,16 @@
+# Prepare environment
+FROM alpine:3.13
+RUN apk add openjdk16
+
+# Download source code
+RUN git clone https://github.com/MCBanners/banner-api.git /app
+WORKDIR /app
+
+# Build the source into a binary
+RUN ./gradlew clean build shadowJar
+
+# Package the application
+ENV BANNERAPI_MARIADB_USER=""
+ENV BANNERAPI_MARIADB_PASS=""
+ENV BANNERAPI_JWT_SECRET=""
+CMD /bin/sh -c "BANNERAPI_MARIADB_USER=$BANNERAPI_MARIADB_USER BANNERAPI_MARIADB_PASS=$BANNERAPI_MARIADB_PASS BANNERAPI_JWT_SECRET=$BANNERAPI_JWT_SECRET java -Xms128M -Xmx128M -jar build/libs/bannerapi.jar"
