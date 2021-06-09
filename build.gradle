@@ -16,7 +16,7 @@ configurations {
 }
 
 bootJar {
-	archiveFileName = "banner-api.jar"
+	archiveFileName = "bannerapi.jar"
 }
 
 repositories {
