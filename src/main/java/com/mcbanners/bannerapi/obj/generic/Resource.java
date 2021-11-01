@@ -8,8 +8,9 @@ public class Resource {
     private final RatingInformation rating;
     private final int downloadCount;
     private final PriceInformation price;
+    private final String lastUpdated;
 
-    public Resource(String logo, String name, int authorId, String authorName, RatingInformation rating, int downloadCount, PriceInformation price) {
+    public Resource(String logo, String name, int authorId, String authorName, RatingInformation rating, int downloadCount, PriceInformation price, String lastUpdated) {
         this.logo = logo;
         this.name = name;
         this.authorId = authorId;
@@ -17,6 +18,7 @@ public class Resource {
         this.rating = rating;
         this.downloadCount = downloadCount;
         this.price = price;
+        this.lastUpdated = lastUpdated;
     }
 
     public String getLogo() {
@@ -45,5 +47,9 @@ public class Resource {
 
     public PriceInformation getPrice() {
         return price;
+    }
+
+    public String getLastUpdated() {
+        return lastUpdated;
     }
 }

@@ -56,6 +56,21 @@ public class ResourceController {
         return draw(resource, author, raw, ServiceBackend.SPIGOT, outputType);
     }
 
+    @GetMapping(value = "/curseforge/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<byte[]> getBannerCf(@PathVariable int id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
+        Resource resource = this.resources.getResource(id, ServiceBackend.CURSEFORGE);
+        if (resource == null) {
+            return null;
+        }
+
+        Author author = this.authors.getAuthor(resource.getAuthorId(), ServiceBackend.CURSEFORGE);
+        if (author == null) {
+            return null;
+        }
+
+        return draw(resource, author, raw, ServiceBackend.CURSEFORGE, outputType);
+    }
+
     @GetMapping(value = "/sponge/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<byte[]> getBanner(@PathVariable String id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
         Resource resource = this.resources.getResource(id, ServiceBackend.ORE);

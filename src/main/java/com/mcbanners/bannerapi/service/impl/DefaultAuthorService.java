@@ -1,7 +1,11 @@
 package com.mcbanners.bannerapi.service.impl;
 
+import com.mcbanners.bannerapi.net.CurseForgeClient;
 import com.mcbanners.bannerapi.net.OreClient;
 import com.mcbanners.bannerapi.net.SpigotClient;
+import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeAuthor;
+import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeProject;
+import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeResource;
 import com.mcbanners.bannerapi.obj.backend.ore.OreAuthor;
 import com.mcbanners.bannerapi.obj.backend.ore.OreResource;
 import com.mcbanners.bannerapi.obj.backend.spigot.SpigotAuthor;
@@ -15,18 +19,22 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 
 @Service
 @CacheConfig(cacheNames = {"author"})
 public class DefaultAuthorService implements AuthorService {
     private final SpigotClient spigotClient;
     private final OreClient oreClient;
+    private final CurseForgeClient curseForgeClient;
 
     @Autowired
-    public DefaultAuthorService(SpigotClient spigotClient, OreClient oreClient) {
+    public DefaultAuthorService(SpigotClient spigotClient, OreClient oreClient, CurseForgeClient curseForgeClient) {
         this.spigotClient = spigotClient;
         this.oreClient = oreClient;
+        this.curseForgeClient = curseForgeClient;
     }
 
     @Override
@@ -34,8 +42,32 @@ public class DefaultAuthorService implements AuthorService {
     public Author getAuthor(int authorId, ServiceBackend backend) {
         // At this time, only Spigot supports querying by author ID
         // Fail fast if SPIGOT is not the specified ServiceBackend
-        if (backend != ServiceBackend.SPIGOT) {
+        if (backend != ServiceBackend.SPIGOT && backend != ServiceBackend.CURSEFORGE) {
             return null;
+        }
+
+        if (backend == ServiceBackend.CURSEFORGE) {
+            CurseForgeAuthor curseForgeAuthor = loadCurseForgeAuthor(authorId);
+            if (curseForgeAuthor == null) {
+                return null;
+            }
+
+            List<CurseForgeResource> resources = loadAllCurseForgeResourcesByAuthor(curseForgeAuthor);
+
+            int totalDownloads = 0;
+
+            for (CurseForgeResource resource : resources) {
+                totalDownloads += resource.getDownloads().getTotal();
+            }
+
+            return new Author(
+                    curseForgeAuthor.getUsername(),
+                    curseForgeAuthor.getProjects().size(),
+                    "",
+                    totalDownloads,
+                    -1,
+                    -1
+            );
         }
 
         SpigotAuthor author = loadSpigotAuthor(authorId);
@@ -149,6 +181,27 @@ public class DefaultAuthorService implements AuthorService {
         }
 
         return resp.getBody();
+    }
+
+    private CurseForgeAuthor loadCurseForgeAuthor(int authorId) {
+        ResponseEntity<CurseForgeAuthor> resp = curseForgeClient.getAuthor(authorId);
+        if (resp == null) {
+            return null;
+        }
+
+        return resp.getBody();
+    }
+
+    private List<CurseForgeResource> loadAllCurseForgeResourcesByAuthor(CurseForgeAuthor author) {
+        List<CurseForgeResource> resources = new ArrayList<>();
+
+        for (CurseForgeProject project : author.getProjects()) {
+            ResponseEntity<CurseForgeResource> resp = curseForgeClient.getResource(project.getId());
+            if (resp != null) {
+                resources.add(resp.getBody());
+            }
+        }
+        return resources;
     }
 
     private String loadOreImageByUrl(String url) {

@@ -1,7 +1,10 @@
 package com.mcbanners.bannerapi.service.impl;
 
+import com.mcbanners.bannerapi.net.CurseForgeClient;
 import com.mcbanners.bannerapi.net.OreClient;
 import com.mcbanners.bannerapi.net.SpigotClient;
+import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeResource;
+import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeResourceMember;
 import com.mcbanners.bannerapi.obj.backend.ore.OreResource;
 import com.mcbanners.bannerapi.obj.backend.spigot.SpigotPremium;
 import com.mcbanners.bannerapi.obj.backend.spigot.SpigotResource;
@@ -23,11 +26,13 @@ import java.util.Base64;
 public class DefaultResourceService implements ResourceService {
     private final SpigotClient spigotClient;
     private final OreClient oreClient;
+    private final CurseForgeClient curseForgeClient;
 
     @Autowired
-    public DefaultResourceService(SpigotClient spigotClient, OreClient oreClient) {
+    public DefaultResourceService(SpigotClient spigotClient, OreClient oreClient, CurseForgeClient curseForgeClient) {
         this.spigotClient = spigotClient;
         this.oreClient = oreClient;
+        this.curseForgeClient = curseForgeClient;
     }
 
     @Override
@@ -35,8 +40,36 @@ public class DefaultResourceService implements ResourceService {
     public Resource getResource(int resourceId, ServiceBackend backend) {
         // At this time, only Spiget supports querying by resource ID
         // Fail fast if SPIGET is not the specified ServiceBackend
-        if (backend != ServiceBackend.SPIGOT) {
+        if (backend != ServiceBackend.SPIGOT && backend != ServiceBackend.CURSEFORGE) {
             return null;
+        }
+
+        if (backend == ServiceBackend.CURSEFORGE) {
+            CurseForgeResource curseForgeResource = loadCurseForgeResource(resourceId);
+
+            if (curseForgeResource == null) {
+                return null;
+            }
+
+            String curseForgeResourceIcon = loadCurseForgeResourceIcon(curseForgeResource.getThumbnail());
+
+            curseForgeResource.getMembers().forEach(member -> {
+                System.out.println(member.getId());
+                System.out.println(member.getTitle());
+                System.out.println(member.getUsername());
+            });
+
+            CurseForgeResourceMember author = curseForgeResource.getMembers().stream().filter(member -> member.getTitle().equalsIgnoreCase("Owner")).findFirst().get();
+
+            return new Resource(
+                    curseForgeResourceIcon,
+                    curseForgeResource.getTitle(),
+                    author.getId(),
+                    author.getUsername(),
+                    new RatingInformation(0, 0.0),
+                    curseForgeResource.getDownloads().getTotal(),
+                    null,
+                    curseForgeResource.getDownload().getUploaded_at());
         }
 
         SpigotResource spigotResource = loadSpigotResource(resourceId);
@@ -67,8 +100,8 @@ public class DefaultResourceService implements ResourceService {
                         Double.parseDouble(spigotResource.getStats().getRating())
                 ),
                 Integer.parseInt(spigotResource.getStats().getDownloads()),
-                isPremium ? new PriceInformation(Double.parseDouble(premium.getPrice()), premium.getCurrency().toUpperCase()) : null
-        );
+                isPremium ? new PriceInformation(Double.parseDouble(premium.getPrice()), premium.getCurrency().toUpperCase()) : null,
+                null);
     }
 
     @Override
@@ -97,8 +130,8 @@ public class DefaultResourceService implements ResourceService {
                 oreResource.getOwner(), // username
                 new RatingInformation(oreResource.getStars()),
                 oreResource.getDownloads(),
-                null
-        );
+                null,
+                null);
     }
 
     private SpigotResource loadSpigotResource(int resourceId) {
@@ -110,8 +143,27 @@ public class DefaultResourceService implements ResourceService {
         return resp.getBody();
     }
 
+    private CurseForgeResource loadCurseForgeResource(int resourceId) {
+        ResponseEntity<CurseForgeResource> resp = curseForgeClient.getResource(resourceId);
+        if (resp == null) {
+            return null;
+        }
+
+        return resp.getBody();
+    }
+
     private String loadSpigotResourceIcon(String url) {
         ResponseEntity<byte[]> resp = spigotClient.getResourceIcon(url);
+        if (resp == null) {
+            return null;
+        }
+
+        byte[] body = resp.getBody();
+        return Base64.getEncoder().encodeToString(body);
+    }
+
+    private String loadCurseForgeResourceIcon(String url) {
+        ResponseEntity<byte[]> resp = curseForgeClient.getResourceIcon(url);
         if (resp == null) {
             return null;
         }

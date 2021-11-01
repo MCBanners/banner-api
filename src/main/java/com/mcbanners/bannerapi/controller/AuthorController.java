@@ -37,6 +37,12 @@ public class AuthorController {
         return new ResponseEntity<>(Collections.singletonMap("valid", author != null), HttpStatus.OK);
     }
 
+    @GetMapping(value = "/curseforge/{id}/isValid", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Boolean>> getIsValidCF(@PathVariable int id) {
+        Author author = this.authors.getAuthor(id, ServiceBackend.CURSEFORGE);
+        return new ResponseEntity<>(Collections.singletonMap("valid", author != null), HttpStatus.OK);
+    }
+
     @GetMapping(value = "/spigot/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<byte[]> getBanner(@PathVariable int id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
         Author author = this.authors.getAuthor(id, ServiceBackend.SPIGOT);
@@ -56,6 +62,17 @@ public class AuthorController {
 
         return draw(author, raw, outputType);
     }
+
+    @GetMapping(value = "/curseforge/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<byte[]> getBannerCf(@PathVariable int id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
+        Author author = this.authors.getAuthor(id, ServiceBackend.CURSEFORGE);
+        if (author == null) {
+            return null;
+        }
+
+        return draw(author, raw, outputType);
+    }
+
 
     private ResponseEntity<byte[]> draw(Author author, Map<String, String> raw, BannerOutputType outputType) {
         return BannerImageWriter.write(new AuthorLayout(author, raw).draw(outputType), outputType);

@@ -18,8 +18,14 @@ import com.mcbanners.bannerapi.util.NumberUtil;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 public class ResourceLayout extends Layout {
     private final Resource resource;
@@ -37,6 +43,7 @@ public class ResourceLayout extends Layout {
     private final int starsY;
     private final TextParameterReader<ResourceParameter> downloads;
     private final TextParameterReader<ResourceParameter> price;
+    private final TextParameterReader<ResourceParameter> updated;
 
 
     public ResourceLayout(Resource resource, Author author, Map<String, String> parameters, ServiceBackend backend) {
@@ -45,7 +52,7 @@ public class ResourceLayout extends Layout {
         this.backend = backend;
 
         ParameterReader<ResourceParameter> reader = new ParameterReader<>(ResourceParameter.class, parameters);
-        reader.addTextReaders("resource_name", "author_name", "reviews", "downloads", "price");
+        reader.addTextReaders("resource_name", "author_name", "reviews", "downloads", "price", "updated");
 
         String resourceTitle = (String) reader.getOrDefault(ResourceParameter.RESOURCE_NAME_DISPLAY);
         if (resourceTitle.isEmpty() || resourceTitle.equalsIgnoreCase("unset")) {
@@ -64,6 +71,7 @@ public class ResourceLayout extends Layout {
         starsY = (int) reader.getOrDefault(ResourceParameter.STARS_Y);
         downloads = reader.getTextReader("downloads");
         price = reader.getTextReader("price");
+        updated = reader.getTextReader("updated");
     }
 
     @Override
@@ -78,6 +86,9 @@ public class ResourceLayout extends Layout {
             case ORE:
                 defaultLogoOverride = BannerSprite.DEFAULT_SPONGE_RES_LOGO;
                 break;
+            case CURSEFORGE:
+                defaultLogoOverride = BannerSprite.DEFAULT_CURSEFORGE_RES_LOGO;
+                break;
             default:
                 throw new RuntimeException("not yet implemented");
         }
@@ -85,7 +96,14 @@ public class ResourceLayout extends Layout {
         addComponent(new LogoComponent(logoX, defaultLogoOverride, resource.getLogo(), logoSize));
         addComponent(resourceName.makeComponent(textColor, resourceTitle));
         addComponent(authorName.makeComponent(textColor, String.format("by %s", this.author.getName())));
-        addComponent(reviews.makeComponent(textColor, NumberUtil.abbreviate(resource.getRating().getCount()) + " reviews"));
+        if (backend != ServiceBackend.CURSEFORGE) {
+            addComponent(reviews.makeComponent(textColor, NumberUtil.abbreviate(resource.getRating().getCount()) + " reviews"));
+        } else {
+            Date date = Date.from(OffsetDateTime.parse(resource.getLastUpdated()).toInstant());
+            SimpleDateFormat sdf = new SimpleDateFormat("M/dd/yyyy", Locale.ENGLISH);
+            sdf.setTimeZone(TimeZone.getTimeZone("America/New_York"));
+            addComponent(updated.makeComponent(textColor, "Updated: " + sdf.format(date)));
+        }
 
         BufferedImage starFull = BannerSprite.STAR_FULL.getImage();
         BufferedImage starHalf = BannerSprite.STAR_HALF.getImage();
@@ -106,7 +124,9 @@ public class ResourceLayout extends Layout {
                     toOverlay = starNone;
                 }
 
-                addComponent(new ImageComponent(starsX + ((int) starsGap * i), starsY, toOverlay));
+                if (backend != ServiceBackend.CURSEFORGE) {
+                    addComponent(new ImageComponent(starsX + ((int) starsGap * i), starsY, toOverlay));
+                }
             }
         }
 
