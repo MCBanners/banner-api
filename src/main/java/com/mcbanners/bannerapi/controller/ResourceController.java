@@ -41,6 +41,12 @@ public class ResourceController {
         return new ResponseEntity<>(Collections.singletonMap("valid", resource != null), HttpStatus.OK);
     }
 
+    @GetMapping(value = "/curseforge/{id}/isValid", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Boolean>> getIsValidCf(@PathVariable int id) {
+        Resource resource = this.resources.getResource(id, ServiceBackend.CURSEFORGE);
+        return new ResponseEntity<>(Collections.singletonMap("valid", resource != null), HttpStatus.OK);
+    }
+
     @GetMapping(value = "/spigot/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<byte[]> getBanner(@PathVariable int id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
         Resource resource = this.resources.getResource(id, ServiceBackend.SPIGOT);

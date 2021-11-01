@@ -47,27 +47,7 @@ public class DefaultAuthorService implements AuthorService {
         }
 
         if (backend == ServiceBackend.CURSEFORGE) {
-            CurseForgeAuthor curseForgeAuthor = loadCurseForgeAuthor(authorId);
-            if (curseForgeAuthor == null) {
-                return null;
-            }
-
-            List<CurseForgeResource> resources = loadAllCurseForgeResourcesByAuthor(curseForgeAuthor);
-
-            int totalDownloads = 0;
-
-            for (CurseForgeResource resource : resources) {
-                totalDownloads += resource.getDownloads().getTotal();
-            }
-
-            return new Author(
-                    curseForgeAuthor.getUsername(),
-                    curseForgeAuthor.getProjects().size(),
-                    "",
-                    totalDownloads,
-                    -1,
-                    -1
-            );
+            return handleCurseForge(authorId, null);
         }
 
         SpigotAuthor author = loadSpigotAuthor(authorId);
@@ -125,8 +105,12 @@ public class DefaultAuthorService implements AuthorService {
     public Author getAuthor(String authorName, ServiceBackend backend) {
         // At this time, only Ore supports querying by author name
         // Fail fast if ORE is not the specified ServiceBackend
-        if (backend != ServiceBackend.ORE) {
+        if (backend != ServiceBackend.ORE && backend != ServiceBackend.CURSEFORGE) {
             return null;
+        }
+
+        if (backend == ServiceBackend.CURSEFORGE) {
+            return handleCurseForge(0, authorName);
         }
 
         OreAuthor author = loadOreAuthor(authorName);
@@ -153,6 +137,37 @@ public class DefaultAuthorService implements AuthorService {
                 totalDownloads,
                 totalLikes,
                 -1 // unknown
+        );
+    }
+
+    private Author handleCurseForge(int authorId, String authorName) {
+        CurseForgeAuthor author;
+
+        if (authorId != 0) {
+            author = loadCurseForgeAuthor(authorId);
+        } else {
+            author = loadCurseForgeAuthor(authorName);
+        }
+
+        if (author == null) {
+            return null;
+        }
+
+        List<CurseForgeResource> resources = loadAllCurseForgeResourcesByAuthor(author);
+
+        int totalDownloads = 0;
+
+        for (CurseForgeResource resource : resources) {
+            totalDownloads += resource.getDownloads().getTotal();
+        }
+
+        return new Author(
+                author.getUsername(),
+                author.getProjects().size(),
+                "",
+                totalDownloads,
+                -1,
+                -1
         );
     }
 
@@ -185,6 +200,15 @@ public class DefaultAuthorService implements AuthorService {
 
     private CurseForgeAuthor loadCurseForgeAuthor(int authorId) {
         ResponseEntity<CurseForgeAuthor> resp = curseForgeClient.getAuthor(authorId);
+        if (resp == null) {
+            return null;
+        }
+
+        return resp.getBody();
+    }
+
+    private CurseForgeAuthor loadCurseForgeAuthor(String authorName) {
+        ResponseEntity<CurseForgeAuthor> resp = curseForgeClient.getAuthor(authorName);
         if (resp == null) {
             return null;
         }

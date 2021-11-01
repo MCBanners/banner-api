@@ -38,8 +38,13 @@ public class AuthorController {
     }
 
     @GetMapping(value = "/curseforge/{id}/isValid", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, Boolean>> getIsValidCF(@PathVariable int id) {
-        Author author = this.authors.getAuthor(id, ServiceBackend.CURSEFORGE);
+    public ResponseEntity<Map<String, Boolean>> getIsValidCF(@PathVariable String id) {
+        Author author;
+        try {
+            author = this.authors.getAuthor(Integer.parseInt(id), ServiceBackend.CURSEFORGE);
+        } catch (NumberFormatException ex) {
+            author = this.authors.getAuthor(id, ServiceBackend.CURSEFORGE);
+        }
         return new ResponseEntity<>(Collections.singletonMap("valid", author != null), HttpStatus.OK);
     }
 
@@ -64,8 +69,14 @@ public class AuthorController {
     }
 
     @GetMapping(value = "/curseforge/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<byte[]> getBannerCf(@PathVariable int id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
-        Author author = this.authors.getAuthor(id, ServiceBackend.CURSEFORGE);
+    public ResponseEntity<byte[]> getBannerCf(@PathVariable String id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
+        Author author;
+        try {
+            author = this.authors.getAuthor(Integer.parseInt(id), ServiceBackend.CURSEFORGE);
+        } catch (NumberFormatException ex) {
+            author = this.authors.getAuthor(id, ServiceBackend.CURSEFORGE);
+        }
+
         if (author == null) {
             return null;
         }
