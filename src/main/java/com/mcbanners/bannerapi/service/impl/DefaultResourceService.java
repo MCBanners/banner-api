@@ -69,7 +69,7 @@ public class DefaultResourceService implements ResourceService {
                     new RatingInformation(0, 0.0),
                     curseForgeResource.getDownloads().getTotal(),
                     null,
-                    curseForgeResource.getDownload().getUploaded_at());
+                    curseForgeResource.getDownload().getUploadedAt());
         }
 
         SpigotResource spigotResource = loadSpigotResource(resourceId);
