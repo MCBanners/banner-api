@@ -100,7 +100,7 @@ public class ResourceLayout extends Layout {
         } else {
             Date date = Date.from(OffsetDateTime.parse(resource.getLastUpdated()).toInstant());
             SimpleDateFormat sdf = new SimpleDateFormat("M/dd/yyyy", Locale.ENGLISH);
-            sdf.setTimeZone(TimeZone.getTimeZone("America/New_York"));
+            sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
             addComponent(updated.makeComponent(textColor, "Updated: " + sdf.format(date)));
         }
 
