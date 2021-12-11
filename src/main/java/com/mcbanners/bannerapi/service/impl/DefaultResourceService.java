@@ -46,20 +46,16 @@ public class DefaultResourceService implements ResourceService {
 
         if (backend == ServiceBackend.CURSEFORGE) {
             CurseForgeResource curseForgeResource = loadCurseForgeResource(resourceId);
-
             if (curseForgeResource == null) {
                 return null;
             }
 
+            CurseForgeResourceMember author = curseForgeResource.getMembers().stream().filter(member -> member.getTitle().equalsIgnoreCase("Owner")).findFirst().orElse(null);
+            if (author == null) {
+                return null;
+            }
+
             String curseForgeResourceIcon = loadCurseForgeResourceIcon(curseForgeResource.getThumbnail());
-
-            curseForgeResource.getMembers().forEach(member -> {
-                System.out.println(member.getId());
-                System.out.println(member.getTitle());
-                System.out.println(member.getUsername());
-            });
-
-            CurseForgeResourceMember author = curseForgeResource.getMembers().stream().filter(member -> member.getTitle().equalsIgnoreCase("Owner")).findFirst().get();
 
             return new Resource(
                     curseForgeResourceIcon,
