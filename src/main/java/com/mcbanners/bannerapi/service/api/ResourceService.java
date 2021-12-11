@@ -17,7 +17,7 @@ public interface ResourceService {
      * Get a resource by its ID as a string on the providing API service
      *
      * @param pluginId the id of the plugin
-     * @param backend the backend to query
+     * @param backend  the backend to query
      * @return the generic Resource object that represents the resource
      */
     Resource getResource(final String pluginId, final ServiceBackend backend);

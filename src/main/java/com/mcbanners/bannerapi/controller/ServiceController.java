@@ -3,7 +3,11 @@ package com.mcbanners.bannerapi.controller;
 import com.mcbanners.bannerapi.banner.BannerFontFace;
 import com.mcbanners.bannerapi.banner.BannerTemplate;
 import com.mcbanners.bannerapi.banner.BannerTextAlign;
-import com.mcbanners.bannerapi.banner.param.*;
+import com.mcbanners.bannerapi.banner.param.AuthorParameter;
+import com.mcbanners.bannerapi.banner.param.BannerParameter;
+import com.mcbanners.bannerapi.banner.param.GeneralParameter;
+import com.mcbanners.bannerapi.banner.param.ResourceParameter;
+import com.mcbanners.bannerapi.banner.param.ServerParameter;
 import com.mcbanners.bannerapi.util.ParamUtil;
 import com.mcbanners.bannerapi.util.StringUtil;
 import org.springframework.http.HttpStatus;
@@ -95,9 +99,9 @@ public class ServiceController {
 
     private Map<String, Object> mergeWithGeneralParameters(Class<? extends BannerParameter<Object>> clazz) {
         return Stream.concat(
-                ParamUtil.makeMap(GeneralParameter.class).entrySet().stream(),
-                ParamUtil.makeMap(clazz).entrySet().stream()
-        )
+                        ParamUtil.makeMap(GeneralParameter.class).entrySet().stream(),
+                        ParamUtil.makeMap(clazz).entrySet().stream()
+                )
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 }

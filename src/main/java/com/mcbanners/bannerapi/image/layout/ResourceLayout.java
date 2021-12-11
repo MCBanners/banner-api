@@ -19,7 +19,6 @@ import com.mcbanners.bannerapi.util.NumberUtil;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.Date;
 import java.util.List;

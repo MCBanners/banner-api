@@ -71,8 +71,7 @@ public class DefaultAuthorService implements AuthorService {
 
         if (hash != null && !hash.isEmpty()) {
             authorAvatarUrl = String.format("http://gravatar.com/avatar/%s.jpg?s=96", author.getAvatar().getHash());
-        }
-        else if (info != null && !info.isEmpty()) {
+        } else if (info != null && !info.isEmpty()) {
             int imageFolder = authorId / 1000;
             authorAvatarUrl = String.format("https://www.spigotmc.org/data/avatars/l/%d/%d.jpg?%s", imageFolder, authorId, info);
         }

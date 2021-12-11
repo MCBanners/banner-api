@@ -1,7 +1,7 @@
 package com.mcbanners.bannerapi.obj.generic;
 
 public class PriceInformation {
-    private double amount;
+    private final double amount;
     private final String currency;
 
     public PriceInformation(double amount, String currency) {
