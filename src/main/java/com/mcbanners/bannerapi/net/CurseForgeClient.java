@@ -13,7 +13,7 @@ import java.util.Collections;
 @Component
 public class CurseForgeClient extends BasicHttpClient {
     public CurseForgeClient() {
-        super("https://api.cfwidget.com/");
+        super("https://api.dev.cfwidget.com/");
     }
 
     public final ResponseEntity<CurseForgeResource> getResource(int resourceId) {
