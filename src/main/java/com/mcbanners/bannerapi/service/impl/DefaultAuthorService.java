@@ -37,19 +37,50 @@ public class DefaultAuthorService implements AuthorService {
         this.curseForgeClient = curseForgeClient;
     }
 
+    /**
+     * Get an author by its id on the specified service backend.
+     *
+     * @param authorId the author ID
+     * @param backend  the service backend to query
+     * @return the Author object or null if the service backend does not support the operation or the author could not be found.
+     */
     @Override
     @Cacheable(unless = "#result == null")
     public Author getAuthor(int authorId, ServiceBackend backend) {
-        // At this time, only Spigot supports querying by author ID
-        // Fail fast if SPIGOT is not the specified ServiceBackend
-        if (backend != ServiceBackend.SPIGOT && backend != ServiceBackend.CURSEFORGE) {
-            return null;
+        switch (backend) {
+            case SPIGOT:
+                return handleSpigot(authorId);
+            case CURSEFORGE:
+                return handleCurseForge(authorId, null);
+            case ORE:
+            default:
+                return null;
         }
+    }
 
-        if (backend == ServiceBackend.CURSEFORGE) {
-            return handleCurseForge(authorId, null);
+    /**
+     * Get an author by its name on the specified service backend.
+     *
+     * @param authorName the author name
+     * @param backend    the service backend to query
+     * @return the Author object or null if the service bannerapi does not support the operation or the author could not be found.
+     */
+    @Override
+    @Cacheable(unless = "#result == null")
+    public Author getAuthor(String authorName, ServiceBackend backend) {
+        switch (backend) {
+            case ORE:
+                return handleOre(authorName);
+            case CURSEFORGE:
+                return handleCurseForge(0, authorName);
+            case SPIGOT:
+            default:
+                return null;
         }
+    }
 
+    // Spigot handling
+    private Author handleSpigot(int authorId) {
         SpigotAuthor author = loadSpigotAuthor(authorId);
         SpigotResource[] resources = loadAllSpigotResourcesByAuthor(authorId);
 
@@ -92,26 +123,36 @@ public class DefaultAuthorService implements AuthorService {
         );
     }
 
-    /**
-     * Get an author by its name on the specified service bannerapi.
-     *
-     * @param authorName the author name
-     * @param backend    the service bannerapi to query
-     * @return the Author object or null if the service bannerapi does not support the operation or the author could not be found.
-     */
-    @Override
-    @Cacheable(unless = "#result == null")
-    public Author getAuthor(String authorName, ServiceBackend backend) {
-        // At this time, only Ore supports querying by author name
-        // Fail fast if ORE is not the specified ServiceBackend
-        if (backend != ServiceBackend.ORE && backend != ServiceBackend.CURSEFORGE) {
+    private SpigotAuthor loadSpigotAuthor(int authorId) {
+        ResponseEntity<SpigotAuthor> resp = spigotClient.getAuthor(authorId);
+        if (resp == null) {
             return null;
         }
 
-        if (backend == ServiceBackend.CURSEFORGE) {
-            return handleCurseForge(0, authorName);
+        return resp.getBody();
+    }
+
+    private SpigotResource[] loadAllSpigotResourcesByAuthor(int authorId) {
+        ResponseEntity<SpigotResource[]> resp = spigotClient.getAllByAuthor(authorId);
+        if (resp == null) {
+            return null;
         }
 
+        return resp.getBody();
+    }
+
+    private String loadSpigotAuthorIcon(String url) {
+        ResponseEntity<byte[]> resp = spigotClient.getResourceIcon(url);
+        if (resp == null) {
+            return null;
+        }
+
+        byte[] body = resp.getBody();
+        return Base64.getEncoder().encodeToString(body);
+    }
+
+    // Ore handling
+    private Author handleOre(String authorName) {
         OreAuthor author = loadOreAuthor(authorName);
         if (author == null || author.getProjects() == null) {
             return null;
@@ -139,6 +180,26 @@ public class DefaultAuthorService implements AuthorService {
         );
     }
 
+    private OreAuthor loadOreAuthor(String authorId) {
+        ResponseEntity<OreAuthor> resp = oreClient.getAuthor(authorId);
+        if (resp == null) {
+            return null;
+        }
+
+        return resp.getBody();
+    }
+
+    private String loadOreImageByUrl(String url) {
+        ResponseEntity<byte[]> resp = oreClient.getAuthApiImage(url);
+        if (resp == null) {
+            return null;
+        }
+
+        byte[] body = resp.getBody();
+        return Base64.getEncoder().encodeToString(body);
+    }
+
+    // Curse handling
     private Author handleCurseForge(int authorId, String authorName) {
         CurseForgeAuthor author;
 
@@ -170,33 +231,6 @@ public class DefaultAuthorService implements AuthorService {
         );
     }
 
-    private SpigotAuthor loadSpigotAuthor(int authorId) {
-        ResponseEntity<SpigotAuthor> resp = spigotClient.getAuthor(authorId);
-        if (resp == null) {
-            return null;
-        }
-
-        return resp.getBody();
-    }
-
-    private SpigotResource[] loadAllSpigotResourcesByAuthor(int authorId) {
-        ResponseEntity<SpigotResource[]> resp = spigotClient.getAllByAuthor(authorId);
-        if (resp == null) {
-            return null;
-        }
-
-        return resp.getBody();
-    }
-
-    private OreAuthor loadOreAuthor(String authorId) {
-        ResponseEntity<OreAuthor> resp = oreClient.getAuthor(authorId);
-        if (resp == null) {
-            return null;
-        }
-
-        return resp.getBody();
-    }
-
     private CurseForgeAuthor loadCurseForgeAuthor(int authorId) {
         ResponseEntity<CurseForgeAuthor> resp = curseForgeClient.getAuthor(authorId);
         if (resp == null) {
@@ -225,25 +259,5 @@ public class DefaultAuthorService implements AuthorService {
             }
         }
         return resources;
-    }
-
-    private String loadOreImageByUrl(String url) {
-        ResponseEntity<byte[]> resp = oreClient.getAuthApiImage(url);
-        if (resp == null) {
-            return null;
-        }
-
-        byte[] body = resp.getBody();
-        return Base64.getEncoder().encodeToString(body);
-    }
-
-    private String loadSpigotAuthorIcon(String url) {
-        ResponseEntity<byte[]> resp = spigotClient.getResourceIcon(url);
-        if (resp == null) {
-            return null;
-        }
-
-        byte[] body = resp.getBody();
-        return Base64.getEncoder().encodeToString(body);
     }
 }

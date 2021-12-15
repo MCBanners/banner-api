@@ -35,39 +35,49 @@ public class DefaultResourceService implements ResourceService {
         this.curseForgeClient = curseForgeClient;
     }
 
+    /**
+     * Get a resource by its ID on the specified service backend.
+     *
+     * @param resourceId the resource ID
+     * @param backend    the service backend to query
+     * @return the Resource object or null if the service backend does not support the operation or the resource could not be found.
+     */
     @Override
     @Cacheable(unless = "#result == null")
     public Resource getResource(int resourceId, ServiceBackend backend) {
-        // At this time, only Spiget supports querying by resource ID
-        // Fail fast if SPIGET is not the specified ServiceBackend
-        if (backend != ServiceBackend.SPIGOT && backend != ServiceBackend.CURSEFORGE) {
-            return null;
-        }
-
-        if (backend == ServiceBackend.CURSEFORGE) {
-            CurseForgeResource curseForgeResource = loadCurseForgeResource(resourceId);
-            if (curseForgeResource == null) {
+        switch (backend) {
+            case SPIGOT:
+                return handleSpigot(resourceId);
+            case CURSEFORGE:
+                return handleCurse(resourceId);
+            case ORE:
+            default:
                 return null;
-            }
-
-            CurseForgeResourceMember author = curseForgeResource.getMembers().stream().filter(member -> member.getTitle().equalsIgnoreCase("Owner")).findFirst().orElse(null);
-            if (author == null) {
-                return null;
-            }
-
-            String curseForgeResourceIcon = loadCurseForgeResourceIcon(curseForgeResource.getThumbnail());
-
-            return new Resource(
-                    curseForgeResourceIcon,
-                    curseForgeResource.getTitle(),
-                    author.getId(),
-                    author.getUsername(),
-                    new RatingInformation(0, 0.0),
-                    curseForgeResource.getDownloads().getTotal(),
-                    null,
-                    curseForgeResource.getDownload().getUploadedAt());
         }
+    }
 
+    /**
+     * Get a resource by its name on the specified service backend.
+     *
+     * @param pluginId the resource name
+     * @param backend    the service backend to query
+     * @return the Resource object or null if the service backend does not support the operation or the resource could not be found.
+     */
+    @Override
+    @Cacheable(unless = "#result == null")
+    public Resource getResource(String pluginId, ServiceBackend backend) {
+        switch (backend) {
+            case ORE:
+                return handleOre(pluginId);
+            case CURSEFORGE:
+            case SPIGOT:
+            default:
+                return null;
+        }
+    }
+
+    // Spigot handling
+    private Resource handleSpigot(int resourceId) {
         SpigotResource spigotResource = loadSpigotResource(resourceId);
 
         if (spigotResource == null) {
@@ -100,15 +110,27 @@ public class DefaultResourceService implements ResourceService {
                 null);
     }
 
-    @Override
-    @Cacheable(unless = "#result == null")
-    public Resource getResource(String pluginId, ServiceBackend backend) {
-        // At this time, only Ore supports querying by author name
-        // Fail fast if ORE is not the specified ServiceBackend
-        if (backend != ServiceBackend.ORE) {
+    private SpigotResource loadSpigotResource(int resourceId) {
+        ResponseEntity<SpigotResource> resp = spigotClient.getResource(resourceId);
+        if (resp == null) {
             return null;
         }
 
+        return resp.getBody();
+    }
+
+    private String loadSpigotResourceIcon(String url) {
+        ResponseEntity<byte[]> resp = spigotClient.getResourceIcon(url);
+        if (resp == null) {
+            return null;
+        }
+
+        byte[] body = resp.getBody();
+        return Base64.getEncoder().encodeToString(body);
+    }
+
+    // Ore handling
+    private Resource handleOre(String pluginId) {
         OreResource oreResource = loadOreResource(pluginId);
         if (oreResource == null) {
             return null;
@@ -130,44 +152,6 @@ public class DefaultResourceService implements ResourceService {
                 null);
     }
 
-    private SpigotResource loadSpigotResource(int resourceId) {
-        ResponseEntity<SpigotResource> resp = spigotClient.getResource(resourceId);
-        if (resp == null) {
-            return null;
-        }
-
-        return resp.getBody();
-    }
-
-    private CurseForgeResource loadCurseForgeResource(int resourceId) {
-        ResponseEntity<CurseForgeResource> resp = curseForgeClient.getResource(resourceId);
-        if (resp == null) {
-            return null;
-        }
-
-        return resp.getBody();
-    }
-
-    private String loadSpigotResourceIcon(String url) {
-        ResponseEntity<byte[]> resp = spigotClient.getResourceIcon(url);
-        if (resp == null) {
-            return null;
-        }
-
-        byte[] body = resp.getBody();
-        return Base64.getEncoder().encodeToString(body);
-    }
-
-    private String loadCurseForgeResourceIcon(String url) {
-        ResponseEntity<byte[]> resp = curseForgeClient.getResourceIcon(url);
-        if (resp == null) {
-            return null;
-        }
-
-        byte[] body = resp.getBody();
-        return Base64.getEncoder().encodeToString(body);
-    }
-
     private OreResource loadOreResource(String pluginId) {
         ResponseEntity<OreResource> resp = oreClient.getResource(pluginId);
         if (resp == null) {
@@ -179,6 +163,50 @@ public class DefaultResourceService implements ResourceService {
 
     private String loadOreResourceIcon(String href) {
         ResponseEntity<byte[]> resp = oreClient.getResourceIcon(href);
+        if (resp == null) {
+            return null;
+        }
+
+        byte[] body = resp.getBody();
+        return Base64.getEncoder().encodeToString(body);
+    }
+
+    // Curse handling
+    private Resource handleCurse(int resourceId) {
+        CurseForgeResource curseForgeResource = loadCurseForgeResource(resourceId);
+        if (curseForgeResource == null) {
+            return null;
+        }
+
+        CurseForgeResourceMember author = curseForgeResource.getMembers().stream().filter(member -> member.getTitle().equalsIgnoreCase("Owner")).findFirst().orElse(null);
+        if (author == null) {
+            return null;
+        }
+
+        String curseForgeResourceIcon = loadCurseForgeResourceIcon(curseForgeResource.getThumbnail());
+
+        return new Resource(
+                curseForgeResourceIcon,
+                curseForgeResource.getTitle(),
+                author.getId(),
+                author.getUsername(),
+                new RatingInformation(0, 0.0),
+                curseForgeResource.getDownloads().getTotal(),
+                null,
+                curseForgeResource.getDownload().getUploadedAt());
+    }
+
+    private CurseForgeResource loadCurseForgeResource(int resourceId) {
+        ResponseEntity<CurseForgeResource> resp = curseForgeClient.getResource(resourceId);
+        if (resp == null) {
+            return null;
+        }
+
+        return resp.getBody();
+    }
+
+    private String loadCurseForgeResourceIcon(String url) {
+        ResponseEntity<byte[]> resp = curseForgeClient.getResourceIcon(url);
         if (resp == null) {
             return null;
         }
