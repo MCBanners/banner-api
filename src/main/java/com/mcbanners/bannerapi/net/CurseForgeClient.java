@@ -46,7 +46,7 @@ public class CurseForgeClient extends BasicHttpClient {
         try {
             return get("author/search/" + authorName, CurseForgeAuthor.class);
         } catch (RestClientResponseException ex) {
-            Log.error("Failed to load Curse Author by username %s: %s", authorName);
+            Log.error("Failed to load Curse Author by username %s: %s", authorName, ex.getMessage());
             ex.printStackTrace();
             return null;
         }
