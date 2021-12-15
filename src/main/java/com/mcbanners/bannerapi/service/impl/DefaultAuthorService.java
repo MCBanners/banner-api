@@ -38,7 +38,7 @@ public class DefaultAuthorService implements AuthorService {
     }
 
     @Override
-    @Cacheable
+    @Cacheable(unless = "#result == null")
     public Author getAuthor(int authorId, ServiceBackend backend) {
         // At this time, only Spigot supports querying by author ID
         // Fail fast if SPIGOT is not the specified ServiceBackend
@@ -100,7 +100,7 @@ public class DefaultAuthorService implements AuthorService {
      * @return the Author object or null if the service bannerapi does not support the operation or the author could not be found.
      */
     @Override
-    @Cacheable
+    @Cacheable(unless = "#result == null")
     public Author getAuthor(String authorName, ServiceBackend backend) {
         // At this time, only Ore supports querying by author name
         // Fail fast if ORE is not the specified ServiceBackend

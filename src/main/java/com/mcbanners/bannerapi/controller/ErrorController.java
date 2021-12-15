@@ -1,6 +1,7 @@
 package com.mcbanners.bannerapi.controller;
 
 import org.springframework.boot.autoconfigure.web.servlet.error.AbstractErrorController;
+import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +23,7 @@ public class ErrorController extends AbstractErrorController {
     @RequestMapping
     public ResponseEntity<Map<String, Object>> error(HttpServletRequest req) {
         return new ResponseEntity<>(
-                getErrorAttributes(req, false),
+                getErrorAttributes(req, ErrorAttributeOptions.of(ErrorAttributeOptions.Include.MESSAGE)),
                 getStatus(req)
         );
     }

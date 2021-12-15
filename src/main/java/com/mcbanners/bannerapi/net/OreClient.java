@@ -5,6 +5,7 @@ import com.mcbanners.bannerapi.obj.backend.ore.OreResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestClientResponseException;
 
 import java.util.Collections;
 
@@ -17,11 +18,19 @@ public class OreClient extends BasicHttpClient {
     }
 
     public final ResponseEntity<OreAuthor> getAuthor(String authorId) {
-        return get("users/" + authorId, OreAuthor.class);
+        try {
+            return get("users/" + authorId, OreAuthor.class);
+        } catch (RestClientResponseException ex) {
+            return null;
+        }
     }
 
     public final ResponseEntity<OreResource> getResource(String pluginId) {
-        return get("projects/" + pluginId, OreResource.class);
+        try {
+            return get("projects/" + pluginId, OreResource.class);
+        } catch (RestClientResponseException ex) {
+            return null;
+        }
     }
 
     public final ResponseEntity<byte[]> getResourceIcon(String href) {
@@ -37,9 +46,13 @@ public class OreClient extends BasicHttpClient {
     }
 
     public final ResponseEntity<byte[]> getImage(String url) {
-        return get(url, "", byte[].class, headers -> {
-            headers.setAccept(Collections.singletonList(MediaType.IMAGE_PNG));
-            return headers;
-        });
+        try {
+            return get(url, "", byte[].class, headers -> {
+                headers.setAccept(Collections.singletonList(MediaType.IMAGE_PNG));
+                return headers;
+            });
+        } catch (RestClientResponseException ex) {
+            return null;
+        }
     }
 }

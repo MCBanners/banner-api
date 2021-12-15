@@ -36,7 +36,8 @@ public class BannerImageWriter {
             bos.flush();
             return new ResponseEntity<>(bos.toByteArray(), HttpStatus.OK);
         } catch (IOException ex) {
-            return new ResponseEntity<>(new byte[]{}, HttpStatus.NO_CONTENT);
+            ex.printStackTrace();
+            return new ResponseEntity<>(new byte[]{}, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

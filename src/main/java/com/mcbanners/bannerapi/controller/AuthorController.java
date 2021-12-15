@@ -56,7 +56,7 @@ public class AuthorController {
     public ResponseEntity<byte[]> getBanner(@PathVariable int id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
         Author author = this.authors.getAuthor(id, ServiceBackend.SPIGOT);
         if (author == null) {
-            return null;
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
 
         return draw(author, raw, outputType);
@@ -66,7 +66,7 @@ public class AuthorController {
     public ResponseEntity<byte[]> getBanner(@PathVariable String id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
         Author author = this.authors.getAuthor(id, ServiceBackend.ORE);
         if (author == null) {
-            return null;
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
 
         return draw(author, raw, outputType);
@@ -82,7 +82,7 @@ public class AuthorController {
         }
 
         if (author == null) {
-            return null;
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
 
         return draw(author, raw, outputType);

@@ -36,7 +36,7 @@ public class DefaultResourceService implements ResourceService {
     }
 
     @Override
-    @Cacheable
+    @Cacheable(unless = "#result == null")
     public Resource getResource(int resourceId, ServiceBackend backend) {
         // At this time, only Spiget supports querying by resource ID
         // Fail fast if SPIGET is not the specified ServiceBackend
@@ -101,7 +101,7 @@ public class DefaultResourceService implements ResourceService {
     }
 
     @Override
-    @Cacheable
+    @Cacheable(unless = "#result == null")
     public Resource getResource(String pluginId, ServiceBackend backend) {
         // At this time, only Ore supports querying by author name
         // Fail fast if ORE is not the specified ServiceBackend
