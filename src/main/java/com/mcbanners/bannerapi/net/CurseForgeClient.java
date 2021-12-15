@@ -3,15 +3,11 @@ package com.mcbanners.bannerapi.net;
 import com.mcbanners.bannerapi.net.error.FurtherProcessingRequiredException;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeAuthor;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeResource;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestClientResponseException;
 
-import java.io.IOException;
 import java.util.Collections;
 
 @Component
