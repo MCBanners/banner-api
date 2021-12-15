@@ -3,6 +3,7 @@ package com.mcbanners.bannerapi.net;
 import com.mcbanners.bannerapi.net.error.FurtherProcessingRequiredException;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeAuthor;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeResource;
+import com.mcbanners.bannerapi.util.Log;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -34,7 +35,9 @@ public class CurseForgeClient extends BasicHttpClient {
     public final ResponseEntity<CurseForgeAuthor> getAuthor(int authorId) {
         try {
             return get("author/" + authorId, CurseForgeAuthor.class);
-        } catch (RestClientResponseException ignored) {
+        } catch (RestClientResponseException ex) {
+            Log.error("Failed to load Curse Author by id %d: %s", authorId, ex.getMessage());
+            ex.printStackTrace();
             return null;
         }
     }
@@ -42,7 +45,9 @@ public class CurseForgeClient extends BasicHttpClient {
     public final ResponseEntity<CurseForgeAuthor> getAuthor(String authorName) {
         try {
             return get("author/search/" + authorName, CurseForgeAuthor.class);
-        } catch (RestClientResponseException ignored) {
+        } catch (RestClientResponseException ex) {
+            Log.error("Failed to load Curse Author by username %s: %s", authorName);
+            ex.printStackTrace();
             return null;
         }
     }
@@ -54,6 +59,8 @@ public class CurseForgeClient extends BasicHttpClient {
                 return headers;
             });
         } catch (RestClientResponseException ex) {
+            Log.error("Failed to load Curse Resource Icon by url %s: %s", url, ex.getMessage());
+            ex.printStackTrace();
             return null;
         }
     }

@@ -2,6 +2,7 @@ package com.mcbanners.bannerapi.net;
 
 import com.mcbanners.bannerapi.obj.backend.ore.OreAuthor;
 import com.mcbanners.bannerapi.obj.backend.ore.OreResource;
+import com.mcbanners.bannerapi.util.Log;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -21,6 +22,7 @@ public class OreClient extends BasicHttpClient {
         try {
             return get("users/" + authorId, OreAuthor.class);
         } catch (RestClientResponseException ex) {
+            Log.error("Failed to load Ore Author by authorId %s: %s", authorId, ex.getMessage());
             return null;
         }
     }
@@ -29,6 +31,8 @@ public class OreClient extends BasicHttpClient {
         try {
             return get("projects/" + pluginId, OreResource.class);
         } catch (RestClientResponseException ex) {
+            Log.error("Failed to load Ore Resource by pluginId %s: %s", pluginId, ex.getMessage());
+            ex.printStackTrace();
             return null;
         }
     }
@@ -52,6 +56,8 @@ public class OreClient extends BasicHttpClient {
                 return headers;
             });
         } catch (RestClientResponseException ex) {
+            Log.error("Failed to load Ore Image from URL %s: %s", url, ex.getMessage());
+            ex.printStackTrace();
             return null;
         }
     }
