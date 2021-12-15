@@ -23,6 +23,7 @@ public class OreClient extends BasicHttpClient {
             return get("users/" + authorId, OreAuthor.class);
         } catch (RestClientResponseException ex) {
             Log.error("Failed to load Ore Author by authorId %s: %s", authorId, ex.getMessage());
+            ex.printStackTrace();
             return null;
         }
     }
