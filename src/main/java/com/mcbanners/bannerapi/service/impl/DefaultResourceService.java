@@ -3,6 +3,7 @@ package com.mcbanners.bannerapi.service.impl;
 import com.mcbanners.bannerapi.net.CurseForgeClient;
 import com.mcbanners.bannerapi.net.OreClient;
 import com.mcbanners.bannerapi.net.SpigotClient;
+import com.mcbanners.bannerapi.net.error.FurtherProcessingRequiredException;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeResource;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeResourceMember;
 import com.mcbanners.bannerapi.obj.backend.ore.OreResource;
@@ -44,7 +45,7 @@ public class DefaultResourceService implements ResourceService {
      */
     @Override
     @Cacheable(unless = "#result == null")
-    public Resource getResource(int resourceId, ServiceBackend backend) {
+    public Resource getResource(int resourceId, ServiceBackend backend) throws FurtherProcessingRequiredException {
         switch (backend) {
             case SPIGOT:
                 return handleSpigot(resourceId);
@@ -172,7 +173,7 @@ public class DefaultResourceService implements ResourceService {
     }
 
     // Curse handling
-    private Resource handleCurse(int resourceId) {
+    private Resource handleCurse(int resourceId) throws FurtherProcessingRequiredException {
         CurseForgeResource curseForgeResource = loadCurseForgeResource(resourceId);
         if (curseForgeResource == null) {
             return null;
@@ -196,7 +197,7 @@ public class DefaultResourceService implements ResourceService {
                 curseForgeResource.getDownload().getUploadedAt());
     }
 
-    private CurseForgeResource loadCurseForgeResource(int resourceId) {
+    private CurseForgeResource loadCurseForgeResource(int resourceId) throws FurtherProcessingRequiredException {
         ResponseEntity<CurseForgeResource> resp = curseForgeClient.getResource(resourceId);
         if (resp == null) {
             return null;

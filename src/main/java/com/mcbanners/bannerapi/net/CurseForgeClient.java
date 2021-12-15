@@ -17,7 +17,7 @@ public class CurseForgeClient extends BasicHttpClient {
         super("https://api.cfwidget.com/");
     }
 
-    public final ResponseEntity<CurseForgeResource> getResource(int resourceId) {
+    public final ResponseEntity<CurseForgeResource> getResource(int resourceId) throws FurtherProcessingRequiredException {
         try {
             return get(String.valueOf(resourceId), CurseForgeResource.class);
         } catch (RestClientResponseException ex) {
