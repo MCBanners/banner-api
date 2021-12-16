@@ -21,16 +21,8 @@ public class CurseForgeClient extends BasicHttpClient {
         try {
             return get(String.valueOf(resourceId), CurseForgeResource.class);
         } catch (RestClientResponseException ex) {
-            Log.error("Failed to load Curse Resource by id %d (got status code %d): %s", resourceId, ex.getRawStatusCode(), ex.getMessage());
+            Log.error("Failed to load Curse Resource by id %d: %s", resourceId, ex.getMessage());
             ex.printStackTrace();
-
-            if (ex.getRawStatusCode() == 202) {
-                Log.warn("Curse is processing the requested resource. This is not an actual error. Throwing FurtherProcessingRequiredException.");
-                throw new FurtherProcessingRequiredException(
-                        "CurseForge is currently processing the requested resource and has asked us to wait while " +
-                                "the processing completes. Please try your request again in about 30 seconds. Sorry " +
-                                "for the inconvenience.");
-            }
         }
 
         return null;

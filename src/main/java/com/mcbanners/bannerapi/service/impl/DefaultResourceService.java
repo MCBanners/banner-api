@@ -206,18 +206,15 @@ public class DefaultResourceService implements ResourceService {
             return null;
         }
 
-        Log.info("In loadCurseForgeResource w/ ResponseEntity:");
-        Log.info("> Status Code: %d", resp.getStatusCodeValue());
-        Log.info("> Body null: %s", resp.getBody() == null);
-        Log.info("> Body contains: ");
-
-        try {
-            Log.info("%s", new ObjectMapper().writeValueAsString(resp.getBody()));
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        if (resp.getStatusCodeValue() == 202) {
+            throw new FurtherProcessingRequiredException(
+                    "CurseForge is currently processing the requested resource and has asked us to wait while " +
+                            "the processing completes. Please try your request again in about 30 seconds. Sorry " +
+                            "for the inconvenience.");
+        } else {
+            return resp.getBody();
         }
 
-        return resp.getBody();
     }
 
     private String loadCurseForgeResourceIcon(String url) {
