@@ -95,7 +95,7 @@ public class SavedController {
                         author = authors.getAuthor(settings.get("_author_id"), ServiceBackend.ORE);
                         break;
                     case CURSEFORGE_AUTHOR:
-                        author = authors.getAuthor(settings.get("_author_id"), ServiceBackend.CURSEFORGE);
+                        author = authors.getAuthor(Integer.parseInt(settings.get("_author_id")), ServiceBackend.CURSEFORGE);
                 }
 
                 settings.remove("_author_id");
@@ -125,7 +125,7 @@ public class SavedController {
                         break;
                     case CURSEFORGE_RESOURCE:
                         backend = ServiceBackend.CURSEFORGE;
-                        resource = resources.getResource(settings.get("_resource_id"), backend);
+                        resource = resources.getResource(Integer.parseInt(settings.get("_resource_id")), backend);
                         author = authors.getAuthor(resource.getAuthorId(), backend);
                         break;
                 }
