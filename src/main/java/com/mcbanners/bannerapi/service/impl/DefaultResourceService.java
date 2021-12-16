@@ -14,6 +14,7 @@ import com.mcbanners.bannerapi.obj.generic.RatingInformation;
 import com.mcbanners.bannerapi.obj.generic.Resource;
 import com.mcbanners.bannerapi.service.ServiceBackend;
 import com.mcbanners.bannerapi.service.api.ResourceService;
+import com.mcbanners.bannerapi.util.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -202,6 +203,10 @@ public class DefaultResourceService implements ResourceService {
         if (resp == null) {
             return null;
         }
+
+        Log.info("In loadCurseForgeResource w/ ResponseEntity:");
+        Log.info("> Status Code: %d", resp.getStatusCodeValue());
+        Log.info("> Body null: %s", resp.getBody() == null);
 
         return resp.getBody();
     }
