@@ -51,9 +51,7 @@ public class SavedController {
     }
 
     @PostMapping(value = "save/{type}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SavedBanner> saveBanner(AuthedUserInformation user, @PathVariable BannerType type, @RequestParam Map<String, String> raw) throws JsonProcessingException {
-        System.out.println(new ObjectMapper().writeValueAsString(raw));
-
+    public ResponseEntity<SavedBanner> saveBanner(AuthedUserInformation user, @PathVariable BannerType type, @RequestParam Map<String, String> raw) {
         SavedBanner banner = new SavedBanner();
 
         banner.setBannerType(type);
@@ -87,6 +85,7 @@ public class SavedController {
         switch (banner.getBannerType()) {
             case SPIGOT_AUTHOR:
             case SPONGE_AUTHOR:
+            case CURSEFORGE_AUTHOR:
                 Author author = null;
                 switch (banner.getBannerType()) {
                     case SPIGOT_AUTHOR:
@@ -95,6 +94,8 @@ public class SavedController {
                     case SPONGE_AUTHOR:
                         author = authors.getAuthor(settings.get("_author_id"), ServiceBackend.ORE);
                         break;
+                    case CURSEFORGE_AUTHOR:
+                        author = authors.getAuthor(settings.get("_author_id"), ServiceBackend.CURSEFORGE);
                 }
 
                 settings.remove("_author_id");
@@ -107,6 +108,7 @@ public class SavedController {
                 break;
             case SPIGOT_RESOURCE:
             case SPONGE_RESOURCE:
+            case CURSEFORGE_RESOURCE:
                 ServiceBackend backend = null;
                 Resource resource = null;
                 author = null;
@@ -120,6 +122,11 @@ public class SavedController {
                         backend = ServiceBackend.ORE;
                         resource = resources.getResource(settings.get("_resource_id"), backend);
                         author = authors.getAuthor(resource.getAuthorName(), backend);
+                        break;
+                    case CURSEFORGE_RESOURCE:
+                        backend = ServiceBackend.CURSEFORGE;
+                        resource = resources.getResource(settings.get("_resource_id"), backend);
+                        author = authors.getAuthor(resource.getAuthorId(), backend);
                         break;
                 }
 
