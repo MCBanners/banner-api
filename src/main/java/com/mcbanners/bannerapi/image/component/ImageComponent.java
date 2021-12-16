@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.Base64;
 
 public class ImageComponent extends BasicComponent {
-    private BufferedImage overlay;
+    private final BufferedImage overlay;
 
     public ImageComponent(int x, int y, String b64) throws IOException {
         this(x, y, Base64.getDecoder().decode(b64));

@@ -10,7 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
 import java.util.Map;
@@ -37,11 +41,22 @@ public class AuthorController {
         return new ResponseEntity<>(Collections.singletonMap("valid", author != null), HttpStatus.OK);
     }
 
+    @GetMapping(value = "/curseforge/{id}/isValid", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Boolean>> getIsValidCF(@PathVariable String id) {
+        Author author;
+        try {
+            author = this.authors.getAuthor(Integer.parseInt(id), ServiceBackend.CURSEFORGE);
+        } catch (NumberFormatException ex) {
+            author = this.authors.getAuthor(id, ServiceBackend.CURSEFORGE);
+        }
+        return new ResponseEntity<>(Collections.singletonMap("valid", author != null), HttpStatus.OK);
+    }
+
     @GetMapping(value = "/spigot/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<byte[]> getBanner(@PathVariable int id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
         Author author = this.authors.getAuthor(id, ServiceBackend.SPIGOT);
         if (author == null) {
-            return null;
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
 
         return draw(author, raw, outputType);
@@ -51,11 +66,28 @@ public class AuthorController {
     public ResponseEntity<byte[]> getBanner(@PathVariable String id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
         Author author = this.authors.getAuthor(id, ServiceBackend.ORE);
         if (author == null) {
-            return null;
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
 
         return draw(author, raw, outputType);
     }
+
+    @GetMapping(value = "/curseforge/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<byte[]> getBannerCf(@PathVariable String id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
+        Author author;
+        try {
+            author = this.authors.getAuthor(Integer.parseInt(id), ServiceBackend.CURSEFORGE);
+        } catch (NumberFormatException ex) {
+            author = this.authors.getAuthor(id, ServiceBackend.CURSEFORGE);
+        }
+
+        if (author == null) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+
+        return draw(author, raw, outputType);
+    }
+
 
     private ResponseEntity<byte[]> draw(Author author, Map<String, String> raw, BannerOutputType outputType) {
         return BannerImageWriter.write(new AuthorLayout(author, raw).draw(outputType), outputType);

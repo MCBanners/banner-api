@@ -2,9 +2,11 @@ package com.mcbanners.bannerapi.net;
 
 import com.mcbanners.bannerapi.obj.backend.ore.OreAuthor;
 import com.mcbanners.bannerapi.obj.backend.ore.OreResource;
+import com.mcbanners.bannerapi.util.Log;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestClientResponseException;
 
 import java.util.Collections;
 
@@ -17,11 +19,23 @@ public class OreClient extends BasicHttpClient {
     }
 
     public final ResponseEntity<OreAuthor> getAuthor(String authorId) {
-        return get("users/" + authorId, OreAuthor.class);
+        try {
+            return get("users/" + authorId, OreAuthor.class);
+        } catch (RestClientResponseException ex) {
+            Log.error("Failed to load Ore Author by authorId %s: %s", authorId, ex.getMessage());
+            ex.printStackTrace();
+            return null;
+        }
     }
 
     public final ResponseEntity<OreResource> getResource(String pluginId) {
-        return get("projects/" + pluginId, OreResource.class);
+        try {
+            return get("projects/" + pluginId, OreResource.class);
+        } catch (RestClientResponseException ex) {
+            Log.error("Failed to load Ore Resource by pluginId %s: %s", pluginId, ex.getMessage());
+            ex.printStackTrace();
+            return null;
+        }
     }
 
     public final ResponseEntity<byte[]> getResourceIcon(String href) {
@@ -37,9 +51,15 @@ public class OreClient extends BasicHttpClient {
     }
 
     public final ResponseEntity<byte[]> getImage(String url) {
-        return get(url, "", byte[].class, headers -> {
-            headers.setAccept(Collections.singletonList(MediaType.IMAGE_PNG));
-            return headers;
-        });
+        try {
+            return get(url, "", byte[].class, headers -> {
+                headers.setAccept(Collections.singletonList(MediaType.IMAGE_PNG));
+                return headers;
+            });
+        } catch (RestClientResponseException ex) {
+            Log.error("Failed to load Ore Image from URL %s: %s", url, ex.getMessage());
+            ex.printStackTrace();
+            return null;
+        }
     }
 }
