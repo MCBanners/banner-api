@@ -95,7 +95,7 @@ public class SavedController {
                         author = authors.getAuthor(settings.get("_author_id"), ServiceBackend.ORE);
                         break;
                     case CURSEFORGE_AUTHOR:
-                        author = authors.getAuthor(Integer.parseInt(settings.get("_author_id")), ServiceBackend.CURSEFORGE);
+                        author = authors.getAuthor(settings.get("_author_id"), ServiceBackend.CURSEFORGE);
                 }
 
                 settings.remove("_author_id");
