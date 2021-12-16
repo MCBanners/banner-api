@@ -1,5 +1,7 @@
 package com.mcbanners.bannerapi.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mcbanners.bannerapi.net.CurseForgeClient;
 import com.mcbanners.bannerapi.net.OreClient;
 import com.mcbanners.bannerapi.net.SpigotClient;
@@ -20,6 +22,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.SerializationUtils;
 
 import java.util.Base64;
 
@@ -198,7 +201,7 @@ public class DefaultResourceService implements ResourceService {
                 curseForgeResource.getDownload().getUploadedAt());
     }
 
-    private CurseForgeResource loadCurseForgeResource(int resourceId) throws FurtherProcessingRequiredException {
+    private CurseForgeResource loadCurseForgeResource(int resourceId) throws FurtherProcessingRequiredException, JsonProcessingException {
         ResponseEntity<CurseForgeResource> resp = curseForgeClient.getResource(resourceId);
         if (resp == null) {
             return null;
@@ -207,6 +210,8 @@ public class DefaultResourceService implements ResourceService {
         Log.info("In loadCurseForgeResource w/ ResponseEntity:");
         Log.info("> Status Code: %d", resp.getStatusCodeValue());
         Log.info("> Body null: %s", resp.getBody() == null);
+        Log.info("> Body contains: ");
+        Log.info("%s", new ObjectMapper().writeValueAsString(resp.getBody()));
 
         return resp.getBody();
     }
