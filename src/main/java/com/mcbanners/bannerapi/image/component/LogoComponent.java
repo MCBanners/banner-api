@@ -35,7 +35,7 @@ public class LogoComponent extends BasicComponent {
         BufferedImage logo = defaultOverride.getImage();
 
         try {
-            if (!base64Image.isEmpty()) {
+            if (base64Image != null && !base64Image.isEmpty()) {
                 BufferedImage temp = ImageIO.read(new ByteArrayInputStream(Base64.getDecoder().decode(base64Image)));
                 if (temp != null) {
                     logo = temp;
