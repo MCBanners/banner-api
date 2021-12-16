@@ -1,6 +1,5 @@
 package com.mcbanners.bannerapi.service.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mcbanners.bannerapi.net.CurseForgeClient;
 import com.mcbanners.bannerapi.net.OreClient;
@@ -201,7 +200,7 @@ public class DefaultResourceService implements ResourceService {
                 curseForgeResource.getDownload().getUploadedAt());
     }
 
-    private CurseForgeResource loadCurseForgeResource(int resourceId) throws FurtherProcessingRequiredException, JsonProcessingException {
+    private CurseForgeResource loadCurseForgeResource(int resourceId) throws FurtherProcessingRequiredException {
         ResponseEntity<CurseForgeResource> resp = curseForgeClient.getResource(resourceId);
         if (resp == null) {
             return null;
@@ -211,7 +210,12 @@ public class DefaultResourceService implements ResourceService {
         Log.info("> Status Code: %d", resp.getStatusCodeValue());
         Log.info("> Body null: %s", resp.getBody() == null);
         Log.info("> Body contains: ");
-        Log.info("%s", new ObjectMapper().writeValueAsString(resp.getBody()));
+
+        try {
+            Log.info("%s", new ObjectMapper().writeValueAsString(resp.getBody()));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 
         return resp.getBody();
     }
