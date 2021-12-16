@@ -1,7 +1,10 @@
 package com.mcbanners.bannerapi.obj.backend.curseforge;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CurseForgeResource {
     private int id;
     private String title;
