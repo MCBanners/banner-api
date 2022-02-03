@@ -1,6 +1,7 @@
 package com.mcbanners.bannerapi.util;
 
 import com.mcbanners.bannerapi.banner.BannerFontFace;
+import io.sentry.Sentry;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -34,7 +35,7 @@ public class SystemInitializationComponent {
                 }
             } catch (IOException e) {
                 System.err.println("Failed to copy file(s) for font " + face.name());
-                e.printStackTrace();
+                Sentry.captureException(e);
             }
         }
     }

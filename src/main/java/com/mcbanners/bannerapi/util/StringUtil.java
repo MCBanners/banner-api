@@ -1,5 +1,6 @@
 package com.mcbanners.bannerapi.util;
 
+import io.sentry.Sentry;
 import org.apache.commons.lang.RandomStringUtils;
 
 import java.awt.*;
@@ -175,7 +176,8 @@ public class StringUtil {
 
         try {
             return string.substring(0, iterator.preceding(chars));
-        } catch (IllegalArgumentException ignored) {
+        } catch (IllegalArgumentException ex) {
+            Sentry.captureException(ex);
             return string;
         }
     }

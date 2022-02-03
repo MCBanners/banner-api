@@ -1,6 +1,7 @@
 package com.mcbanners.bannerapi.image;
 
 import com.mcbanners.bannerapi.banner.BannerOutputType;
+import io.sentry.Sentry;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -36,7 +37,7 @@ public class BannerImageWriter {
             bos.flush();
             return new ResponseEntity<>(bos.toByteArray(), HttpStatus.OK);
         } catch (IOException ex) {
-            ex.printStackTrace();
+            Sentry.captureException(ex);
             return new ResponseEntity<>(new byte[]{}, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

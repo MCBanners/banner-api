@@ -1,5 +1,7 @@
 package com.mcbanners.bannerapi.banner;
 
+import io.sentry.Sentry;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -33,7 +35,7 @@ public enum BannerTemplate {
         try {
             return ImageIO.read(stream);
         } catch (IOException e) {
-            e.printStackTrace();
+            Sentry.captureException(e);
             return null;
         }
     }
@@ -41,7 +43,8 @@ public enum BannerTemplate {
     public static BannerTemplate fromString(String name) {
         try {
             return valueOf(name.toUpperCase());
-        } catch (IllegalArgumentException ignored) {
+        } catch (IllegalArgumentException ex) {
+            Sentry.captureException(ex);
             return null;
         }
     }

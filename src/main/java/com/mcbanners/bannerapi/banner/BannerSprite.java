@@ -1,5 +1,7 @@
 package com.mcbanners.bannerapi.banner;
 
+import io.sentry.Sentry;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -24,7 +26,7 @@ public enum BannerSprite {
         try {
             return ImageIO.read(stream);
         } catch (IOException e) {
-            e.printStackTrace();
+            Sentry.captureException(e);
             return null;
         }
     }

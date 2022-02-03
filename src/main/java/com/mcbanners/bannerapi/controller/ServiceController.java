@@ -10,6 +10,7 @@ import com.mcbanners.bannerapi.banner.param.ResourceParameter;
 import com.mcbanners.bannerapi.banner.param.ServerParameter;
 import com.mcbanners.bannerapi.util.ParamUtil;
 import com.mcbanners.bannerapi.util.StringUtil;
+import io.sentry.Sentry;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -86,6 +87,7 @@ public class ServiceController {
 
             return new ResponseEntity<>(output.toByteArray(), HttpStatus.OK);
         } catch (IOException ex) {
+            Sentry.captureException(ex);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
         }
     }

@@ -1,5 +1,7 @@
 package com.mcbanners.bannerapi.banner;
 
+import io.sentry.Sentry;
+
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -36,7 +38,7 @@ public enum BannerFontFace {
         try {
             return Font.createFont(Font.TRUETYPE_FONT, getFile(bold));
         } catch (FontFormatException | IOException e) {
-            e.printStackTrace();
+            Sentry.captureException(e);
             return null;
         }
     }
@@ -45,6 +47,7 @@ public enum BannerFontFace {
         try {
             return valueOf(name.toUpperCase());
         } catch (IllegalArgumentException ex) {
+            Sentry.captureException(ex);
             return null;
         }
     }

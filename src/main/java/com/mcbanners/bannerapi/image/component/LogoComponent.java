@@ -4,6 +4,7 @@ import com.mcbanners.bannerapi.banner.BannerOutputType;
 import com.mcbanners.bannerapi.banner.BannerSprite;
 import com.mcbanners.bannerapi.image.ImageBuilder;
 import com.mcbanners.bannerapi.util.ImageUtil;
+import io.sentry.Sentry;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -53,7 +54,7 @@ public class LogoComponent extends BasicComponent {
 
             return new ImageComponent(x, (100 - logoSize) / 2, logo).draw(builder, outputType);
         } catch (IOException | RuntimeException ex) {
-            ex.printStackTrace();
+            Sentry.captureException(ex);
             return null;
         }
     }

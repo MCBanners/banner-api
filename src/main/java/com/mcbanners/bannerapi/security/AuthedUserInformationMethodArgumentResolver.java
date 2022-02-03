@@ -1,6 +1,7 @@
 package com.mcbanners.bannerapi.security;
 
 import io.jsonwebtoken.Claims;
+import io.sentry.Sentry;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -37,6 +38,7 @@ public class AuthedUserInformationMethodArgumentResolver implements HandlerMetho
         try {
             claims = jwtHandler.parse(token);
         } catch (Exception ex) {
+            Sentry.captureException(ex);
             return null;
         }
 
