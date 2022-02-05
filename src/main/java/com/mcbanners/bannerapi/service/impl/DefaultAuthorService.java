@@ -1,13 +1,16 @@
 package com.mcbanners.bannerapi.service.impl;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.mcbanners.bannerapi.net.CurseForgeClient;
+import com.mcbanners.bannerapi.net.ModrinthClient;
 import com.mcbanners.bannerapi.net.OreClient;
 import com.mcbanners.bannerapi.net.SpigotClient;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeAuthor;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeProject;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeResource;
+import com.mcbanners.bannerapi.obj.backend.modrinth.ModrinthTeamUser;
 import com.mcbanners.bannerapi.obj.backend.ore.OreAuthor;
 import com.mcbanners.bannerapi.obj.backend.ore.OreResource;
 import com.mcbanners.bannerapi.obj.backend.spigot.SpigotAuthor;
@@ -31,14 +34,16 @@ public class DefaultAuthorService implements AuthorService {
     private final SpigotClient spigotClient;
     private final OreClient oreClient;
     private final CurseForgeClient curseForgeClient;
+    private final ModrinthClient modrinthClient;
 
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Autowired
-    public DefaultAuthorService(SpigotClient spigotClient, OreClient oreClient, CurseForgeClient curseForgeClient) {
+    public DefaultAuthorService(SpigotClient spigotClient, OreClient oreClient, CurseForgeClient curseForgeClient, ModrinthClient modrinthClient) {
         this.spigotClient = spigotClient;
         this.oreClient = oreClient;
         this.curseForgeClient = curseForgeClient;
+        this.modrinthClient = modrinthClient;
     }
 
     /**
@@ -77,6 +82,8 @@ public class DefaultAuthorService implements AuthorService {
                 return handleOre(authorName);
             case CURSEFORGE:
                 return handleCurseForge(0, authorName);
+            case MODRINTH:
+                return handleModrinth(authorName);
             case SPIGOT:
             default:
                 return null;
@@ -216,6 +223,36 @@ public class DefaultAuthorService implements AuthorService {
 
         byte[] body = resp.getBody();
         return Base64.getEncoder().encodeToString(body);
+    }
+
+    // Modrinth Handling
+    private Author handleModrinth(String teamName) {
+        ArrayNode modrinthTeam = loadModrinthTeam(teamName);
+
+        if (modrinthTeam == null) {
+            return null;
+        }
+
+        ObjectMapper mapper = new ObjectMapper();
+        ModrinthTeamUser author = mapper.convertValue(modrinthTeam.get(0).get("user"), ModrinthTeamUser.class);
+
+        return new Author(
+                author.getName(),
+                0,
+                "",
+                -1,
+                -1,
+                -1
+        );
+    }
+
+    private ArrayNode loadModrinthTeam(String id) {
+        ResponseEntity<ArrayNode> resp = modrinthClient.getAuthor(id);
+        if (resp == null) {
+            return null;
+        }
+
+        return resp.getBody();
     }
 
     // Curse handling

@@ -1,12 +1,13 @@
 package com.mcbanners.bannerapi.service.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mcbanners.bannerapi.net.CurseForgeClient;
+import com.mcbanners.bannerapi.net.ModrinthClient;
 import com.mcbanners.bannerapi.net.OreClient;
 import com.mcbanners.bannerapi.net.SpigotClient;
 import com.mcbanners.bannerapi.net.error.FurtherProcessingRequiredException;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeResource;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeResourceMember;
+import com.mcbanners.bannerapi.obj.backend.modrinth.ModrinthResource;
 import com.mcbanners.bannerapi.obj.backend.ore.OreResource;
 import com.mcbanners.bannerapi.obj.backend.spigot.SpigotPremium;
 import com.mcbanners.bannerapi.obj.backend.spigot.SpigotResource;
@@ -15,13 +16,11 @@ import com.mcbanners.bannerapi.obj.generic.RatingInformation;
 import com.mcbanners.bannerapi.obj.generic.Resource;
 import com.mcbanners.bannerapi.service.ServiceBackend;
 import com.mcbanners.bannerapi.service.api.ResourceService;
-import com.mcbanners.bannerapi.util.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.SerializationUtils;
 
 import java.util.Base64;
 
@@ -31,12 +30,14 @@ public class DefaultResourceService implements ResourceService {
     private final SpigotClient spigotClient;
     private final OreClient oreClient;
     private final CurseForgeClient curseForgeClient;
+    private final ModrinthClient modrinthClient;
 
     @Autowired
-    public DefaultResourceService(SpigotClient spigotClient, OreClient oreClient, CurseForgeClient curseForgeClient) {
+    public DefaultResourceService(SpigotClient spigotClient, OreClient oreClient, CurseForgeClient curseForgeClient, ModrinthClient modrinthClient) {
         this.spigotClient = spigotClient;
         this.oreClient = oreClient;
         this.curseForgeClient = curseForgeClient;
+        this.modrinthClient = modrinthClient;
     }
 
     /**
@@ -73,6 +74,8 @@ public class DefaultResourceService implements ResourceService {
         switch (backend) {
             case ORE:
                 return handleOre(pluginId);
+            case MODRINTH:
+                return handleModrinth(pluginId);
             case CURSEFORGE:
             case SPIGOT:
             default:
@@ -219,6 +222,48 @@ public class DefaultResourceService implements ResourceService {
 
     private String loadCurseForgeResourceIcon(String url) {
         ResponseEntity<byte[]> resp = curseForgeClient.getResourceIcon(url);
+        if (resp == null) {
+            return null;
+        }
+
+        byte[] body = resp.getBody();
+        return Base64.getEncoder().encodeToString(body);
+    }
+
+    // Modrinth Handling
+    private Resource handleModrinth(String pluginId) {
+        ModrinthResource modrinthResource = loadModrinthResource(pluginId);
+        if (modrinthResource == null) {
+            return null;
+        }
+
+        String modrinthResourceIcon = loadModrinthResourceIcon(modrinthResource.getIcon_url());
+        if (modrinthResourceIcon == null) {
+            modrinthResourceIcon = "";
+        }
+
+        return new Resource(
+                modrinthResourceIcon,
+                modrinthResource.getTitle(),
+                -1,
+                modrinthResource.getSlug(),
+                new RatingInformation(0, 0.0),
+                modrinthResource.getDownloads(),
+                null,
+                modrinthResource.getUpdated());
+    }
+
+    private ModrinthResource loadModrinthResource(String pluginId) {
+        ResponseEntity<ModrinthResource> resp = modrinthClient.getResource(pluginId);
+        if (resp == null) {
+            return null;
+        }
+
+        return resp.getBody();
+    }
+
+    private String loadModrinthResourceIcon(String url) {
+        ResponseEntity<byte[]> resp = modrinthClient.getResourceIcon(url);
         if (resp == null) {
             return null;
         }

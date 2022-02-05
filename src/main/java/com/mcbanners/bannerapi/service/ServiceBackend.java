@@ -7,5 +7,6 @@ package com.mcbanners.bannerapi.service;
 public enum ServiceBackend {
     SPIGOT,
     ORE,
-    CURSEFORGE
+    CURSEFORGE,
+    MODRINTH
 }

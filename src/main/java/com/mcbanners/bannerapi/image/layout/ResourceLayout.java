@@ -88,6 +88,9 @@ public class ResourceLayout extends Layout {
             case CURSEFORGE:
                 defaultLogoOverride = BannerSprite.DEFAULT_CURSEFORGE_RES_LOGO;
                 break;
+            case MODRINTH:
+                defaultLogoOverride = BannerSprite.DEFAULT_MODRINTH_RES_LOGO;
+                break;
             default:
                 throw new RuntimeException("not yet implemented");
         }
@@ -95,7 +98,7 @@ public class ResourceLayout extends Layout {
         addComponent(new LogoComponent(logoX, defaultLogoOverride, resource.getLogo(), logoSize));
         addComponent(resourceName.makeComponent(textColor, resourceTitle));
         addComponent(authorName.makeComponent(textColor, String.format("by %s", this.author.getName())));
-        if (backend != ServiceBackend.CURSEFORGE) {
+        if (backend != ServiceBackend.CURSEFORGE && backend != ServiceBackend.MODRINTH) {
             addComponent(reviews.makeComponent(textColor, NumberUtil.abbreviate(resource.getRating().getCount()) + " reviews"));
         } else {
             Date date = Date.from(OffsetDateTime.parse(resource.getLastUpdated()).toInstant());
@@ -123,7 +126,7 @@ public class ResourceLayout extends Layout {
                     toOverlay = starNone;
                 }
 
-                if (backend != ServiceBackend.CURSEFORGE) {
+                if (backend != ServiceBackend.CURSEFORGE && backend != ServiceBackend.MODRINTH) {
                     addComponent(new ImageComponent(starsX + ((int) starsGap * i), starsY, toOverlay));
                 }
             }
