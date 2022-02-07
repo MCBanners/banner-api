@@ -2,6 +2,7 @@ package com.mcbanners.bannerapi.net;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.mcbanners.bannerapi.obj.backend.modrinth.ModrinthResource;
+import com.mcbanners.bannerapi.obj.backend.modrinth.ModrinthUser;
 import com.mcbanners.bannerapi.util.Log;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,11 +28,31 @@ public class ModrinthClient extends BasicHttpClient {
         return null;
     }
 
-    public final ResponseEntity<ArrayNode> getAuthor(String authorId) {
+    public final ResponseEntity<ArrayNode> getMainProjectAuthor(String authorId) {
         try {
             return get("project/" + authorId + "/members", ArrayNode.class);
         } catch (RestClientResponseException ex) {
             Log.error("Failed to load Modrinth Team by teamId %s: %s", authorId, ex.getMessage());
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    public final ResponseEntity<ModrinthUser> getUserInformation(String username) {
+        try {
+            return get("user/" + username, ModrinthUser.class);
+        } catch (RestClientResponseException ex) {
+            Log.error("Failed to load Modrinth User by username %s: %s", username, ex.getMessage());
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    public final ResponseEntity<ArrayNode> getUserProjects(String username) {
+        try {
+            return get("user/" + username + "/projects", ArrayNode.class);
+        } catch (RestClientResponseException ex) {
+            Log.error("Failed to load Modrinth User by username %s: %s", username, ex.getMessage());
             ex.printStackTrace();
             return null;
         }

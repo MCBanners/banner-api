@@ -1,5 +1,6 @@
 package com.mcbanners.bannerapi.service.impl;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.mcbanners.bannerapi.net.CurseForgeClient;
 import com.mcbanners.bannerapi.net.ModrinthClient;
 import com.mcbanners.bannerapi.net.OreClient;
@@ -237,7 +238,7 @@ public class DefaultResourceService implements ResourceService {
             return null;
         }
 
-        String modrinthResourceIcon = loadModrinthResourceIcon(modrinthResource.getIcon_url());
+        String modrinthResourceIcon = loadModrinthResourceIcon(modrinthResource.getIconUrl());
         if (modrinthResourceIcon == null) {
             modrinthResourceIcon = "";
         }
@@ -246,7 +247,7 @@ public class DefaultResourceService implements ResourceService {
                 modrinthResourceIcon,
                 modrinthResource.getTitle(),
                 -1,
-                modrinthResource.getSlug(),
+                determineModrinthResourceAuthor(pluginId),
                 new RatingInformation(0, 0.0),
                 modrinthResource.getDownloads(),
                 null,
@@ -260,6 +261,16 @@ public class DefaultResourceService implements ResourceService {
         }
 
         return resp.getBody();
+    }
+
+    private String determineModrinthResourceAuthor(String pluginId) {
+        ResponseEntity<ArrayNode> resp = modrinthClient.getMainProjectAuthor(pluginId);
+        if (resp == null) {
+            return null;
+        }
+
+        ArrayNode team = resp.getBody();
+        return team.get(0).get("user").get("username").textValue();
     }
 
     private String loadModrinthResourceIcon(String url) {

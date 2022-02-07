@@ -10,7 +10,8 @@ import com.mcbanners.bannerapi.net.SpigotClient;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeAuthor;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeProject;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeResource;
-import com.mcbanners.bannerapi.obj.backend.modrinth.ModrinthTeamUser;
+import com.mcbanners.bannerapi.obj.backend.modrinth.ModrinthResource;
+import com.mcbanners.bannerapi.obj.backend.modrinth.ModrinthUser;
 import com.mcbanners.bannerapi.obj.backend.ore.OreAuthor;
 import com.mcbanners.bannerapi.obj.backend.ore.OreResource;
 import com.mcbanners.bannerapi.obj.backend.spigot.SpigotAuthor;
@@ -226,33 +227,68 @@ public class DefaultAuthorService implements AuthorService {
     }
 
     // Modrinth Handling
-    private Author handleModrinth(String teamName) {
-        ArrayNode modrinthTeam = loadModrinthTeam(teamName);
+    private Author handleModrinth(String authorName) {
+        ModrinthUser author = loadModrinthUser(authorName);
 
-        if (modrinthTeam == null) {
+        if (author == null) {
             return null;
         }
 
-        ObjectMapper mapper = new ObjectMapper();
-        ModrinthTeamUser author = mapper.convertValue(modrinthTeam.get(0).get("user"), ModrinthTeamUser.class);
+        ModrinthResource[] projects = loadAllModrinthResourcesByAuthor(authorName);
+
+        if (projects == null) {
+            return null;
+        }
+
+        int totalDownloads = 0, totalFollowers = 0;
+
+        for (ModrinthResource project : projects) {
+            totalDownloads += project.getDownloads();
+            totalFollowers += project.getFollowers();
+        }
+
+        String modrinthAuthorAvatar = loadModrinthAuthorIcon(author.getAvatarUrl());
+        if (modrinthAuthorAvatar == null) {
+            modrinthAuthorAvatar = "";
+        }
 
         return new Author(
                 author.getName(),
-                0,
-                "",
-                -1,
-                -1,
+                projects.length,
+                modrinthAuthorAvatar,
+                totalDownloads,
+                totalFollowers,
                 -1
         );
     }
 
-    private ArrayNode loadModrinthTeam(String id) {
-        ResponseEntity<ArrayNode> resp = modrinthClient.getAuthor(id);
+    private String loadModrinthAuthorIcon(String url) {
+        ResponseEntity<byte[]> resp = modrinthClient.getResourceIcon(url);
+        if (resp == null) {
+            return null;
+        }
+
+        byte[] body = resp.getBody();
+        return Base64.getEncoder().encodeToString(body);
+    }
+
+    private ModrinthUser loadModrinthUser(String username) {
+        ResponseEntity<ModrinthUser> resp = modrinthClient.getUserInformation(username);
         if (resp == null) {
             return null;
         }
 
         return resp.getBody();
+    }
+
+    private ModrinthResource[] loadAllModrinthResourcesByAuthor(String username) {
+        ResponseEntity<ArrayNode> resp = modrinthClient.getUserProjects(username);
+        if (resp == null) {
+            return null;
+        }
+
+        ArrayNode projects = resp.getBody();
+        return mapper.convertValue(projects, ModrinthResource[].class);
     }
 
     // Curse handling

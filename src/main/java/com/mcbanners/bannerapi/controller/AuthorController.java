@@ -52,6 +52,12 @@ public class AuthorController {
         return new ResponseEntity<>(Collections.singletonMap("valid", author != null), HttpStatus.OK);
     }
 
+    @GetMapping(value = "/modrinth/{id}/isValid", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Boolean>> getIsValidModrinth(@PathVariable String id) {
+        Author author = this.authors.getAuthor(id, ServiceBackend.MODRINTH);
+        return new ResponseEntity<>(Collections.singletonMap("valid", author != null), HttpStatus.OK);
+    }
+
     @GetMapping(value = "/spigot/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<byte[]> getBanner(@PathVariable int id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
         Author author = this.authors.getAuthor(id, ServiceBackend.SPIGOT);
@@ -59,7 +65,7 @@ public class AuthorController {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
 
-        return draw(author, raw, outputType);
+        return draw(author, raw, ServiceBackend.SPIGOT, outputType);
     }
 
     @GetMapping(value = "/sponge/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
@@ -69,7 +75,7 @@ public class AuthorController {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
 
-        return draw(author, raw, outputType);
+        return draw(author, raw, ServiceBackend.ORE, outputType);
     }
 
     @GetMapping(value = "/curseforge/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
@@ -85,11 +91,21 @@ public class AuthorController {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
 
-        return draw(author, raw, outputType);
+        return draw(author, raw, ServiceBackend.CURSEFORGE, outputType);
+    }
+
+    @GetMapping(value = "/modrinth/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<byte[]> getBannerModrinth(@PathVariable String id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
+        Author author = this.authors.getAuthor(id, ServiceBackend.MODRINTH);
+        if (author == null) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+
+        return draw(author, raw, ServiceBackend.MODRINTH, outputType);
     }
 
 
-    private ResponseEntity<byte[]> draw(Author author, Map<String, String> raw, BannerOutputType outputType) {
-        return BannerImageWriter.write(new AuthorLayout(author, raw).draw(outputType), outputType);
+    private ResponseEntity<byte[]> draw(Author author, Map<String, String> raw, ServiceBackend backend, BannerOutputType outputType) {
+        return BannerImageWriter.write(new AuthorLayout(author, raw, backend).draw(outputType), outputType);
     }
 }

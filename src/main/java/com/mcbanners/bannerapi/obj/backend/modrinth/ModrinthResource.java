@@ -1,6 +1,8 @@
 package com.mcbanners.bannerapi.obj.backend.modrinth;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonSetter;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ModrinthResource {
@@ -9,7 +11,8 @@ public class ModrinthResource {
     private String title;
     private String updated;
     private int downloads;
-    private String icon_url;
+    private int followers;
+    private String iconUrl;
 
     public String getSlug() {
         return slug;
@@ -17,6 +20,14 @@ public class ModrinthResource {
 
     public void setSlug(String slug) {
         this.slug = slug;
+    }
+
+    public String getTeam() {
+        return team;
+    }
+
+    public void setTeam(String team) {
+        this.team = team;
     }
 
     public String getTitle() {
@@ -27,12 +38,12 @@ public class ModrinthResource {
         this.title = title;
     }
 
-    public String getIcon_url() {
-        return icon_url;
+    public String getUpdated() {
+        return updated;
     }
 
-    public void setIcon_url(String icon_url) {
-        this.icon_url = icon_url;
+    public void setUpdated(String updated) {
+        this.updated = updated;
     }
 
     public int getDownloads() {
@@ -43,19 +54,21 @@ public class ModrinthResource {
         this.downloads = downloads;
     }
 
-    public String getUpdated() {
-        return updated;
+    @JsonGetter("icon_url")
+    public String getIconUrl() {
+        return iconUrl;
     }
 
-    public void setUpdated(String updated) {
-        this.updated = updated;
+    @JsonSetter("icon_url")
+    public void setIconUrl(String iconUrl) {
+        this.iconUrl = iconUrl;
     }
 
-    public String getTeam() {
-        return team;
+    public int getFollowers() {
+        return followers;
     }
 
-    public void setTeam(String team) {
-        this.team = team;
+    public void setFollowers(int followers) {
+        this.followers = followers;
     }
 }
