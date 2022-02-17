@@ -222,7 +222,7 @@ public abstract class BasicHttpClient {
             headers = extraHeaders.apply(headers);
         }
 
-        HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
+        HttpEntity<String> entity = new HttpEntity<>(headers);
 
         return this.template.exchange(
                 url,

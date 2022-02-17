@@ -1,5 +1,7 @@
 package com.mcbanners.bannerapi.service.impl;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mcbanners.bannerapi.net.CurseForgeClient;
 import com.mcbanners.bannerapi.net.OreClient;
 import com.mcbanners.bannerapi.net.SpigotClient;
@@ -29,6 +31,8 @@ public class DefaultAuthorService implements AuthorService {
     private final SpigotClient spigotClient;
     private final OreClient oreClient;
     private final CurseForgeClient curseForgeClient;
+
+    private final ObjectMapper mapper = new ObjectMapper();
 
     @Autowired
     public DefaultAuthorService(SpigotClient spigotClient, OreClient oreClient, CurseForgeClient curseForgeClient) {
@@ -153,26 +157,27 @@ public class DefaultAuthorService implements AuthorService {
 
     // Ore handling
     private Author handleOre(String authorName) {
-        OreAuthor author = loadOreAuthor(authorName);
-        if (author == null || author.getProjects() == null) {
+        OreResource[] resources = loadOreAuthorProjects(authorName);
+
+        if (resources == null) {
             return null;
         }
 
         int totalDownloads = 0, totalLikes = 0;
 
-        for (OreResource resource : author.getProjects()) {
-            totalDownloads += resource.getDownloads();
-            totalLikes += resource.getStars();
+        for (OreResource resource : resources) {
+            totalDownloads += resource.getStats().getDownloads();
+            totalLikes += resource.getStats().getStars();
         }
 
-        String oreAuthorAvatar = loadOreImageByUrl(author.getAvatarUrl());
+        String oreAuthorAvatar = loadOreImageByUrl(authorName);
         if (oreAuthorAvatar == null) {
             oreAuthorAvatar = "";
         }
 
         return new Author(
-                author.getUsername(),
-                author.getProjects().length,
+                resources[0].getNamespace().getOwner(),
+                resources.length,
                 oreAuthorAvatar,
                 totalDownloads,
                 totalLikes,
@@ -189,8 +194,22 @@ public class DefaultAuthorService implements AuthorService {
         return resp.getBody();
     }
 
+    private OreResource[] loadOreAuthorProjects(String authorId) {
+        ResponseEntity<JsonNode> resp = oreClient.getProjectsFromAuthor(authorId);
+        if (resp == null) {
+            return null;
+        }
+
+        JsonNode data = resp.getBody().get("result");
+        if (!data.isArray()) {
+            return  null;
+        }
+
+        return mapper.convertValue(data, OreResource[].class);
+    }
+
     private String loadOreImageByUrl(String url) {
-        ResponseEntity<byte[]> resp = oreClient.getAuthApiImage(url);
+        ResponseEntity<byte[]> resp = oreClient.getAuthorIcon(url);
         if (resp == null) {
             return null;
         }

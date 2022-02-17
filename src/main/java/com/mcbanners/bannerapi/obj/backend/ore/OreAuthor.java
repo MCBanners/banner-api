@@ -5,9 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OreAuthor {
     private int id;
-    private String username;
+    private String name;
     private String avatarUrl;
-    private OreResource[] projects;
 
     public int getId() {
         return id;
@@ -17,12 +16,12 @@ public class OreAuthor {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getAvatarUrl() {
@@ -31,13 +30,5 @@ public class OreAuthor {
 
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
-    }
-
-    public OreResource[] getProjects() {
-        return projects;
-    }
-
-    public void setProjects(OreResource[] projects) {
-        this.projects = projects;
     }
 }
