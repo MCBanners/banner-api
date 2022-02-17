@@ -1,22 +1,24 @@
 package com.mcbanners.bannerapi.obj.backend.ore;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonSetter;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OreResource {
     private String pluginId;
     private String name;
-    private String owner;
-    private String description;
-    private String href;
-    private int views;
-    private int downloads;
-    private int stars;
+    private OreResourceNamespace namespace;
+    private OreResourceStats stats;
+    private String lastUpdated;
+    private String iconUrl;
 
+    @JsonGetter("plugin_id")
     public String getPluginId() {
         return pluginId;
     }
 
+    @JsonSetter("plugin_id")
     public void setPluginId(String pluginId) {
         this.pluginId = pluginId;
     }
@@ -29,51 +31,39 @@ public class OreResource {
         this.name = name;
     }
 
-    public String getOwner() {
-        return owner;
+    public OreResourceStats getStats() {
+        return stats;
     }
 
-    public void setOwner(String owner) {
-        this.owner = owner;
+    public void setStats(OreResourceStats stats) {
+        this.stats = stats;
     }
 
-    public String getDescription() {
-        return description;
+    @JsonGetter("last_updated")
+    public String getLastUpdated() {
+        return lastUpdated;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    @JsonSetter("last_updated")
+    public void setLastUpdated(String lastUpdated) {
+        this.lastUpdated = lastUpdated;
     }
 
-    public String getHref() {
-        return href;
+    @JsonGetter("icon_url")
+    public String getIconUrl() {
+        return iconUrl;
     }
 
-    public void setHref(String href) {
-        this.href = href;
+    @JsonSetter("icon_url")
+    public void setIconUrl(String iconUrl) {
+        this.iconUrl = iconUrl;
     }
 
-    public int getViews() {
-        return views;
+    public OreResourceNamespace getNamespace() {
+        return namespace;
     }
 
-    public void setViews(int views) {
-        this.views = views;
-    }
-
-    public int getDownloads() {
-        return downloads;
-    }
-
-    public void setDownloads(int downloads) {
-        this.downloads = downloads;
-    }
-
-    public int getStars() {
-        return stars;
-    }
-
-    public void setStars(int stars) {
-        this.stars = stars;
+    public void setNamespace(OreResourceNamespace namespace) {
+        this.namespace = namespace;
     }
 }

@@ -12,6 +12,11 @@ import java.util.function.Function;
 public abstract class BasicHttpClient {
     private static final String USER_AGENT = "MCBanners";
     private final String baseURL;
+
+    public String getBaseURL() {
+        return baseURL;
+    }
+
     private final HttpHeaders headers;
     private final RestTemplate template;
 
@@ -222,7 +227,7 @@ public abstract class BasicHttpClient {
             headers = extraHeaders.apply(headers);
         }
 
-        HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
+        HttpEntity<String> entity = new HttpEntity<>(headers);
 
         return this.template.exchange(
                 url,

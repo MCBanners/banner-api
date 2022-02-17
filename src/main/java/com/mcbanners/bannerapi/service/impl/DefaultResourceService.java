@@ -140,7 +140,9 @@ public class DefaultResourceService implements ResourceService {
             return null;
         }
 
-        String oreResourceIcon = loadOreResourceIcon(oreResource.getHref());
+        System.out.println(oreResource.getIconUrl());
+
+        String oreResourceIcon = loadOreResourceIcon(oreResource.getIconUrl());
         if (oreResourceIcon == null) {
             oreResourceIcon = "";
         }
@@ -149,9 +151,9 @@ public class DefaultResourceService implements ResourceService {
                 oreResourceIcon,
                 oreResource.getName(),
                 -1, // not known
-                oreResource.getOwner(), // username
-                new RatingInformation(oreResource.getStars()),
-                oreResource.getDownloads(),
+                oreResource.getNamespace().getOwner(), // username
+                new RatingInformation(oreResource.getStats().getStars()),
+                oreResource.getStats().getDownloads(),
                 null,
                 null);
     }
@@ -166,7 +168,7 @@ public class DefaultResourceService implements ResourceService {
     }
 
     private String loadOreResourceIcon(String href) {
-        ResponseEntity<byte[]> resp = oreClient.getResourceIcon(href);
+        ResponseEntity<byte[]> resp = oreClient.getImage(href);
         if (resp == null) {
             return null;
         }
