@@ -26,7 +26,6 @@ public class OreClient extends BasicHttpClient {
         auth();
     }
 
-
     public final ResponseEntity<OreAuthorization> initialAuthProcess() {
         try {
             HttpHeaders headers = new HttpHeaders();
@@ -49,9 +48,6 @@ public class OreClient extends BasicHttpClient {
         OreAuthorization auth = resp.getBody();
         this.expiration = Instant.from(DateTimeFormatter.ISO_OFFSET_DATE_TIME.parse(auth.getExpires()));
         this.session = auth.getSession();
-
-        System.out.println(this.expiration);
-        System.out.println(this.session);
     }
 
     public final ResponseEntity<OreAuthor> getAuthor(String authorId) {
