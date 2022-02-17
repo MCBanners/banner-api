@@ -13,7 +13,9 @@ public enum BannerTemplate {
     ORANGE_RADIAL(BannerTextTheme.DARK),
     VELVET(BannerTextTheme.DARK),
     YELLOW(BannerTextTheme.DARK),
-    MALACHITE_GREEN(BannerTextTheme.DARK);
+    MALACHITE_GREEN(BannerTextTheme.DARK),
+    DARK_GUNMETAL(BannerTextTheme.LIGHT),
+    PURPLE_TAUPE(BannerTextTheme.LIGHT);
 
     private final BannerTextTheme textTheme;
 
