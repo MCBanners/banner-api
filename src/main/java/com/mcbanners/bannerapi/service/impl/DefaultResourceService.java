@@ -140,8 +140,6 @@ public class DefaultResourceService implements ResourceService {
             return null;
         }
 
-        System.out.println(oreResource.getIconUrl());
-
         String oreResourceIcon = loadOreResourceIcon(oreResource.getIconUrl());
         if (oreResourceIcon == null) {
             oreResourceIcon = "";
