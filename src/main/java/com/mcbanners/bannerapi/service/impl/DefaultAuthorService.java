@@ -153,29 +153,29 @@ public class DefaultAuthorService implements AuthorService {
 
     // Ore handling
     private Author handleOre(String authorName) {
-        OreAuthor author = loadOreAuthor(authorName);
-        if (author == null || author.getProjects() == null) {
-            return null;
-        }
-
-        int totalDownloads = 0, totalLikes = 0;
-
-        for (OreResource resource : author.getProjects()) {
-            totalDownloads += resource.getDownloads();
-            totalLikes += resource.getStars();
-        }
-
-        String oreAuthorAvatar = loadOreImageByUrl(author.getAvatarUrl());
-        if (oreAuthorAvatar == null) {
-            oreAuthorAvatar = "";
-        }
+//        OreAuthor author = loadOreAuthor(authorName);
+//        if (author == null || author.getProjects() == null) {
+//            return null;
+//        }
+//
+//        int totalDownloads = 0, totalLikes = 0;
+//
+//        for (OreResource resource : author.getProjects()) {
+//            totalDownloads += resource.getStats().getDownloads();
+//            totalLikes += resource.getStats().getStars();
+//        }
+//
+//        String oreAuthorAvatar = loadOreImageByUrl(author.getAvatarUrl());
+//        if (oreAuthorAvatar == null) {
+//            oreAuthorAvatar = "";
+//        }
 
         return new Author(
-                author.getUsername(),
-                author.getProjects().length,
-                oreAuthorAvatar,
-                totalDownloads,
-                totalLikes,
+                authorName,
+                1,
+                "",
+                -1,
+                -1,
                 -1 // unknown
         );
     }
