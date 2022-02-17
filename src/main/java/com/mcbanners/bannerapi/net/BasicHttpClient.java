@@ -12,11 +12,6 @@ import java.util.function.Function;
 public abstract class BasicHttpClient {
     private static final String USER_AGENT = "MCBanners";
     private final String baseURL;
-
-    public String getBaseURL() {
-        return baseURL;
-    }
-
     private final HttpHeaders headers;
     private final RestTemplate template;
 
