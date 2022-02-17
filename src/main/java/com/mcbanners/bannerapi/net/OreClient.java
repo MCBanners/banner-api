@@ -36,6 +36,9 @@ public class OreClient extends BasicHttpClient {
         } catch (RestClientResponseException ex) {
             Log.error("Failed to Authenticate to Ore API");
             ex.printStackTrace();
+            if (ex.getRawStatusCode() == 401) {
+                auth();
+            }
             return null;
         }
     }
@@ -59,6 +62,9 @@ public class OreClient extends BasicHttpClient {
         } catch (RestClientResponseException ex) {
             Log.error("Failed to load Ore Author by authorId %s: %s", authorId, ex.getMessage());
             ex.printStackTrace();
+            if (ex.getRawStatusCode() == 401) {
+                auth();
+            }
             return null;
         }
     }
@@ -71,6 +77,9 @@ public class OreClient extends BasicHttpClient {
         } catch (RestClientResponseException ex) {
             Log.error("Failed to load Ore Author by authorId %s: %s", authorId, ex.getMessage());
             ex.printStackTrace();
+            if (ex.getRawStatusCode() == 401) {
+                auth();
+            }
             return null;
         }
     }
@@ -83,6 +92,9 @@ public class OreClient extends BasicHttpClient {
         } catch (RestClientResponseException ex) {
             Log.error("Failed to load Ore Resource by pluginId %s: %s", pluginId, ex.getMessage());
             ex.printStackTrace();
+            if (ex.getRawStatusCode() == 401) {
+                auth();
+            }
             return null;
         }
     }
