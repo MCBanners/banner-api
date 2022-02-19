@@ -29,10 +29,7 @@ public class OreClient extends BasicHttpClient {
 
     public final ResponseEntity<OreAuthorization> initialAuthProcess() {
         try {
-            HttpHeaders headers = new HttpHeaders();
-            headers.add(HttpHeaders.ACCEPT, "application/json");
-            headers.add(HttpHeaders.CONTENT_TYPE, "application/json");
-            return post("authenticate", OreAuthorization.class, httpHeaders -> headers);
+            return post("authenticate", OreAuthorization.class);
         } catch (RestClientResponseException ex) {
             Log.error("Failed to Authenticate to Ore API");
             ex.printStackTrace();
