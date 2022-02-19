@@ -12,16 +12,10 @@ import java.util.function.Function;
 public abstract class BasicHttpClient {
     private static final String USER_AGENT = "MCBanners";
     private final String baseURL;
-    private final HttpHeaders headers;
     private final RestTemplate template;
 
     public BasicHttpClient(String baseURL) {
         this.baseURL = baseURL;
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("User-Agent", USER_AGENT);
-        this.headers = headers;
-
         this.template = new RestTemplate();
     }
 
@@ -216,13 +210,16 @@ public abstract class BasicHttpClient {
     }
 
     private <T> ResponseEntity<T> makeRequestForResponseType(String url, HttpMethod method, Class<T> responseType, Function<HttpHeaders, HttpHeaders> extraHeaders) throws RestClientResponseException {
-        HttpHeaders headers = this.headers;
+        HttpHeaders headers = new HttpHeaders();
 
         if (extraHeaders != null) {
             headers = extraHeaders.apply(headers);
         }
 
-        HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
+        // Force adds the user agent. Idk why it isn't there from the other attempt
+        headers.add("User-Agent", USER_AGENT);
+
+        HttpEntity<String> entity = new HttpEntity<>(headers);
 
         return this.template.exchange(
                 url,
