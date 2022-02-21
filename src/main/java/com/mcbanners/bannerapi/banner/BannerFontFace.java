@@ -9,7 +9,9 @@ public enum BannerFontFace {
     OPEN_SANS,
     POPPINS,
     RALEWAY,
-    SOURCE_SANS_PRO;
+    SOURCE_SANS_PRO,
+    JETBRAINS_MONO,
+    INTER;
 
     public String getFileName(boolean bold) {
         StringBuilder builder = new StringBuilder();
