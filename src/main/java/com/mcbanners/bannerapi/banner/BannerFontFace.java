@@ -11,7 +11,8 @@ public enum BannerFontFace {
     RALEWAY,
     SOURCE_SANS_PRO,
     JETBRAINS_MONO,
-    INTER;
+    INTER,
+    ROBERTO;
 
     public String getFileName(boolean bold) {
         StringBuilder builder = new StringBuilder();
