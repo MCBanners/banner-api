@@ -12,7 +12,7 @@ public enum BannerFontFace {
     SOURCE_SANS_PRO,
     JETBRAINS_MONO,
     INTER,
-    ROBERTO;
+    ROBOTO;
 
     public String getFileName(boolean bold) {
         StringBuilder builder = new StringBuilder();
