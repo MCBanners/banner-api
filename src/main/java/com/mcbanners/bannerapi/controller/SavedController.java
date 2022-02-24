@@ -1,7 +1,5 @@
 package com.mcbanners.bannerapi.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mcbanners.bannerapi.banner.BannerOutputType;
 import com.mcbanners.bannerapi.banner.BannerType;
 import com.mcbanners.bannerapi.image.BannerImageWriter;
@@ -81,35 +79,49 @@ public class SavedController {
 
         Map<String, String> settings = banner.getSettings();
 
+        ServiceBackend backend = null;
         Layout layout = null;
         switch (banner.getBannerType()) {
             case SPIGOT_AUTHOR:
             case SPONGE_AUTHOR:
             case CURSEFORGE_AUTHOR:
+            case MODRINTH_AUTHOR:
                 Author author = null;
                 switch (banner.getBannerType()) {
                     case SPIGOT_AUTHOR:
-                        author = authors.getAuthor(Integer.parseInt(settings.get("_author_id")), ServiceBackend.SPIGOT);
+                        backend = ServiceBackend.SPIGOT;
+                        author = authors.getAuthor(Integer.parseInt(settings.get("_author_id")), backend);
                         break;
                     case SPONGE_AUTHOR:
-                        author = authors.getAuthor(settings.get("_author_id"), ServiceBackend.ORE);
+                        backend = ServiceBackend.ORE;
+                        author = authors.getAuthor(settings.get("_author_id"), backend);
                         break;
                     case CURSEFORGE_AUTHOR:
-                        author = authors.getAuthor(settings.get("_author_id"), ServiceBackend.CURSEFORGE);
+                        backend = ServiceBackend.CURSEFORGE;
+                        author = authors.getAuthor(settings.get("_author_id"), backend);
+                        break;
+                    case MODRINTH_AUTHOR:
+                        backend = ServiceBackend.MODRINTH;
+                        author = authors.getAuthor(settings.get("_author_id"), backend);
+                        break;
                 }
 
                 settings.remove("_author_id");
+
+                if (backend == null) {
+                    throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Backend not set");
+                }
 
                 if (author == null) {
                     throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The stored author could not be found!");
                 }
 
-                layout = new AuthorLayout(author, settings);
+                layout = new AuthorLayout(author, settings, backend);
                 break;
             case SPIGOT_RESOURCE:
             case SPONGE_RESOURCE:
             case CURSEFORGE_RESOURCE:
-                ServiceBackend backend = null;
+            case MODRINTH_RESOURCE:
                 Resource resource = null;
                 author = null;
                 switch (banner.getBannerType()) {
@@ -127,6 +139,11 @@ public class SavedController {
                         backend = ServiceBackend.CURSEFORGE;
                         resource = resources.getResource(Integer.parseInt(settings.get("_resource_id")), backend);
                         author = authors.getAuthor(resource.getAuthorId(), backend);
+                        break;
+                    case MODRINTH_RESOURCE:
+                        backend = ServiceBackend.MODRINTH;
+                        resource = resources.getResource(settings.get("_resource_id"), backend);
+                        author = authors.getAuthor(resource.getAuthorName(), backend);
                         break;
                 }
 

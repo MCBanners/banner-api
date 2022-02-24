@@ -10,6 +10,7 @@ import com.mcbanners.bannerapi.image.ImageBuilder;
 import com.mcbanners.bannerapi.image.component.BasicComponent;
 import com.mcbanners.bannerapi.image.component.LogoComponent;
 import com.mcbanners.bannerapi.obj.generic.Author;
+import com.mcbanners.bannerapi.service.ServiceBackend;
 import com.mcbanners.bannerapi.util.NumberUtil;
 
 import java.awt.*;
@@ -19,6 +20,7 @@ import java.util.Map;
 
 public class AuthorLayout extends Layout {
     private final Author author;
+    private final ServiceBackend backend;
     private final BannerTemplate template;
     private final int logoSize;
     private final int logoX;
@@ -28,8 +30,9 @@ public class AuthorLayout extends Layout {
     private final TextParameterReader<AuthorParameter> likes;
     private final TextParameterReader<AuthorParameter> reviews;
 
-    public AuthorLayout(Author author, Map<String, String> parameters) {
+    public AuthorLayout(Author author, Map<String, String> parameters, ServiceBackend backend) {
         this.author = author;
+        this.backend = backend;
 
         ParameterReader<AuthorParameter> reader = new ParameterReader<>(AuthorParameter.class, parameters);
         reader.addTextReaders("author_name", "resource_count", "likes", "downloads", "reviews");
@@ -52,7 +55,7 @@ public class AuthorLayout extends Layout {
         addComponent(authorName.makeComponent(textColor, author.getName()));
         addComponent(resourceCount.makeComponent(textColor, author.getResources() + " resources"));
         if (author.getLikes() != -1) {
-            addComponent(likes.makeComponent(textColor, NumberUtil.abbreviate(author.getLikes()) + " likes"));
+            addComponent(likes.makeComponent(textColor, NumberUtil.abbreviate(author.getLikes()) + (backend == ServiceBackend.MODRINTH ? " followers" : " likes")));
         }
         addComponent(downloads.makeComponent(textColor, NumberUtil.abbreviate(author.getDownloads()) + " downloads"));
         if (author.getRating() != -1) {

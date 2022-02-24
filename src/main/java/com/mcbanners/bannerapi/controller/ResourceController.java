@@ -51,6 +51,12 @@ public class ResourceController {
         return new ResponseEntity<>(Collections.singletonMap("valid", resource != null), HttpStatus.OK);
     }
 
+    @GetMapping(value = "/modrinth/{id}/isValid", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Boolean>> getIsValidModrinth(@PathVariable String id) {
+        Resource resource = this.resources.getResource(id, ServiceBackend.MODRINTH);
+        return new ResponseEntity<>(Collections.singletonMap("valid", resource != null), HttpStatus.OK);
+    }
+
     @GetMapping(value = "/spigot/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<byte[]> getBanner(@PathVariable int id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
         Resource resource = this.resources.getResource(id, ServiceBackend.SPIGOT);
@@ -79,6 +85,21 @@ public class ResourceController {
         }
 
         return draw(resource, author, raw, ServiceBackend.CURSEFORGE, outputType);
+    }
+
+    @GetMapping(value = "/modrinth/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<byte[]> getBannerModrinth(@PathVariable String id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
+        Resource resource = this.resources.getResource(id, ServiceBackend.MODRINTH);
+        if (resource == null) {
+            return null;
+        }
+
+        Author author = this.authors.getAuthor(resource.getAuthorName(), ServiceBackend.MODRINTH);
+        if (author == null) {
+            return null;
+        }
+
+        return draw(resource, author, raw, ServiceBackend.MODRINTH, outputType);
     }
 
     @GetMapping(value = "/sponge/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)

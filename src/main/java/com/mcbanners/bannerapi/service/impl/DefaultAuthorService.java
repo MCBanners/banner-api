@@ -1,13 +1,17 @@
 package com.mcbanners.bannerapi.service.impl;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.mcbanners.bannerapi.net.CurseForgeClient;
+import com.mcbanners.bannerapi.net.ModrinthClient;
 import com.mcbanners.bannerapi.net.OreClient;
 import com.mcbanners.bannerapi.net.SpigotClient;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeAuthor;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeProject;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeResource;
+import com.mcbanners.bannerapi.obj.backend.modrinth.ModrinthResource;
+import com.mcbanners.bannerapi.obj.backend.modrinth.ModrinthUser;
 import com.mcbanners.bannerapi.obj.backend.ore.OreAuthor;
 import com.mcbanners.bannerapi.obj.backend.ore.OreResource;
 import com.mcbanners.bannerapi.obj.backend.spigot.SpigotAuthor;
@@ -31,14 +35,16 @@ public class DefaultAuthorService implements AuthorService {
     private final SpigotClient spigotClient;
     private final OreClient oreClient;
     private final CurseForgeClient curseForgeClient;
+    private final ModrinthClient modrinthClient;
 
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Autowired
-    public DefaultAuthorService(SpigotClient spigotClient, OreClient oreClient, CurseForgeClient curseForgeClient) {
+    public DefaultAuthorService(SpigotClient spigotClient, OreClient oreClient, CurseForgeClient curseForgeClient, ModrinthClient modrinthClient) {
         this.spigotClient = spigotClient;
         this.oreClient = oreClient;
         this.curseForgeClient = curseForgeClient;
+        this.modrinthClient = modrinthClient;
     }
 
     /**
@@ -77,6 +83,8 @@ public class DefaultAuthorService implements AuthorService {
                 return handleOre(authorName);
             case CURSEFORGE:
                 return handleCurseForge(0, authorName);
+            case MODRINTH:
+                return handleModrinth(authorName);
             case SPIGOT:
             default:
                 return null;
@@ -216,6 +224,71 @@ public class DefaultAuthorService implements AuthorService {
 
         byte[] body = resp.getBody();
         return Base64.getEncoder().encodeToString(body);
+    }
+
+    // Modrinth Handling
+    private Author handleModrinth(String authorName) {
+        ModrinthUser author = loadModrinthUser(authorName);
+
+        if (author == null) {
+            return null;
+        }
+
+        ModrinthResource[] projects = loadAllModrinthResourcesByAuthor(authorName);
+
+        if (projects == null) {
+            return null;
+        }
+
+        int totalDownloads = 0, totalFollowers = 0;
+
+        for (ModrinthResource project : projects) {
+            totalDownloads += project.getDownloads();
+            totalFollowers += project.getFollowers();
+        }
+
+        String modrinthAuthorAvatar = loadModrinthAuthorIcon(author.getAvatarUrl());
+        if (modrinthAuthorAvatar == null) {
+            modrinthAuthorAvatar = "";
+        }
+
+        return new Author(
+                author.getName(),
+                projects.length,
+                modrinthAuthorAvatar,
+                totalDownloads,
+                totalFollowers,
+                -1
+        );
+    }
+
+    private String loadModrinthAuthorIcon(String url) {
+        ResponseEntity<byte[]> resp = modrinthClient.getResourceIcon(url);
+        if (resp == null) {
+            return null;
+        }
+
+        byte[] body = resp.getBody();
+        return Base64.getEncoder().encodeToString(body);
+    }
+
+    private ModrinthUser loadModrinthUser(String username) {
+        ResponseEntity<ModrinthUser> resp = modrinthClient.getUserInformation(username);
+        if (resp == null) {
+            return null;
+        }
+
+        return resp.getBody();
+    }
+
+    private ModrinthResource[] loadAllModrinthResourcesByAuthor(String username) {
+        ResponseEntity<ArrayNode> resp = modrinthClient.getUserProjects(username);
+        if (resp == null) {
+            return null;
+        }
+
+        ArrayNode projects = resp.getBody();
+        return mapper.convertValue(projects, ModrinthResource[].class);
     }
 
     // Curse handling
