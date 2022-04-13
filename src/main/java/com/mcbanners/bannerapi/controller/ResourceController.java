@@ -57,6 +57,12 @@ public class ResourceController {
         return new ResponseEntity<>(Collections.singletonMap("valid", resource != null), HttpStatus.OK);
     }
 
+    @GetMapping(value = "/mcmarket/{id}/isValid", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Boolean>> getIsValidMCMarket(@PathVariable int id) {
+        Resource resource = this.resources.getResource(id, ServiceBackend.MCMARKET);
+        return new ResponseEntity<>(Collections.singletonMap("valid", resource != null), HttpStatus.OK);
+    }
+
     @GetMapping(value = "/polymart/{id}/isValid", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Boolean>> getIsValidPolyMart(@PathVariable int id) {
         Resource resource = this.resources.getResource(id, ServiceBackend.POLYMART);
@@ -106,6 +112,21 @@ public class ResourceController {
         }
 
         return draw(resource, author, raw, ServiceBackend.MODRINTH, outputType);
+    }
+
+    @GetMapping(value = "/mcmarket/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<byte[]> getBannerMCMarket(@PathVariable int id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
+        Resource resource = this.resources.getResource(id, ServiceBackend.MCMARKET);
+        if (resource == null) {
+            return null;
+        }
+
+        Author author = this.authors.getAuthor(resource.getAuthorName(), ServiceBackend.MCMARKET);
+        if (author == null) {
+            return null;
+        }
+
+        return draw(resource, author, raw, ServiceBackend.MCMARKET, outputType);
     }
 
     @GetMapping(value = "/sponge/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)

@@ -2,6 +2,7 @@ package com.mcbanners.bannerapi.service.impl;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.mcbanners.bannerapi.net.CurseForgeClient;
+import com.mcbanners.bannerapi.net.MCMarketClient;
 import com.mcbanners.bannerapi.net.ModrinthClient;
 import com.mcbanners.bannerapi.net.OreClient;
 import com.mcbanners.bannerapi.net.PolyMartClient;
@@ -9,6 +10,8 @@ import com.mcbanners.bannerapi.net.SpigotClient;
 import com.mcbanners.bannerapi.net.error.FurtherProcessingRequiredException;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeResource;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeResourceMember;
+import com.mcbanners.bannerapi.obj.backend.mcmarket.MCMarketAuthor;
+import com.mcbanners.bannerapi.obj.backend.mcmarket.MCMarketResource;
 import com.mcbanners.bannerapi.obj.backend.modrinth.ModrinthResource;
 import com.mcbanners.bannerapi.obj.backend.ore.OreResource;
 import com.mcbanners.bannerapi.obj.backend.polymart.PolyMartResource;
@@ -36,15 +39,18 @@ public class DefaultResourceService implements ResourceService {
     private final OreClient oreClient;
     private final CurseForgeClient curseForgeClient;
     private final ModrinthClient modrinthClient;
+    private final MCMarketClient mcMarketClient;
     private final PolyMartClient polyMartClient;
 
     @Autowired
     public DefaultResourceService(SpigotClient spigotClient, OreClient oreClient, CurseForgeClient curseForgeClient, ModrinthClient modrinthClient, PolyMartClient polyMartClient) {
+    public DefaultResourceService(SpigotClient spigotClient, OreClient oreClient, CurseForgeClient curseForgeClient, ModrinthClient modrinthClient, MCMarketClient mcMarketClient) {
         this.spigotClient = spigotClient;
         this.oreClient = oreClient;
         this.curseForgeClient = curseForgeClient;
         this.modrinthClient = modrinthClient;
         this.polyMartClient = polyMartClient;
+        this.mcMarketClient = mcMarketClient;
     }
 
     /**
@@ -62,6 +68,8 @@ public class DefaultResourceService implements ResourceService {
                 return handleSpigot(resourceId);
             case CURSEFORGE:
                 return handleCurse(resourceId);
+            case MCMARKET:
+                return handleMcMarket(resourceId);
             case POLYMART:
                 return handlePolyMart(resourceId);
             case ORE:
@@ -290,6 +298,54 @@ public class DefaultResourceService implements ResourceService {
 
         byte[] body = resp.getBody();
         return Base64.getEncoder().encodeToString(body);
+    }
+
+    // MC-Market handling
+    private Resource handleMcMarket(int resourceId) {
+        MCMarketResource resource = loadMCMarketResource(resourceId);
+
+        if (resource == null || resource.getResult().equals("error")) {
+            return null;
+        }
+
+        MCMarketAuthor author = loadMCMarketAuthor(resource.getData().getAuthorId());
+
+        if (author == null || author.getResult().equals("error")) {
+            return null;
+        }
+
+        boolean isPremium = resource.getData().getPrice() != 0.0;
+
+        return new Resource(
+                "",
+                resource.getData().getTitle(),
+                author.getData().getMemberId(),
+                author.getData().getUsername(),
+                new RatingInformation(
+                        resource.getData().getReviewCount(),
+                        resource.getData().getReviewAverage()
+                ),
+                resource.getData().getDownloadCount(),
+                isPremium ? new PriceInformation(resource.getData().getPrice(), resource.getData().getCurrency().toUpperCase()) : null,
+                null);
+    }
+
+    private MCMarketResource loadMCMarketResource(int resourceId) {
+        ResponseEntity<MCMarketResource> resp = mcMarketClient.getResource(resourceId);
+        if (resp == null) {
+            return null;
+        }
+
+        return resp.getBody();
+    }
+
+    private MCMarketAuthor loadMCMarketAuthor(int authorId) {
+        ResponseEntity<MCMarketAuthor> resp = mcMarketClient.getAuthor(authorId);
+        if (resp == null) {
+            return null;
+        }
+
+        return resp.getBody();
     }
 
     // PolyMart handling

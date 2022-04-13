@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.mcbanners.bannerapi.net.CurseForgeClient;
+import com.mcbanners.bannerapi.net.MCMarketClient;
 import com.mcbanners.bannerapi.net.ModrinthClient;
 import com.mcbanners.bannerapi.net.OreClient;
 import com.mcbanners.bannerapi.net.PolyMartClient;
@@ -11,6 +12,7 @@ import com.mcbanners.bannerapi.net.SpigotClient;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeAuthor;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeProject;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeResource;
+import com.mcbanners.bannerapi.obj.backend.mcmarket.MCMarketAuthor;
 import com.mcbanners.bannerapi.obj.backend.modrinth.ModrinthResource;
 import com.mcbanners.bannerapi.obj.backend.modrinth.ModrinthUser;
 import com.mcbanners.bannerapi.obj.backend.ore.OreAuthor;
@@ -41,16 +43,19 @@ public class DefaultAuthorService implements AuthorService {
     private final CurseForgeClient curseForgeClient;
     private final ModrinthClient modrinthClient;
     private final PolyMartClient polyMartClient;
+    private final MCMarketClient mcMarketClient;
 
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Autowired
+    public DefaultAuthorService(SpigotClient spigotClient, OreClient oreClient, CurseForgeClient curseForgeClient, ModrinthClient modrinthClient, MCMarketClient mcMarketClient) {
     public DefaultAuthorService(SpigotClient spigotClient, OreClient oreClient, CurseForgeClient curseForgeClient, ModrinthClient modrinthClient, PolyMartClient polyMartClient) {
         this.spigotClient = spigotClient;
         this.oreClient = oreClient;
         this.curseForgeClient = curseForgeClient;
         this.modrinthClient = modrinthClient;
         this.polyMartClient = polyMartClient;
+        this.mcMarketClient = mcMarketClient;
     }
 
     /**
@@ -70,6 +75,8 @@ public class DefaultAuthorService implements AuthorService {
                 return handleCurseForge(authorId, null);
             case POLYMART:
                 return handlePolyMart(authorId);
+            case MCMARKET:
+                return handleMcMarket(authorId);
             case ORE:
             default:
                 return null;
@@ -360,6 +367,35 @@ public class DefaultAuthorService implements AuthorService {
             }
         }
         return resources;
+    }
+
+    // MC-Market Handling
+    private Author handleMcMarket(int authorId) {
+        MCMarketAuthor author = loadMCMarketAuthor(authorId);
+
+        if (author == null || author.getResult().equals("error")) {
+            return null;
+        }
+
+        int totalDownloads = 0, totalReviews = 0;
+
+        return new Author(
+                author.getData().getUsername(),
+                author.getData().getResourceCount(),
+                "",
+                totalDownloads,
+                -1,
+                totalReviews
+        );
+    }
+
+    private MCMarketAuthor loadMCMarketAuthor(int authorId) {
+        ResponseEntity<MCMarketAuthor> resp = mcMarketClient.getAuthor(authorId);
+        if (resp == null) {
+            return null;
+        }
+
+        return resp.getBody();
     }
 
     // PolyMart Handling

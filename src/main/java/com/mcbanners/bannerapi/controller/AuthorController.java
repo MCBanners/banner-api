@@ -64,6 +64,12 @@ public class AuthorController {
         return new ResponseEntity<>(Collections.singletonMap("valid", author != null), HttpStatus.OK);
     }
 
+    @GetMapping(value = "/mcmarket/{id}/isValid", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Boolean>> getIsValidMCMarket(@PathVariable int id) {
+        Author author = this.authors.getAuthor(id, ServiceBackend.MCMARKET);
+        return new ResponseEntity<>(Collections.singletonMap("valid", author != null), HttpStatus.OK);
+    }
+
     @GetMapping(value = "/spigot/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<byte[]> getBanner(@PathVariable int id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
         Author author = this.authors.getAuthor(id, ServiceBackend.SPIGOT);
@@ -116,8 +122,18 @@ public class AuthorController {
         if (author == null) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
+    @GetMapping(value = "/mcmarket/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<byte[]> getBannerMCMarket(@PathVariable int id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
+        Author author = this.authors.getAuthor(id, ServiceBackend.MCMARKET);
+        if (author == null) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
 
         return draw(author, raw, ServiceBackend.POLYMART, outputType);
+    }
+
+
+        return draw(author, raw, ServiceBackend.MCMARKET, outputType);
     }
 
 
