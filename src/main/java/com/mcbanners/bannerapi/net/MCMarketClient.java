@@ -6,9 +6,12 @@ import com.mcbanners.bannerapi.obj.backend.mcmarket.MCMarketResource;
 import com.mcbanners.bannerapi.util.Log;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientResponseException;
+
+import java.util.Collections;
 
 @Component
 public class MCMarketClient extends BasicHttpClient {
@@ -44,5 +47,18 @@ public class MCMarketClient extends BasicHttpClient {
         }
 
         return null;
+    }
+
+    public ResponseEntity<byte[]> getResourceIcon(String url) {
+        try {
+            return get(url, "", byte[].class, headers -> {
+                headers.setAccept(Collections.singletonList(MediaType.IMAGE_PNG));
+                return headers;
+            });
+        } catch (RestClientResponseException ex) {
+            Log.error("Failed to load MCMarket Resource Icon by url %s: %s", url, ex.getMessage());
+            ex.printStackTrace();
+            return null;
+        }
     }
 }

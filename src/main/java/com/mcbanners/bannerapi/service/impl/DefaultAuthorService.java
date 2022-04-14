@@ -379,10 +379,20 @@ public class DefaultAuthorService implements AuthorService {
 
         int totalDownloads = 0, totalReviews = 0;
 
+        String authorAvatarUrl;
+
+        int imageFolder = authorId / 1000;
+        authorAvatarUrl = String.format("https://static.mc-market.org/avatars/l/%d/%d.jpg?", imageFolder, authorId);
+
+        String mcMarketAuthorIcon = loadMCMarketAuthorIcon(authorAvatarUrl);
+        if (mcMarketAuthorIcon == null) {
+            mcMarketAuthorIcon = "";
+        }
+
         return new Author(
                 author.getData().getUsername(),
                 author.getData().getResourceCount(),
-                "",
+                mcMarketAuthorIcon,
                 totalDownloads,
                 -1,
                 totalReviews
@@ -396,6 +406,16 @@ public class DefaultAuthorService implements AuthorService {
         }
 
         return resp.getBody();
+    }
+
+    private String loadMCMarketAuthorIcon(String url) {
+        ResponseEntity<byte[]> resp = mcMarketClient.getResourceIcon(url);
+        if (resp == null) {
+            return null;
+        }
+
+        byte[] body = resp.getBody();
+        return Base64.getEncoder().encodeToString(body);
     }
 
     // PolyMart Handling
