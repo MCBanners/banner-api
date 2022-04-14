@@ -37,7 +37,7 @@ public class MCMarketClient extends BasicHttpClient {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.AUTHORIZATION, "Private " + this.key);
-            return get("authors/" + id, MCMarketAuthor.class, httpHeaders -> headers);
+            return get("members/" + id, MCMarketAuthor.class, httpHeaders -> headers);
         } catch (RestClientResponseException ex) {
             Log.error("Failed to get author " + id + " from MC-Market", ex);
             ex.printStackTrace();

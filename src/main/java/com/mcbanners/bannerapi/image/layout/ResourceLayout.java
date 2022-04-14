@@ -91,6 +91,9 @@ public class ResourceLayout extends Layout {
             case MODRINTH:
                 defaultLogoOverride = BannerSprite.DEFAULT_MODRINTH_RES_LOGO;
                 break;
+            case MCMARKET:
+                defaultLogoOverride = BannerSprite.DEFAULT_MCMARKET_RES_LOGO;
+                break;
             case POLYMART:
                 defaultLogoOverride = BannerSprite.DEFAULT_POLYMART_RES_LOGO;
                 break;

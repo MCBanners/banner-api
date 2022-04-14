@@ -121,7 +121,7 @@ public class ResourceController {
             return null;
         }
 
-        Author author = this.authors.getAuthor(resource.getAuthorName(), ServiceBackend.MCMARKET);
+        Author author = this.authors.getAuthor(resource.getAuthorId(), ServiceBackend.MCMARKET);
         if (author == null) {
             return null;
         }
