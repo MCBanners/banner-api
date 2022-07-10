@@ -9,6 +9,7 @@ public class MCMarketAuthorData {
     private int memberId;
     private String username;
     private int resourceCount;
+    private String avatar_url;
 
     @JsonGetter("member_id")
     public int getMemberId() {
@@ -36,5 +37,15 @@ public class MCMarketAuthorData {
     @JsonSetter("resource_count")
     public void setResourceCount(int resourceCount) {
         this.resourceCount = resourceCount;
+    }
+
+    @JsonGetter("avatar_url")
+    public String getAvatarUrl() {
+        return avatar_url;
+    }
+
+    @JsonSetter("avatar_url")
+    public void setAvatarUrl(String avatar_url) {
+        this.avatar_url = avatar_url;
     }
 }

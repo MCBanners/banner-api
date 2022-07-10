@@ -13,6 +13,9 @@ import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeAuthor;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeProject;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeResource;
 import com.mcbanners.bannerapi.obj.backend.mcmarket.MCMarketAuthor;
+import com.mcbanners.bannerapi.obj.backend.mcmarket.MCMarketResource;
+import com.mcbanners.bannerapi.obj.backend.mcmarket.MCMarketResourceBasic;
+import com.mcbanners.bannerapi.obj.backend.mcmarket.MCMarketResourceBasicData;
 import com.mcbanners.bannerapi.obj.backend.modrinth.ModrinthResource;
 import com.mcbanners.bannerapi.obj.backend.modrinth.ModrinthUser;
 import com.mcbanners.bannerapi.obj.backend.ore.OreAuthor;
@@ -33,7 +36,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @CacheConfig(cacheNames = {"author"})
@@ -377,14 +382,31 @@ public class DefaultAuthorService implements AuthorService {
             return null;
         }
 
+        MCMarketResourceBasic resources = loadMCMarketAuthorBasic(authorId);
+
+        if (resources == null || resources.getData().length == 0) {
+            return null;
+        }
+
+        // This is a stupid workaround to get all the right data. Sorry everyone.
+        final Set<MCMarketResource> actualResources = new HashSet<>();
+
+        for (final MCMarketResourceBasicData data : resources.getData()) {
+            final MCMarketResource resource = anotherMCMarketResourceGrabber(data.getResourceId());
+
+            if (resource != null) {
+                actualResources.add(resource);
+            }
+        }
+
         int totalDownloads = 0, totalReviews = 0;
 
-        String authorAvatarUrl;
+        for (MCMarketResource resource : actualResources) {
+            totalDownloads += resource.getData().getDownloadCount();
+            totalReviews += resource.getData().getReviewCount();
+        }
 
-        int imageFolder = authorId / 1000;
-        authorAvatarUrl = String.format("https://static.mc-market.org/avatars/l/%d/%d.jpg?", imageFolder, authorId);
-
-        String mcMarketAuthorIcon = loadMCMarketAuthorIcon(authorAvatarUrl);
+        String mcMarketAuthorIcon = loadMCMarketAuthorIcon(author.getData().getAvatarUrl());
         if (mcMarketAuthorIcon == null) {
             mcMarketAuthorIcon = "";
         }
@@ -397,6 +419,24 @@ public class DefaultAuthorService implements AuthorService {
                 -1,
                 totalReviews
         );
+    }
+
+    private MCMarketResource anotherMCMarketResourceGrabber(int resourceId) {
+        ResponseEntity<MCMarketResource> resp = mcMarketClient.getResource(resourceId);
+        if (resp == null) {
+            return null;
+        }
+
+        return resp.getBody();
+    }
+
+    private MCMarketResourceBasic loadMCMarketAuthorBasic(int authorId) {
+        ResponseEntity<MCMarketResourceBasic> resp = mcMarketClient.getAllByAuthor(authorId);
+        if (resp == null) {
+            return null;
+        }
+
+        return resp.getBody();
     }
 
     private MCMarketAuthor loadMCMarketAuthor(int authorId) {

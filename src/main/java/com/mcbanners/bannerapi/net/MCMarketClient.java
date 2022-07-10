@@ -3,6 +3,7 @@ package com.mcbanners.bannerapi.net;
 
 import com.mcbanners.bannerapi.obj.backend.mcmarket.MCMarketAuthor;
 import com.mcbanners.bannerapi.obj.backend.mcmarket.MCMarketResource;
+import com.mcbanners.bannerapi.obj.backend.mcmarket.MCMarketResourceBasic;
 import com.mcbanners.bannerapi.util.Log;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -34,6 +35,18 @@ public class MCMarketClient extends BasicHttpClient {
         }
 
         return null;
+    }
+
+    public ResponseEntity<MCMarketResourceBasic> getAllByAuthor(int id) {
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.AUTHORIZATION, "Private " + this.key);
+            return get("resources/authors/" + id, MCMarketResourceBasic.class, httpHeaders -> headers);
+        } catch (RestClientResponseException ex) {
+            Log.error("Failed to load all Spigot Resources by author id %d: %s", id, ex.getMessage());
+            ex.printStackTrace();
+            return null;
+        }
     }
 
     public final ResponseEntity<MCMarketAuthor> getAuthor(int id) {
