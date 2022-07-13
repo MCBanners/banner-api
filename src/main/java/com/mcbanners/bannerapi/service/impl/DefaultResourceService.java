@@ -82,7 +82,7 @@ public class DefaultResourceService implements ResourceService {
      * Get a resource by its name on the specified service backend.
      *
      * @param pluginId the resource name
-     * @param backend    the service backend to query
+     * @param backend  the service backend to query
      * @return the Resource object or null if the service backend does not support the operation or the resource could not be found.
      */
     @Override
@@ -316,6 +316,14 @@ public class DefaultResourceService implements ResourceService {
 
         boolean isPremium = resource.getData().getPrice() != 0.0;
 
+        int downloadsToShow;
+
+        if (isPremium) {
+            downloadsToShow = resource.getData().getPurchaseCount();
+        } else {
+            downloadsToShow = resource.getData().getDownloadCount();
+        }
+
         return new Resource(
                 "",
                 resource.getData().getTitle(),
@@ -325,7 +333,7 @@ public class DefaultResourceService implements ResourceService {
                         resource.getData().getReviewCount(),
                         resource.getData().getReviewAverage()
                 ),
-                resource.getData().getDownloadCount(),
+                downloadsToShow,
                 isPremium ? new PriceInformation(resource.getData().getPrice(), resource.getData().getCurrency().toUpperCase()) : null,
                 null);
     }
