@@ -449,7 +449,7 @@ public class DefaultAuthorService implements AuthorService {
     }
 
     private String loadMCMarketAuthorIcon(String url) {
-        ResponseEntity<byte[]> resp = mcMarketClient.getResourceIcon(url);
+        ResponseEntity<byte[]> resp = mcMarketClient.getIcon(url);
         if (resp == null) {
             return null;
         }

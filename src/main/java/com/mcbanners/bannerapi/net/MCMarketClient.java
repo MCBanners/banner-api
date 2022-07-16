@@ -2,6 +2,7 @@ package com.mcbanners.bannerapi.net;
 
 
 import com.mcbanners.bannerapi.obj.backend.mcmarket.MCMarketAuthor;
+import com.mcbanners.bannerapi.obj.backend.mcmarket.MCMarketMember;
 import com.mcbanners.bannerapi.obj.backend.mcmarket.MCMarketResource;
 import com.mcbanners.bannerapi.obj.backend.mcmarket.MCMarketResourceBasic;
 import com.mcbanners.bannerapi.util.Log;
@@ -62,7 +63,20 @@ public class MCMarketClient extends BasicHttpClient {
         return null;
     }
 
-    public ResponseEntity<byte[]> getResourceIcon(String url) {
+    public final ResponseEntity<MCMarketMember> getMember(int id) {
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.AUTHORIZATION, "Private " + this.key);
+            return get("members/" + id, MCMarketMember.class, httpHeaders -> headers);
+        } catch (RestClientResponseException ex) {
+            Log.error("Failed to get member " + id + " from MC-Market", ex);
+            ex.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public ResponseEntity<byte[]> getIcon(String url) {
         try {
             return get(url, "", byte[].class, headers -> {
                 headers.setAccept(Collections.singletonList(MediaType.IMAGE_PNG));
