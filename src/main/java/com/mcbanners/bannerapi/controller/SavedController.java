@@ -86,6 +86,7 @@ public class SavedController {
             case SPONGE_AUTHOR:
             case CURSEFORGE_AUTHOR:
             case MODRINTH_AUTHOR:
+            case POLYMART_AUTHOR:
                 Author author = null;
                 switch (banner.getBannerType()) {
                     case SPIGOT_AUTHOR:
@@ -102,6 +103,10 @@ public class SavedController {
                         break;
                     case MODRINTH_AUTHOR:
                         backend = ServiceBackend.MODRINTH;
+                        author = authors.getAuthor(settings.get("_author_id"), backend);
+                        break;
+                    case POLYMART_AUTHOR:
+                        backend = ServiceBackend.POLYMART;
                         author = authors.getAuthor(settings.get("_author_id"), backend);
                         break;
                 }
@@ -122,6 +127,7 @@ public class SavedController {
             case SPONGE_RESOURCE:
             case CURSEFORGE_RESOURCE:
             case MODRINTH_RESOURCE:
+            case POLYMART_RESOURCE:
                 Resource resource = null;
                 author = null;
                 switch (banner.getBannerType()) {
@@ -144,6 +150,11 @@ public class SavedController {
                         backend = ServiceBackend.MODRINTH;
                         resource = resources.getResource(settings.get("_resource_id"), backend);
                         author = authors.getAuthor(resource.getAuthorName(), backend);
+                        break;
+                    case POLYMART_RESOURCE:
+                        backend = ServiceBackend.POLYMART;
+                        resource = resources.getResource(settings.get("_resource_id"), backend);
+                        author = authors.getAuthor(resource.getAuthorId(), backend);
                         break;
                 }
 

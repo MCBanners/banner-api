@@ -4,12 +4,15 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.mcbanners.bannerapi.net.CurseForgeClient;
 import com.mcbanners.bannerapi.net.ModrinthClient;
 import com.mcbanners.bannerapi.net.OreClient;
+import com.mcbanners.bannerapi.net.PolyMartClient;
 import com.mcbanners.bannerapi.net.SpigotClient;
 import com.mcbanners.bannerapi.net.error.FurtherProcessingRequiredException;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeResource;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeResourceMember;
 import com.mcbanners.bannerapi.obj.backend.modrinth.ModrinthResource;
 import com.mcbanners.bannerapi.obj.backend.ore.OreResource;
+import com.mcbanners.bannerapi.obj.backend.polymart.PolyMartResource;
+import com.mcbanners.bannerapi.obj.backend.polymart.PolyMartResourceData;
 import com.mcbanners.bannerapi.obj.backend.spigot.SpigotPremium;
 import com.mcbanners.bannerapi.obj.backend.spigot.SpigotResource;
 import com.mcbanners.bannerapi.obj.generic.PriceInformation;
@@ -24,6 +27,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Base64;
+import java.util.Locale;
 
 @Service
 @CacheConfig(cacheNames = {"resource"})
@@ -32,13 +36,15 @@ public class DefaultResourceService implements ResourceService {
     private final OreClient oreClient;
     private final CurseForgeClient curseForgeClient;
     private final ModrinthClient modrinthClient;
+    private final PolyMartClient polyMartClient;
 
     @Autowired
-    public DefaultResourceService(SpigotClient spigotClient, OreClient oreClient, CurseForgeClient curseForgeClient, ModrinthClient modrinthClient) {
+    public DefaultResourceService(SpigotClient spigotClient, OreClient oreClient, CurseForgeClient curseForgeClient, ModrinthClient modrinthClient, PolyMartClient polyMartClient) {
         this.spigotClient = spigotClient;
         this.oreClient = oreClient;
         this.curseForgeClient = curseForgeClient;
         this.modrinthClient = modrinthClient;
+        this.polyMartClient = polyMartClient;
     }
 
     /**
@@ -56,6 +62,8 @@ public class DefaultResourceService implements ResourceService {
                 return handleSpigot(resourceId);
             case CURSEFORGE:
                 return handleCurse(resourceId);
+            case POLYMART:
+                return handlePolyMart(resourceId);
             case ORE:
             default:
                 return null;
@@ -79,6 +87,7 @@ public class DefaultResourceService implements ResourceService {
                 return handleModrinth(pluginId);
             case CURSEFORGE:
             case SPIGOT:
+            case POLYMART:
             default:
                 return null;
         }
@@ -280,6 +289,53 @@ public class DefaultResourceService implements ResourceService {
         }
 
         byte[] body = resp.getBody();
+        return Base64.getEncoder().encodeToString(body);
+    }
+
+    // PolyMart handling
+    private Resource handlePolyMart(final int resourceId) {
+        final PolyMartResource resource = loadPolyMartResource(resourceId);
+
+        if (resource == null) {
+            return null;
+        }
+
+        final PolyMartResourceData data = resource.getResponse().getResource();
+        final String image = loadPolyMartImage(data.getThumbnailURL());
+
+        final boolean isPremium = !(data.getPrice() == 0.00);
+
+        return new Resource(
+                image,
+                data.getTitle(),
+                data.getOwner().getId(),
+                data.getOwner().getName(),
+                new RatingInformation(
+                        data.getReviews().getCount(),
+                        (double) data.getReviews().getStars()
+                ),
+                data.getDownloads(),
+                isPremium ? new PriceInformation(data.getPrice(), data.getCurrency().toUpperCase(Locale.ROOT)) : null,
+                null
+        );
+    }
+
+    private PolyMartResource loadPolyMartResource(final int resourceId) {
+        final ResponseEntity<PolyMartResource> resp = polyMartClient.getResource(resourceId);
+        if (resp == null) {
+            return null;
+        }
+
+        return resp.getBody();
+    }
+
+    private String loadPolyMartImage(final String url) {
+        final ResponseEntity<byte[]> resp = polyMartClient.getIcon(url);
+        if (resp == null) {
+            return null;
+        }
+
+        final byte[] body = resp.getBody();
         return Base64.getEncoder().encodeToString(body);
     }
 }

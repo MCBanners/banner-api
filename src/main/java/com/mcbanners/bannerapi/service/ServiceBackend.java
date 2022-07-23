@@ -8,5 +8,6 @@ public enum ServiceBackend {
     SPIGOT,
     ORE,
     CURSEFORGE,
-    MODRINTH
+    MODRINTH,
+    POLYMART
 }

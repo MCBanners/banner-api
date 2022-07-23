@@ -57,6 +57,12 @@ public class ResourceController {
         return new ResponseEntity<>(Collections.singletonMap("valid", resource != null), HttpStatus.OK);
     }
 
+    @GetMapping(value = "/polymart/{id}/isValid", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Boolean>> getIsValidPolyMart(@PathVariable int id) {
+        Resource resource = this.resources.getResource(id, ServiceBackend.POLYMART);
+        return new ResponseEntity<>(Collections.singletonMap("valid", resource != null), HttpStatus.OK);
+    }
+
     @GetMapping(value = "/spigot/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<byte[]> getBanner(@PathVariable int id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
         Resource resource = this.resources.getResource(id, ServiceBackend.SPIGOT);
@@ -115,6 +121,21 @@ public class ResourceController {
         }
 
         return draw(resource, author, raw, ServiceBackend.ORE, outputType);
+    }
+
+    @GetMapping(value = "/polymart/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<byte[]> getBannerPolyMart(@PathVariable int id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
+        Resource resource = this.resources.getResource(id, ServiceBackend.POLYMART);
+        if (resource == null) {
+            return null;
+        }
+
+        Author author = this.authors.getAuthor(resource.getAuthorId(), ServiceBackend.POLYMART);
+        if (author == null) {
+            return null;
+        }
+
+        return draw(resource, author, raw, ServiceBackend.POLYMART, outputType);
     }
 
     private ResponseEntity<byte[]> draw(Resource resource, Author author, Map<String, String> raw, ServiceBackend backend, BannerOutputType outputType) {

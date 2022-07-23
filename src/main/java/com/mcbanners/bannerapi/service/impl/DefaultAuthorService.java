@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.mcbanners.bannerapi.net.CurseForgeClient;
 import com.mcbanners.bannerapi.net.ModrinthClient;
 import com.mcbanners.bannerapi.net.OreClient;
+import com.mcbanners.bannerapi.net.PolyMartClient;
 import com.mcbanners.bannerapi.net.SpigotClient;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeAuthor;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeProject;
@@ -14,6 +15,9 @@ import com.mcbanners.bannerapi.obj.backend.modrinth.ModrinthResource;
 import com.mcbanners.bannerapi.obj.backend.modrinth.ModrinthUser;
 import com.mcbanners.bannerapi.obj.backend.ore.OreAuthor;
 import com.mcbanners.bannerapi.obj.backend.ore.OreResource;
+import com.mcbanners.bannerapi.obj.backend.polymart.PolyMartAuthor;
+import com.mcbanners.bannerapi.obj.backend.polymart.PolyMartAuthorStatistics;
+import com.mcbanners.bannerapi.obj.backend.polymart.PolyMartAuthorUserData;
 import com.mcbanners.bannerapi.obj.backend.spigot.SpigotAuthor;
 import com.mcbanners.bannerapi.obj.backend.spigot.SpigotResource;
 import com.mcbanners.bannerapi.obj.generic.Author;
@@ -36,15 +40,17 @@ public class DefaultAuthorService implements AuthorService {
     private final OreClient oreClient;
     private final CurseForgeClient curseForgeClient;
     private final ModrinthClient modrinthClient;
+    private final PolyMartClient polyMartClient;
 
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Autowired
-    public DefaultAuthorService(SpigotClient spigotClient, OreClient oreClient, CurseForgeClient curseForgeClient, ModrinthClient modrinthClient) {
+    public DefaultAuthorService(SpigotClient spigotClient, OreClient oreClient, CurseForgeClient curseForgeClient, ModrinthClient modrinthClient, PolyMartClient polyMartClient) {
         this.spigotClient = spigotClient;
         this.oreClient = oreClient;
         this.curseForgeClient = curseForgeClient;
         this.modrinthClient = modrinthClient;
+        this.polyMartClient = polyMartClient;
     }
 
     /**
@@ -62,6 +68,8 @@ public class DefaultAuthorService implements AuthorService {
                 return handleSpigot(authorId);
             case CURSEFORGE:
                 return handleCurseForge(authorId, null);
+            case POLYMART:
+                return handlePolyMart(authorId);
             case ORE:
             default:
                 return null;
@@ -86,6 +94,7 @@ public class DefaultAuthorService implements AuthorService {
             case MODRINTH:
                 return handleModrinth(authorName);
             case SPIGOT:
+            case POLYMART:
             default:
                 return null;
         }
@@ -351,5 +360,46 @@ public class DefaultAuthorService implements AuthorService {
             }
         }
         return resources;
+    }
+
+    // PolyMart Handling
+    private Author handlePolyMart(final int authorId) {
+        final PolyMartAuthor author = loadPolyMartAuthor(authorId);
+
+        if (author == null) {
+            return null;
+        }
+
+        final PolyMartAuthorUserData data = author.getResponse().getUser();
+        final PolyMartAuthorStatistics statistics = data.getStatistics();
+        final String authorImage = loadPolyMartImage(data.getProfilePictureURL());
+
+        return new Author(
+                data.getUsername(),
+                statistics.getResourceCount(),
+                authorImage,
+                statistics.getResourceDownloads(),
+                -1,
+                statistics.getResourceRatings()
+        );
+    }
+
+    private PolyMartAuthor loadPolyMartAuthor(final int authorId) {
+        final ResponseEntity<PolyMartAuthor> resp = polyMartClient.getAuthor(authorId);
+        if (resp == null) {
+            return null;
+        }
+
+        return resp.getBody();
+    }
+
+    private String loadPolyMartImage(final String url) {
+        final ResponseEntity<byte[]> resp = polyMartClient.getIcon(url);
+        if (resp == null) {
+            return null;
+        }
+
+        final byte[] body = resp.getBody();
+        return Base64.getEncoder().encodeToString(body);
     }
 }
