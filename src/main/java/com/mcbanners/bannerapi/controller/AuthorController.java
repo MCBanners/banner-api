@@ -115,16 +115,9 @@ public class AuthorController {
 
         return draw(author, raw, ServiceBackend.MODRINTH, outputType);
     }
-
     @GetMapping(value = "/polymart/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<byte[]> getBannerPolyMart(@PathVariable int id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
         Author author = this.authors.getAuthor(id, ServiceBackend.POLYMART);
-        if (author == null) {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        }
-    @GetMapping(value = "/mcmarket/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<byte[]> getBannerMCMarket(@PathVariable int id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
-        Author author = this.authors.getAuthor(id, ServiceBackend.MCMARKET);
         if (author == null) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
@@ -132,10 +125,15 @@ public class AuthorController {
         return draw(author, raw, ServiceBackend.POLYMART, outputType);
     }
 
+    @GetMapping(value = "/mcmarket/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<byte[]> getBannerMCMarket(@PathVariable int id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
+        Author author = this.authors.getAuthor(id, ServiceBackend.MCMARKET);
+        if (author == null) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
 
         return draw(author, raw, ServiceBackend.MCMARKET, outputType);
     }
-
 
     private ResponseEntity<byte[]> draw(Author author, Map<String, String> raw, ServiceBackend backend, BannerOutputType outputType) {
         return BannerImageWriter.write(new AuthorLayout(author, raw, backend).draw(outputType), outputType);

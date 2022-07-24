@@ -43,15 +43,15 @@ public class DefaultResourceService implements ResourceService {
     private final PolyMartClient polyMartClient;
 
     @Autowired
-    public DefaultResourceService(SpigotClient spigotClient, OreClient oreClient, CurseForgeClient curseForgeClient, ModrinthClient modrinthClient, PolyMartClient polyMartClient) {
-    public DefaultResourceService(SpigotClient spigotClient, OreClient oreClient, CurseForgeClient curseForgeClient, ModrinthClient modrinthClient, MCMarketClient mcMarketClient) {
+    public DefaultResourceService(SpigotClient spigotClient, OreClient oreClient, CurseForgeClient curseForgeClient, ModrinthClient modrinthClient, MCMarketClient mcMarketClient, PolyMartClient polyMartClient) {
         this.spigotClient = spigotClient;
         this.oreClient = oreClient;
         this.curseForgeClient = curseForgeClient;
         this.modrinthClient = modrinthClient;
-        this.polyMartClient = polyMartClient;
         this.mcMarketClient = mcMarketClient;
+        this.polyMartClient = polyMartClient;
     }
+
 
     /**
      * Get a resource by its ID on the specified service backend.
@@ -96,6 +96,7 @@ public class DefaultResourceService implements ResourceService {
             case CURSEFORGE:
             case SPIGOT:
             case POLYMART:
+            case MCMARKET:
             default:
                 return null;
         }

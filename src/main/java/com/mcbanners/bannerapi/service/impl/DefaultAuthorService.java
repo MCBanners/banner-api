@@ -53,8 +53,7 @@ public class DefaultAuthorService implements AuthorService {
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Autowired
-    public DefaultAuthorService(SpigotClient spigotClient, OreClient oreClient, CurseForgeClient curseForgeClient, ModrinthClient modrinthClient, MCMarketClient mcMarketClient) {
-    public DefaultAuthorService(SpigotClient spigotClient, OreClient oreClient, CurseForgeClient curseForgeClient, ModrinthClient modrinthClient, PolyMartClient polyMartClient) {
+    public DefaultAuthorService(SpigotClient spigotClient, OreClient oreClient, CurseForgeClient curseForgeClient, ModrinthClient modrinthClient, PolyMartClient polyMartClient, MCMarketClient mcMarketClient) {
         this.spigotClient = spigotClient;
         this.oreClient = oreClient;
         this.curseForgeClient = curseForgeClient;
@@ -62,6 +61,7 @@ public class DefaultAuthorService implements AuthorService {
         this.polyMartClient = polyMartClient;
         this.mcMarketClient = mcMarketClient;
     }
+
 
     /**
      * Get an author by its id on the specified service backend.
@@ -107,6 +107,7 @@ public class DefaultAuthorService implements AuthorService {
                 return handleModrinth(authorName);
             case SPIGOT:
             case POLYMART:
+            case MCMARKET:
             default:
                 return null;
         }
