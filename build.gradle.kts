@@ -27,7 +27,7 @@ dependencies {
 	implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
 	implementation("com.github.ben-manes.caffeine:caffeine:2.9.0")
 	implementation("org.mariadb.jdbc:mariadb-java-client:2.7.2")
-	implementation("org.flywaydb:flyway-core:6.5.7")
+	implementation("org.flywaydb:flyway-core:9.0.1")
 	implementation("io.jsonwebtoken:jjwt-api:0.11.2")
 
 	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.2")
