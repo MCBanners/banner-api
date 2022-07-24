@@ -153,7 +153,7 @@ public class SavedController {
                         break;
                     case POLYMART_RESOURCE:
                         backend = ServiceBackend.POLYMART;
-                        resource = resources.getResource(settings.get("_resource_id"), backend);
+                        resource = resources.getResource(Integer.parseInt(settings.get("_resource_id")), backend);
                         author = authors.getAuthor(resource.getAuthorId(), backend);
                         break;
                 }
