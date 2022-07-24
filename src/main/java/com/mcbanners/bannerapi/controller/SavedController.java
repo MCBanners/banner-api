@@ -99,7 +99,7 @@ public class SavedController {
                         break;
                     case CURSEFORGE_AUTHOR:
                         backend = ServiceBackend.CURSEFORGE;
-                        author = authors.getAuthor(settings.get("_author_id"), backend);
+                        author = authors.getAuthor(Integer.parseInt(settings.get("_author_id")), backend);
                         break;
                     case MODRINTH_AUTHOR:
                         backend = ServiceBackend.MODRINTH;
@@ -107,7 +107,7 @@ public class SavedController {
                         break;
                     case POLYMART_AUTHOR:
                         backend = ServiceBackend.POLYMART;
-                        author = authors.getAuthor(settings.get("_author_id"), backend);
+                        author = authors.getAuthor(Integer.parseInt(settings.get("_author_id")), backend);
                         break;
                 }
 
