@@ -22,7 +22,7 @@ public class MCMarketClient extends BasicHttpClient {
     private String key;
 
     public MCMarketClient() {
-        super("https://api.mc-market.org/v1/");
+        super("https://api.builtbybit.com/v1/");
     }
 
     public final ResponseEntity<MCMarketResource> getResource(int id) {

@@ -12,6 +12,10 @@ public class MCMarketResourceBasicData {
     private String tagLine;
     private double price;
     private String currency;
+    private int purchaseCount;
+    private int downloadCount;
+    private int reviewCount;
+    private double reviewAverage;
 
     @JsonGetter("resource_id")
     public int getResourceId() {
@@ -65,5 +69,45 @@ public class MCMarketResourceBasicData {
 
     public void setCurrency(String currency) {
         this.currency = currency;
+    }
+
+    @JsonGetter("purchase_count")
+    public int getPurchaseCount() {
+        return purchaseCount;
+    }
+
+    @JsonSetter("purchase_count")
+    public void setPurchaseCount(int purchaseCount) {
+        this.purchaseCount = purchaseCount;
+    }
+
+    @JsonGetter("download_count")
+    public int getDownloadCount() {
+        return downloadCount;
+    }
+
+    @JsonSetter("download_count")
+    public void setDownloadCount(int downloadCount) {
+        this.downloadCount = downloadCount;
+    }
+
+    @JsonGetter("review_count")
+    public int getReviewCount() {
+        return reviewCount;
+    }
+
+    @JsonSetter("review_count")
+    public void setReviewCount(int reviewCount) {
+        this.reviewCount = reviewCount;
+    }
+
+    @JsonGetter("review_average")
+    public double getReviewAverage() {
+        return reviewAverage;
+    }
+
+    @JsonSetter("review_average")
+    public void setReviewAverage(double reviewAverage) {
+        this.reviewAverage = reviewAverage;
     }
 }

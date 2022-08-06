@@ -1,8 +1,8 @@
 package com.mcbanners.bannerapi.service.impl;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.mcbanners.bannerapi.net.CurseForgeClient;
 import com.mcbanners.bannerapi.net.MCMarketClient;
 import com.mcbanners.bannerapi.net.ModrinthClient;
@@ -13,7 +13,6 @@ import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeAuthor;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeProject;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeResource;
 import com.mcbanners.bannerapi.obj.backend.mcmarket.MCMarketAuthor;
-import com.mcbanners.bannerapi.obj.backend.mcmarket.MCMarketResource;
 import com.mcbanners.bannerapi.obj.backend.mcmarket.MCMarketResourceBasic;
 import com.mcbanners.bannerapi.obj.backend.mcmarket.MCMarketResourceBasicData;
 import com.mcbanners.bannerapi.obj.backend.modrinth.ModrinthResource;
@@ -36,9 +35,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 @CacheConfig(cacheNames = {"author"})
@@ -232,7 +229,7 @@ public class DefaultAuthorService implements AuthorService {
 
         JsonNode data = resp.getBody().get("result");
         if (!data.isArray()) {
-            return  null;
+            return null;
         }
 
         return mapper.convertValue(data, OreResource[].class);
@@ -389,25 +386,17 @@ public class DefaultAuthorService implements AuthorService {
             return null;
         }
 
-        // This is a stupid workaround to get all the right data. Sorry everyone.
-        final Set<MCMarketResource> actualResources = new HashSet<>();
-
-        for (final MCMarketResourceBasicData data : resources.getData()) {
-            final MCMarketResource resource = anotherMCMarketResourceGrabber(data.getResourceId());
-
-            if (resource != null) {
-                actualResources.add(resource);
-            }
-        }
-
         int totalDownloads = 0, totalReviews = 0;
 
-        for (MCMarketResource resource : actualResources) {
-            totalDownloads += resource.getData().getDownloadCount();
-            totalReviews += resource.getData().getReviewCount();
+        for (final MCMarketResourceBasicData resource : resources.getData()) {
+            totalDownloads += resource.getDownloadCount();
+            totalReviews += resource.getReviewCount();
         }
 
-        String mcMarketAuthorIcon = loadMCMarketAuthorIcon(author.getData().getAvatarUrl());
+        String avatarUrl = author.getData().getAvatarUrl();
+        avatarUrl = avatarUrl.replace("https://static.mc-market.org", "https://cdn.builtbybit.com");
+
+        String mcMarketAuthorIcon = loadMCMarketAuthorIcon(avatarUrl);
         if (mcMarketAuthorIcon == null) {
             mcMarketAuthorIcon = "";
         }
@@ -420,15 +409,6 @@ public class DefaultAuthorService implements AuthorService {
                 -1,
                 totalReviews
         );
-    }
-
-    private MCMarketResource anotherMCMarketResourceGrabber(int resourceId) {
-        ResponseEntity<MCMarketResource> resp = mcMarketClient.getResource(resourceId);
-        if (resp == null) {
-            return null;
-        }
-
-        return resp.getBody();
     }
 
     private MCMarketResourceBasic loadMCMarketAuthorBasic(int authorId) {
