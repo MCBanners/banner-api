@@ -51,7 +51,10 @@ public class DefaultMemberService implements MemberService {
             return null;
         }
 
-        String memberIcon = loadBuiltByBitClientMemberIcon(data.getAvatarUrl());
+        String avatarUrl = data.getAvatarUrl();
+        avatarUrl = avatarUrl.replace("https://static.mc-market.org", "https://cdn.builtbybit.com");
+
+        String memberIcon = loadBuiltByBitClientMemberIcon(avatarUrl);
         if (memberIcon == null) {
             memberIcon = "";
         }
