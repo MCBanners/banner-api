@@ -5,16 +5,19 @@ import com.mcbanners.bannerapi.banner.BannerType;
 import com.mcbanners.bannerapi.image.BannerImageWriter;
 import com.mcbanners.bannerapi.image.layout.AuthorLayout;
 import com.mcbanners.bannerapi.image.layout.Layout;
+import com.mcbanners.bannerapi.image.layout.MemberLayout;
 import com.mcbanners.bannerapi.image.layout.ResourceLayout;
 import com.mcbanners.bannerapi.image.layout.ServerLayout;
 import com.mcbanners.bannerapi.obj.backend.mcapi.MinecraftServer;
 import com.mcbanners.bannerapi.obj.generic.Author;
+import com.mcbanners.bannerapi.obj.generic.Member;
 import com.mcbanners.bannerapi.obj.generic.Resource;
 import com.mcbanners.bannerapi.persistence.SavedBanner;
 import com.mcbanners.bannerapi.persistence.SavedBannerRepository;
 import com.mcbanners.bannerapi.security.AuthedUserInformation;
 import com.mcbanners.bannerapi.service.ServiceBackend;
 import com.mcbanners.bannerapi.service.api.AuthorService;
+import com.mcbanners.bannerapi.service.api.MemberService;
 import com.mcbanners.bannerapi.service.api.MinecraftServerService;
 import com.mcbanners.bannerapi.service.api.ResourceService;
 import com.mcbanners.bannerapi.util.StringUtil;
@@ -38,14 +41,16 @@ public class SavedController {
     private final ResourceService resources;
     private final AuthorService authors;
     private final MinecraftServerService servers;
+    private final MemberService members;
     private final SavedBannerRepository repository;
 
     @Autowired
-    public SavedController(ResourceService resources, SavedBannerRepository repository, AuthorService authors, MinecraftServerService servers) {
+    public SavedController(ResourceService resources, SavedBannerRepository repository, AuthorService authors, MinecraftServerService servers, MemberService members) {
         this.resources = resources;
         this.repository = repository;
         this.authors = authors;
         this.servers = servers;
+        this.members = members;
     }
 
     @PostMapping(value = "save/{type}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -86,6 +91,7 @@ public class SavedController {
             case SPONGE_AUTHOR:
             case CURSEFORGE_AUTHOR:
             case MODRINTH_AUTHOR:
+            case BUILTBYBIT_AUTHOR:
             case POLYMART_AUTHOR:
                 Author author = null;
                 switch (banner.getBannerType()) {
@@ -104,6 +110,10 @@ public class SavedController {
                     case MODRINTH_AUTHOR:
                         backend = ServiceBackend.MODRINTH;
                         author = authors.getAuthor(settings.get("_author_id"), backend);
+                        break;
+                    case BUILTBYBIT_AUTHOR:
+                        backend = ServiceBackend.BUILTBYBIT;
+                        author = authors.getAuthor(Integer.parseInt(settings.get("_author_id")), backend);
                         break;
                     case POLYMART_AUTHOR:
                         backend = ServiceBackend.POLYMART;
@@ -127,6 +137,7 @@ public class SavedController {
             case SPONGE_RESOURCE:
             case CURSEFORGE_RESOURCE:
             case MODRINTH_RESOURCE:
+            case BUILTBYBIT_RESOURCE:
             case POLYMART_RESOURCE:
                 Resource resource = null;
                 author = null;
@@ -150,6 +161,11 @@ public class SavedController {
                         backend = ServiceBackend.MODRINTH;
                         resource = resources.getResource(settings.get("_resource_id"), backend);
                         author = authors.getAuthor(resource.getAuthorName(), backend);
+                        break;
+                    case BUILTBYBIT_RESOURCE:
+                        backend = ServiceBackend.BUILTBYBIT;
+                        resource = resources.getResource(Integer.parseInt(settings.get("_resource_id")), backend);
+                        author = authors.getAuthor(resource.getAuthorId(), backend);
                         break;
                     case POLYMART_RESOURCE:
                         backend = ServiceBackend.POLYMART;
@@ -191,6 +207,26 @@ public class SavedController {
                 settings.remove("_server_port");
 
                 layout = new ServerLayout(server, settings);
+                break;
+            case BUILTBYBIT_MEMBER:
+                Member member = null;
+                if (banner.getBannerType() == BannerType.BUILTBYBIT_MEMBER) {
+                    backend = ServiceBackend.BUILTBYBIT;
+                    member = members.getMember(Integer.parseInt(settings.get("_member_id")), backend);
+                }
+
+                settings.remove("_member_id");
+
+                if (backend == null) {
+                    throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Backend not set");
+                }
+
+                if (member == null) {
+                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The stored author could not be found!");
+                }
+
+                layout = new MemberLayout(member, settings, backend);
+                break;
         }
 
         return BannerImageWriter.write(layout.draw(outputType), outputType);

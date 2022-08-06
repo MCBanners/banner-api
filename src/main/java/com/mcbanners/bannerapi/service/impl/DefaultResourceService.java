@@ -2,6 +2,7 @@ package com.mcbanners.bannerapi.service.impl;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.mcbanners.bannerapi.net.CurseForgeClient;
+import com.mcbanners.bannerapi.net.BuiltByBitClient;
 import com.mcbanners.bannerapi.net.ModrinthClient;
 import com.mcbanners.bannerapi.net.OreClient;
 import com.mcbanners.bannerapi.net.PolyMartClient;
@@ -9,6 +10,8 @@ import com.mcbanners.bannerapi.net.SpigotClient;
 import com.mcbanners.bannerapi.net.error.FurtherProcessingRequiredException;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeResource;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeResourceMember;
+import com.mcbanners.bannerapi.obj.backend.builtbybit.BuiltByBitAuthor;
+import com.mcbanners.bannerapi.obj.backend.builtbybit.BuiltByBitResource;
 import com.mcbanners.bannerapi.obj.backend.modrinth.ModrinthResource;
 import com.mcbanners.bannerapi.obj.backend.ore.OreResource;
 import com.mcbanners.bannerapi.obj.backend.polymart.PolyMartResource;
@@ -36,16 +39,19 @@ public class DefaultResourceService implements ResourceService {
     private final OreClient oreClient;
     private final CurseForgeClient curseForgeClient;
     private final ModrinthClient modrinthClient;
+    private final BuiltByBitClient builtByBitClient;
     private final PolyMartClient polyMartClient;
 
     @Autowired
-    public DefaultResourceService(SpigotClient spigotClient, OreClient oreClient, CurseForgeClient curseForgeClient, ModrinthClient modrinthClient, PolyMartClient polyMartClient) {
+    public DefaultResourceService(SpigotClient spigotClient, OreClient oreClient, CurseForgeClient curseForgeClient, ModrinthClient modrinthClient, BuiltByBitClient builtByBitClient, PolyMartClient polyMartClient) {
         this.spigotClient = spigotClient;
         this.oreClient = oreClient;
         this.curseForgeClient = curseForgeClient;
         this.modrinthClient = modrinthClient;
+        this.builtByBitClient = builtByBitClient;
         this.polyMartClient = polyMartClient;
     }
+
 
     /**
      * Get a resource by its ID on the specified service backend.
@@ -62,6 +68,8 @@ public class DefaultResourceService implements ResourceService {
                 return handleSpigot(resourceId);
             case CURSEFORGE:
                 return handleCurse(resourceId);
+            case BUILTBYBIT:
+                return handleBuiltByBit(resourceId);
             case POLYMART:
                 return handlePolyMart(resourceId);
             case ORE:
@@ -74,7 +82,7 @@ public class DefaultResourceService implements ResourceService {
      * Get a resource by its name on the specified service backend.
      *
      * @param pluginId the resource name
-     * @param backend    the service backend to query
+     * @param backend  the service backend to query
      * @return the Resource object or null if the service backend does not support the operation or the resource could not be found.
      */
     @Override
@@ -88,6 +96,7 @@ public class DefaultResourceService implements ResourceService {
             case CURSEFORGE:
             case SPIGOT:
             case POLYMART:
+            case BUILTBYBIT:
             default:
                 return null;
         }
@@ -290,6 +299,62 @@ public class DefaultResourceService implements ResourceService {
 
         byte[] body = resp.getBody();
         return Base64.getEncoder().encodeToString(body);
+    }
+
+    // BuiltByBit handling
+    private Resource handleBuiltByBit(int resourceId) {
+        BuiltByBitResource resource = loadBuiltByBitResource(resourceId);
+
+        if (resource == null || resource.getResult().equals("error")) {
+            return null;
+        }
+
+        BuiltByBitAuthor author = loadBuiltByBitAuthor(resource.getData().getAuthorId());
+
+        if (author == null || author.getResult().equals("error")) {
+            return null;
+        }
+
+        boolean isPremium = resource.getData().getPrice() != 0.0;
+
+        int downloadsToShow;
+
+        if (isPremium) {
+            downloadsToShow = resource.getData().getPurchaseCount();
+        } else {
+            downloadsToShow = resource.getData().getDownloadCount();
+        }
+
+        return new Resource(
+                "",
+                resource.getData().getTitle(),
+                author.getData().getMemberId(),
+                author.getData().getUsername(),
+                new RatingInformation(
+                        resource.getData().getReviewCount(),
+                        resource.getData().getReviewAverage()
+                ),
+                downloadsToShow,
+                isPremium ? new PriceInformation(resource.getData().getPrice(), resource.getData().getCurrency().toUpperCase()) : null,
+                null);
+    }
+
+    private BuiltByBitResource loadBuiltByBitResource(int resourceId) {
+        ResponseEntity<BuiltByBitResource> resp = builtByBitClient.getResource(resourceId);
+        if (resp == null) {
+            return null;
+        }
+
+        return resp.getBody();
+    }
+
+    private BuiltByBitAuthor loadBuiltByBitAuthor(int authorId) {
+        ResponseEntity<BuiltByBitAuthor> resp = builtByBitClient.getAuthor(authorId);
+        if (resp == null) {
+            return null;
+        }
+
+        return resp.getBody();
     }
 
     // PolyMart handling

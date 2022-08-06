@@ -6,6 +6,7 @@ import com.mcbanners.bannerapi.banner.BannerTextAlign;
 import com.mcbanners.bannerapi.banner.param.AuthorParameter;
 import com.mcbanners.bannerapi.banner.param.BannerParameter;
 import com.mcbanners.bannerapi.banner.param.GeneralParameter;
+import com.mcbanners.bannerapi.banner.param.MemberParameter;
 import com.mcbanners.bannerapi.banner.param.ResourceParameter;
 import com.mcbanners.bannerapi.banner.param.ServerParameter;
 import com.mcbanners.bannerapi.util.ParamUtil;
@@ -49,6 +50,7 @@ public class ServiceController {
 
         if (bypass || type.equals("author")) toSerialize.put("author", AuthorParameter.class);
         if (bypass || type.equals("resource")) toSerialize.put("resource", ResourceParameter.class);
+        if (bypass || type.equals("member")) toSerialize.put("member", MemberParameter.class);
         if (bypass || type.equals("server")) toSerialize.put("server", ServerParameter.class);
 
         Object out;

@@ -1,9 +1,10 @@
 package com.mcbanners.bannerapi.service.impl;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.mcbanners.bannerapi.net.CurseForgeClient;
+import com.mcbanners.bannerapi.net.BuiltByBitClient;
 import com.mcbanners.bannerapi.net.ModrinthClient;
 import com.mcbanners.bannerapi.net.OreClient;
 import com.mcbanners.bannerapi.net.PolyMartClient;
@@ -11,6 +12,9 @@ import com.mcbanners.bannerapi.net.SpigotClient;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeAuthor;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeProject;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeResource;
+import com.mcbanners.bannerapi.obj.backend.builtbybit.BuiltByBitAuthor;
+import com.mcbanners.bannerapi.obj.backend.builtbybit.BuiltByBitResourceBasic;
+import com.mcbanners.bannerapi.obj.backend.builtbybit.BuiltByBitResourceBasicData;
 import com.mcbanners.bannerapi.obj.backend.modrinth.ModrinthResource;
 import com.mcbanners.bannerapi.obj.backend.modrinth.ModrinthUser;
 import com.mcbanners.bannerapi.obj.backend.ore.OreAuthor;
@@ -41,17 +45,20 @@ public class DefaultAuthorService implements AuthorService {
     private final CurseForgeClient curseForgeClient;
     private final ModrinthClient modrinthClient;
     private final PolyMartClient polyMartClient;
+    private final BuiltByBitClient builtByBitClient;
 
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Autowired
-    public DefaultAuthorService(SpigotClient spigotClient, OreClient oreClient, CurseForgeClient curseForgeClient, ModrinthClient modrinthClient, PolyMartClient polyMartClient) {
+    public DefaultAuthorService(SpigotClient spigotClient, OreClient oreClient, CurseForgeClient curseForgeClient, ModrinthClient modrinthClient, PolyMartClient polyMartClient, BuiltByBitClient builtByBitClient) {
         this.spigotClient = spigotClient;
         this.oreClient = oreClient;
         this.curseForgeClient = curseForgeClient;
         this.modrinthClient = modrinthClient;
         this.polyMartClient = polyMartClient;
+        this.builtByBitClient = builtByBitClient;
     }
+
 
     /**
      * Get an author by its id on the specified service backend.
@@ -70,6 +77,8 @@ public class DefaultAuthorService implements AuthorService {
                 return handleCurseForge(authorId, null);
             case POLYMART:
                 return handlePolyMart(authorId);
+            case BUILTBYBIT:
+                return handleBuiltByBit(authorId);
             case ORE:
             default:
                 return null;
@@ -95,6 +104,7 @@ public class DefaultAuthorService implements AuthorService {
                 return handleModrinth(authorName);
             case SPIGOT:
             case POLYMART:
+            case BUILTBYBIT:
             default:
                 return null;
         }
@@ -219,7 +229,7 @@ public class DefaultAuthorService implements AuthorService {
 
         JsonNode data = resp.getBody().get("result");
         if (!data.isArray()) {
-            return  null;
+            return null;
         }
 
         return mapper.convertValue(data, OreResource[].class);
@@ -360,6 +370,73 @@ public class DefaultAuthorService implements AuthorService {
             }
         }
         return resources;
+    }
+
+    // BuiltByBit Handling
+    private Author handleBuiltByBit(int authorId) {
+        BuiltByBitAuthor author = loadBuiltByBitAuthor(authorId);
+
+        if (author == null || author.getResult().equals("error")) {
+            return null;
+        }
+
+        BuiltByBitResourceBasic resources = loadBuiltByBitAuthorBasic(authorId);
+
+        if (resources == null || resources.getData().length == 0) {
+            return null;
+        }
+
+        int totalDownloads = 0, totalReviews = 0;
+
+        for (final BuiltByBitResourceBasicData resource : resources.getData()) {
+            totalDownloads += resource.getDownloadCount();
+            totalReviews += resource.getReviewCount();
+        }
+
+        String avatarUrl = author.getData().getAvatarUrl();
+        avatarUrl = avatarUrl.replace("https://static.mc-market.org", "https://cdn.builtbybit.com");
+
+        String builtByBitAuthorIcon = loadBuiltByBitAuthorIcon(avatarUrl);
+        if (builtByBitAuthorIcon == null) {
+            builtByBitAuthorIcon = "";
+        }
+
+        return new Author(
+                author.getData().getUsername(),
+                author.getData().getResourceCount(),
+                builtByBitAuthorIcon,
+                totalDownloads,
+                -1,
+                totalReviews
+        );
+    }
+
+    private BuiltByBitResourceBasic loadBuiltByBitAuthorBasic(int authorId) {
+        ResponseEntity<BuiltByBitResourceBasic> resp = builtByBitClient.getAllByAuthor(authorId);
+        if (resp == null) {
+            return null;
+        }
+
+        return resp.getBody();
+    }
+
+    private BuiltByBitAuthor loadBuiltByBitAuthor(int authorId) {
+        ResponseEntity<BuiltByBitAuthor> resp = builtByBitClient.getAuthor(authorId);
+        if (resp == null) {
+            return null;
+        }
+
+        return resp.getBody();
+    }
+
+    private String loadBuiltByBitAuthorIcon(String url) {
+        ResponseEntity<byte[]> resp = builtByBitClient.getIcon(url);
+        if (resp == null) {
+            return null;
+        }
+
+        byte[] body = resp.getBody();
+        return Base64.getEncoder().encodeToString(body);
     }
 
     // PolyMart Handling
