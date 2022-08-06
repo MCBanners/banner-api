@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class SpigotResourceStats {
     private String downloads;
     private String updates;
-    private String reviews;
+    private SpigotResourceReviews reviews;
     private String rating;
 
     public String getDownloads() {
@@ -25,11 +25,11 @@ public class SpigotResourceStats {
         this.updates = updates;
     }
 
-    public String getReviews() {
+    public SpigotResourceReviews getReviews() {
         return reviews;
     }
 
-    public void setReviews(String reviews) {
+    public void setReviews(SpigotResourceReviews reviews) {
         this.reviews = reviews;
     }
 

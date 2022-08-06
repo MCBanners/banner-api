@@ -123,30 +123,20 @@ public class DefaultAuthorService implements AuthorService {
 
         for (SpigotResource resource : resources) {
             totalDownloads += Integer.parseInt(resource.getStats().getDownloads());
-            totalReviews += Integer.parseInt(resource.getStats().getReviews());
+            totalReviews += Integer.parseInt(resource.getStats().getReviews().getTotal());
         }
 
-        String hash = author.getAvatar().getHash();
-        String info = author.getAvatar().getInfo();
+        final String rawIcon = author.getAvatar();
+        final String[] iconSplit = rawIcon.split("\\?");
 
-        String authorAvatarUrl = "";
-
-        if (hash != null && !hash.isEmpty()) {
-            authorAvatarUrl = String.format("http://gravatar.com/avatar/%s.jpg?s=96", author.getAvatar().getHash());
-        } else if (info != null && !info.isEmpty()) {
-            int imageFolder = authorId / 1000;
-            authorAvatarUrl = String.format("https://www.spigotmc.org/data/avatars/l/%d/%d.jpg?%s", imageFolder, authorId, info);
-        }
-
-        String spigotAuthorIcon = loadSpigotAuthorIcon(authorAvatarUrl);
+        String spigotAuthorIcon = loadSpigotAuthorIcon(iconSplit[0]);
         if (spigotAuthorIcon == null) {
             spigotAuthorIcon = "";
         }
 
-
         return new Author(
                 author.getUsername(),
-                Integer.parseInt(author.getResource_count()),
+                Integer.parseInt(author.getResourceCount()),
                 spigotAuthorIcon,
                 totalDownloads,
                 -1,

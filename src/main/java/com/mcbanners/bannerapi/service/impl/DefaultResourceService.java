@@ -110,11 +110,10 @@ public class DefaultResourceService implements ResourceService {
             return null;
         }
 
-        String rawURL = "https://www.spigotmc.org/data/resource_icons/%s/%s.jpg";
-        int imageFolder = (int) Math.floor(Double.parseDouble(spigotResource.getId()) / 1000);
-        String finalUrl = String.format(rawURL, imageFolder, spigotResource.getId());
+        final String rawIcon = spigotResource.getIconLink();
+        final String[] iconSplit = rawIcon.split("\\?");
 
-        String spigotResourceIcon = loadSpigotResourceIcon(finalUrl);
+        String spigotResourceIcon = loadSpigotResourceIcon(iconSplit[0]);
         if (spigotResourceIcon == null) {
             spigotResourceIcon = "";
         }
@@ -128,7 +127,7 @@ public class DefaultResourceService implements ResourceService {
                 Integer.parseInt(spigotResource.getAuthor().getId()),
                 spigotResource.getAuthor().getUsername(),
                 new RatingInformation(
-                        Integer.parseInt(spigotResource.getStats().getReviews()),
+                        Integer.parseInt(spigotResource.getStats().getReviews().getUnique()),
                         Double.parseDouble(spigotResource.getStats().getRating())
                 ),
                 Integer.parseInt(spigotResource.getStats().getDownloads()),

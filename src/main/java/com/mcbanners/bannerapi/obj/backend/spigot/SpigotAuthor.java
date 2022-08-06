@@ -1,13 +1,15 @@
 package com.mcbanners.bannerapi.obj.backend.spigot;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonSetter;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SpigotAuthor {
     private String id;
     private String username;
-    private String resource_count;
-    private SpigotAvatar avatar;
+    private String resourceCount;
+    private String avatar;
 
     public String getId() {
         return id;
@@ -25,19 +27,21 @@ public class SpigotAuthor {
         this.username = username;
     }
 
-    public String getResource_count() {
-        return resource_count;
+    @JsonGetter("resource_count")
+    public String getResourceCount() {
+        return resourceCount;
     }
 
-    public void setResource_count(String resource_count) {
-        this.resource_count = resource_count;
+    @JsonSetter("resource_count")
+    public void setResourceCount(String resourceCount) {
+        this.resourceCount = resourceCount;
     }
 
-    public SpigotAvatar getAvatar() {
+    public String getAvatar() {
         return avatar;
     }
 
-    public void setAvatar(SpigotAvatar avatar) {
+    public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
 }

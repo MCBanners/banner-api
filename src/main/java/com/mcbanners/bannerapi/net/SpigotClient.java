@@ -13,7 +13,7 @@ import java.util.Collections;
 @Component
 public final class SpigotClient extends BasicHttpClient {
     public SpigotClient() {
-        super("https://api.spigotmc.org/simple/0.1/index.php?action=");
+        super("https://api.spigotmc.org/simple/0.2/index.php?action=");
     }
 
     public ResponseEntity<SpigotAuthor> getAuthor(int id) {
