@@ -64,9 +64,9 @@ public class AuthorController {
         return new ResponseEntity<>(Collections.singletonMap("valid", author != null), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/mcmarket/{id}/isValid", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, Boolean>> getIsValidMCMarket(@PathVariable int id) {
-        Author author = this.authors.getAuthor(id, ServiceBackend.MCMARKET);
+    @GetMapping(value = "/builtbybit/{id}/isValid", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Boolean>> getIsValidBuiltByBit(@PathVariable int id) {
+        Author author = this.authors.getAuthor(id, ServiceBackend.BUILTBYBIT);
         return new ResponseEntity<>(Collections.singletonMap("valid", author != null), HttpStatus.OK);
     }
 
@@ -125,14 +125,14 @@ public class AuthorController {
         return draw(author, raw, ServiceBackend.POLYMART, outputType);
     }
 
-    @GetMapping(value = "/mcmarket/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<byte[]> getBannerMCMarket(@PathVariable int id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
-        Author author = this.authors.getAuthor(id, ServiceBackend.MCMARKET);
+    @GetMapping(value = "/builtbybit/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<byte[]> getBannerBuiltByBit(@PathVariable int id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
+        Author author = this.authors.getAuthor(id, ServiceBackend.BUILTBYBIT);
         if (author == null) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
 
-        return draw(author, raw, ServiceBackend.MCMARKET, outputType);
+        return draw(author, raw, ServiceBackend.BUILTBYBIT, outputType);
     }
 
     private ResponseEntity<byte[]> draw(Author author, Map<String, String> raw, ServiceBackend backend, BannerOutputType outputType) {

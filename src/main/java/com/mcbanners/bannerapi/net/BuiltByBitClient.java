@@ -1,10 +1,10 @@
 package com.mcbanners.bannerapi.net;
 
 
-import com.mcbanners.bannerapi.obj.backend.mcmarket.MCMarketAuthor;
-import com.mcbanners.bannerapi.obj.backend.mcmarket.MCMarketMember;
-import com.mcbanners.bannerapi.obj.backend.mcmarket.MCMarketResource;
-import com.mcbanners.bannerapi.obj.backend.mcmarket.MCMarketResourceBasic;
+import com.mcbanners.bannerapi.obj.backend.builtbybit.BuiltByBitAuthor;
+import com.mcbanners.bannerapi.obj.backend.builtbybit.BuiltByBitMember;
+import com.mcbanners.bannerapi.obj.backend.builtbybit.BuiltByBitResource;
+import com.mcbanners.bannerapi.obj.backend.builtbybit.BuiltByBitResourceBasic;
 import com.mcbanners.bannerapi.util.Log;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -16,60 +16,60 @@ import org.springframework.web.client.RestClientResponseException;
 import java.util.Collections;
 
 @Component
-public class MCMarketClient extends BasicHttpClient {
+public class BuiltByBitClient extends BasicHttpClient {
 
-    @Value("${mcmarket.key}")
+    @Value("${builtbybit.key}")
     private String key;
 
-    public MCMarketClient() {
+    public BuiltByBitClient() {
         super("https://api.builtbybit.com/v1/");
     }
 
-    public final ResponseEntity<MCMarketResource> getResource(int id) {
+    public final ResponseEntity<BuiltByBitResource> getResource(int id) {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.AUTHORIZATION, "Private " + this.key);
-            return get("resources/" + id, MCMarketResource.class, httpHeaders -> headers);
+            return get("resources/" + id, BuiltByBitResource.class, httpHeaders -> headers);
         } catch (RestClientResponseException ex) {
-            Log.error("Failed to get resource " + id + " from MC-Market", ex);
+            Log.error("Failed to get resource " + id + " from BuiltByBit", ex);
             ex.printStackTrace();
         }
 
         return null;
     }
 
-    public ResponseEntity<MCMarketResourceBasic> getAllByAuthor(int id) {
+    public ResponseEntity<BuiltByBitResourceBasic> getAllByAuthor(int id) {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.AUTHORIZATION, "Private " + this.key);
-            return get("resources/authors/" + id, MCMarketResourceBasic.class, httpHeaders -> headers);
+            return get("resources/authors/" + id, BuiltByBitResourceBasic.class, httpHeaders -> headers);
         } catch (RestClientResponseException ex) {
-            Log.error("Failed to load all Spigot Resources by author id %d: %s", id, ex.getMessage());
+            Log.error("Failed to load all BuiltByBit Resources by author id %d: %s", id, ex.getMessage());
             ex.printStackTrace();
             return null;
         }
     }
 
-    public final ResponseEntity<MCMarketAuthor> getAuthor(int id) {
+    public final ResponseEntity<BuiltByBitAuthor> getAuthor(int id) {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.AUTHORIZATION, "Private " + this.key);
-            return get("members/" + id, MCMarketAuthor.class, httpHeaders -> headers);
+            return get("members/" + id, BuiltByBitAuthor.class, httpHeaders -> headers);
         } catch (RestClientResponseException ex) {
-            Log.error("Failed to get author " + id + " from MC-Market", ex);
+            Log.error("Failed to get author " + id + " from BuiltByBit", ex);
             ex.printStackTrace();
         }
 
         return null;
     }
 
-    public final ResponseEntity<MCMarketMember> getMember(int id) {
+    public final ResponseEntity<BuiltByBitMember> getMember(int id) {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.AUTHORIZATION, "Private " + this.key);
-            return get("members/" + id, MCMarketMember.class, httpHeaders -> headers);
+            return get("members/" + id, BuiltByBitMember.class, httpHeaders -> headers);
         } catch (RestClientResponseException ex) {
-            Log.error("Failed to get member " + id + " from MC-Market", ex);
+            Log.error("Failed to get member " + id + " from BuiltByBit", ex);
             ex.printStackTrace();
         }
 
@@ -83,7 +83,7 @@ public class MCMarketClient extends BasicHttpClient {
                 return headers;
             });
         } catch (RestClientResponseException ex) {
-            Log.error("Failed to load MCMarket Resource Icon by url %s: %s", url, ex.getMessage());
+            Log.error("Failed to load BuiltByBit Resource Icon by url %s: %s", url, ex.getMessage());
             ex.printStackTrace();
             return null;
         }

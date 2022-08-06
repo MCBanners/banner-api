@@ -1,8 +1,8 @@
 package com.mcbanners.bannerapi.service.impl;
 
-import com.mcbanners.bannerapi.net.MCMarketClient;
-import com.mcbanners.bannerapi.obj.backend.mcmarket.MCMarketMember;
-import com.mcbanners.bannerapi.obj.backend.mcmarket.MCMarketMemberData;
+import com.mcbanners.bannerapi.net.BuiltByBitClient;
+import com.mcbanners.bannerapi.obj.backend.builtbybit.BuiltByBitMember;
+import com.mcbanners.bannerapi.obj.backend.builtbybit.BuiltByBitMemberData;
 import com.mcbanners.bannerapi.obj.generic.Member;
 import com.mcbanners.bannerapi.service.ServiceBackend;
 import com.mcbanners.bannerapi.service.api.MemberService;
@@ -22,36 +22,36 @@ import java.util.TimeZone;
 @Service
 @CacheConfig(cacheNames = {"member"})
 public class DefaultMemberService implements MemberService {
-    private final MCMarketClient mcMarketClient;
+    private final BuiltByBitClient builtByBitClient;
 
     @Autowired
-    public DefaultMemberService(MCMarketClient mcMarketClient) {
-        this.mcMarketClient = mcMarketClient;
+    public DefaultMemberService(BuiltByBitClient builtByBitClient) {
+        this.builtByBitClient = builtByBitClient;
     }
 
     @Override
     @Cacheable(unless = "#result == null")
     public Member getMember(int memberId, ServiceBackend backend) {
-        if (backend == ServiceBackend.MCMARKET) {
-            return handleMcMarket(memberId);
+        if (backend == ServiceBackend.BUILTBYBIT) {
+            return handleBuiltByBit(memberId);
         }
         return null;
     }
 
-    private Member handleMcMarket(int memberId) {
-        MCMarketMember member = loadMCMarketMember(memberId);
+    private Member handleBuiltByBit(int memberId) {
+        BuiltByBitMember member = loadBuiltByBitClientMember(memberId);
 
         if (member == null || member.getResult().equals("error")) {
             return null;
         }
 
-        MCMarketMemberData data = member.getData();
+        BuiltByBitMemberData data = member.getData();
 
         if (data == null) {
             return null;
         }
 
-        String memberIcon = loadMCMarketMemberIcon(data.getAvatarUrl());
+        String memberIcon = loadBuiltByBitClientMemberIcon(data.getAvatarUrl());
         if (memberIcon == null) {
             memberIcon = "";
         }
@@ -83,8 +83,8 @@ public class DefaultMemberService implements MemberService {
                 data.getFeedbackNegative());
     }
 
-    private MCMarketMember loadMCMarketMember(int memberId) {
-        ResponseEntity<MCMarketMember> resp = mcMarketClient.getMember(memberId);
+    private BuiltByBitMember loadBuiltByBitClientMember(int memberId) {
+        ResponseEntity<BuiltByBitMember> resp = builtByBitClient.getMember(memberId);
         if (resp == null) {
             return null;
         }
@@ -92,8 +92,8 @@ public class DefaultMemberService implements MemberService {
         return resp.getBody();
     }
 
-    private String loadMCMarketMemberIcon(String url) {
-        ResponseEntity<byte[]> resp = mcMarketClient.getIcon(url);
+    private String loadBuiltByBitClientMemberIcon(String url) {
+        ResponseEntity<byte[]> resp = builtByBitClient.getIcon(url);
         if (resp == null) {
             return null;
         }

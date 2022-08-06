@@ -29,20 +29,20 @@ public class MemberController {
         this.members = members;
     }
 
-    @GetMapping(value = "/mcmarket/{id}/isValid", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/builtbybit/{id}/isValid", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Boolean>> getIsValid(@PathVariable int id) {
-        Member member = this.members.getMember(id, ServiceBackend.MCMARKET);
+        Member member = this.members.getMember(id, ServiceBackend.BUILTBYBIT);
         return new ResponseEntity<>(Collections.singletonMap("valid", member != null), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/mcmarket/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
+    @GetMapping(value = "/builtbybit/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<byte[]> getBanner(@PathVariable int id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
-        Member member = this.members.getMember(id, ServiceBackend.MCMARKET);
+        Member member = this.members.getMember(id, ServiceBackend.BUILTBYBIT);
         if (member == null) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
 
-        return draw(member, raw, ServiceBackend.MCMARKET, outputType);
+        return draw(member, raw, ServiceBackend.BUILTBYBIT, outputType);
     }
 
     private ResponseEntity<byte[]> draw(Member member, Map<String, String> raw, ServiceBackend backend, BannerOutputType outputType) {

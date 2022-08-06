@@ -1,11 +1,11 @@
-package com.mcbanners.bannerapi.obj.backend.mcmarket;
+package com.mcbanners.bannerapi.obj.backend.builtbybit;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class MCMarketResourceData {
+public class BuiltByBitResourceData {
     private int resourceId;
     private int authorId;
     private String title;

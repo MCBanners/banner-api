@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.mcbanners.bannerapi.net.CurseForgeClient;
-import com.mcbanners.bannerapi.net.MCMarketClient;
+import com.mcbanners.bannerapi.net.BuiltByBitClient;
 import com.mcbanners.bannerapi.net.ModrinthClient;
 import com.mcbanners.bannerapi.net.OreClient;
 import com.mcbanners.bannerapi.net.PolyMartClient;
@@ -12,9 +12,9 @@ import com.mcbanners.bannerapi.net.SpigotClient;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeAuthor;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeProject;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeResource;
-import com.mcbanners.bannerapi.obj.backend.mcmarket.MCMarketAuthor;
-import com.mcbanners.bannerapi.obj.backend.mcmarket.MCMarketResourceBasic;
-import com.mcbanners.bannerapi.obj.backend.mcmarket.MCMarketResourceBasicData;
+import com.mcbanners.bannerapi.obj.backend.builtbybit.BuiltByBitAuthor;
+import com.mcbanners.bannerapi.obj.backend.builtbybit.BuiltByBitResourceBasic;
+import com.mcbanners.bannerapi.obj.backend.builtbybit.BuiltByBitResourceBasicData;
 import com.mcbanners.bannerapi.obj.backend.modrinth.ModrinthResource;
 import com.mcbanners.bannerapi.obj.backend.modrinth.ModrinthUser;
 import com.mcbanners.bannerapi.obj.backend.ore.OreAuthor;
@@ -45,18 +45,18 @@ public class DefaultAuthorService implements AuthorService {
     private final CurseForgeClient curseForgeClient;
     private final ModrinthClient modrinthClient;
     private final PolyMartClient polyMartClient;
-    private final MCMarketClient mcMarketClient;
+    private final BuiltByBitClient builtByBitClient;
 
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Autowired
-    public DefaultAuthorService(SpigotClient spigotClient, OreClient oreClient, CurseForgeClient curseForgeClient, ModrinthClient modrinthClient, PolyMartClient polyMartClient, MCMarketClient mcMarketClient) {
+    public DefaultAuthorService(SpigotClient spigotClient, OreClient oreClient, CurseForgeClient curseForgeClient, ModrinthClient modrinthClient, PolyMartClient polyMartClient, BuiltByBitClient builtByBitClient) {
         this.spigotClient = spigotClient;
         this.oreClient = oreClient;
         this.curseForgeClient = curseForgeClient;
         this.modrinthClient = modrinthClient;
         this.polyMartClient = polyMartClient;
-        this.mcMarketClient = mcMarketClient;
+        this.builtByBitClient = builtByBitClient;
     }
 
 
@@ -77,8 +77,8 @@ public class DefaultAuthorService implements AuthorService {
                 return handleCurseForge(authorId, null);
             case POLYMART:
                 return handlePolyMart(authorId);
-            case MCMARKET:
-                return handleMcMarket(authorId);
+            case BUILTBYBIT:
+                return handleBuiltByBit(authorId);
             case ORE:
             default:
                 return null;
@@ -104,7 +104,7 @@ public class DefaultAuthorService implements AuthorService {
                 return handleModrinth(authorName);
             case SPIGOT:
             case POLYMART:
-            case MCMARKET:
+            case BUILTBYBIT:
             default:
                 return null;
         }
@@ -372,15 +372,15 @@ public class DefaultAuthorService implements AuthorService {
         return resources;
     }
 
-    // MC-Market Handling
-    private Author handleMcMarket(int authorId) {
-        MCMarketAuthor author = loadMCMarketAuthor(authorId);
+    // BuiltByBit Handling
+    private Author handleBuiltByBit(int authorId) {
+        BuiltByBitAuthor author = loadBuiltByBitAuthor(authorId);
 
         if (author == null || author.getResult().equals("error")) {
             return null;
         }
 
-        MCMarketResourceBasic resources = loadMCMarketAuthorBasic(authorId);
+        BuiltByBitResourceBasic resources = loadBuiltByBitAuthorBasic(authorId);
 
         if (resources == null || resources.getData().length == 0) {
             return null;
@@ -388,7 +388,7 @@ public class DefaultAuthorService implements AuthorService {
 
         int totalDownloads = 0, totalReviews = 0;
 
-        for (final MCMarketResourceBasicData resource : resources.getData()) {
+        for (final BuiltByBitResourceBasicData resource : resources.getData()) {
             totalDownloads += resource.getDownloadCount();
             totalReviews += resource.getReviewCount();
         }
@@ -396,23 +396,23 @@ public class DefaultAuthorService implements AuthorService {
         String avatarUrl = author.getData().getAvatarUrl();
         avatarUrl = avatarUrl.replace("https://static.mc-market.org", "https://cdn.builtbybit.com");
 
-        String mcMarketAuthorIcon = loadMCMarketAuthorIcon(avatarUrl);
-        if (mcMarketAuthorIcon == null) {
-            mcMarketAuthorIcon = "";
+        String builtByBitAuthorIcon = loadBuiltByBitAuthorIcon(avatarUrl);
+        if (builtByBitAuthorIcon == null) {
+            builtByBitAuthorIcon = "";
         }
 
         return new Author(
                 author.getData().getUsername(),
                 author.getData().getResourceCount(),
-                mcMarketAuthorIcon,
+                builtByBitAuthorIcon,
                 totalDownloads,
                 -1,
                 totalReviews
         );
     }
 
-    private MCMarketResourceBasic loadMCMarketAuthorBasic(int authorId) {
-        ResponseEntity<MCMarketResourceBasic> resp = mcMarketClient.getAllByAuthor(authorId);
+    private BuiltByBitResourceBasic loadBuiltByBitAuthorBasic(int authorId) {
+        ResponseEntity<BuiltByBitResourceBasic> resp = builtByBitClient.getAllByAuthor(authorId);
         if (resp == null) {
             return null;
         }
@@ -420,8 +420,8 @@ public class DefaultAuthorService implements AuthorService {
         return resp.getBody();
     }
 
-    private MCMarketAuthor loadMCMarketAuthor(int authorId) {
-        ResponseEntity<MCMarketAuthor> resp = mcMarketClient.getAuthor(authorId);
+    private BuiltByBitAuthor loadBuiltByBitAuthor(int authorId) {
+        ResponseEntity<BuiltByBitAuthor> resp = builtByBitClient.getAuthor(authorId);
         if (resp == null) {
             return null;
         }
@@ -429,8 +429,8 @@ public class DefaultAuthorService implements AuthorService {
         return resp.getBody();
     }
 
-    private String loadMCMarketAuthorIcon(String url) {
-        ResponseEntity<byte[]> resp = mcMarketClient.getIcon(url);
+    private String loadBuiltByBitAuthorIcon(String url) {
+        ResponseEntity<byte[]> resp = builtByBitClient.getIcon(url);
         if (resp == null) {
             return null;
         }

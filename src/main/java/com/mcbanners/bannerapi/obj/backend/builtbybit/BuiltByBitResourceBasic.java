@@ -1,11 +1,11 @@
-package com.mcbanners.bannerapi.obj.backend.mcmarket;
+package com.mcbanners.bannerapi.obj.backend.builtbybit;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class MCMarketResourceBasic {
+public class BuiltByBitResourceBasic {
     private String result;
-    private MCMarketResourceBasicData[] data;
+    private BuiltByBitResourceBasicData[] data;
 
     public String getResult() {
         return result;
@@ -15,11 +15,11 @@ public class MCMarketResourceBasic {
         this.result = result;
     }
 
-    public MCMarketResourceBasicData[] getData() {
+    public BuiltByBitResourceBasicData[] getData() {
         return data;
     }
 
-    public void setData(MCMarketResourceBasicData[] data) {
+    public void setData(BuiltByBitResourceBasicData[] data) {
         this.data = data;
     }
 }

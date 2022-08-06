@@ -9,6 +9,6 @@ public enum ServiceBackend {
     ORE,
     CURSEFORGE,
     MODRINTH,
-    MCMARKET,
+    BUILTBYBIT,
     POLYMART
 }

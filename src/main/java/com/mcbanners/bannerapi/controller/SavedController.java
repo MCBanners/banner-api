@@ -91,7 +91,7 @@ public class SavedController {
             case SPONGE_AUTHOR:
             case CURSEFORGE_AUTHOR:
             case MODRINTH_AUTHOR:
-            case MCMARKET_AUTHOR:
+            case BUILTBYBIT_AUTHOR:
             case POLYMART_AUTHOR:
                 Author author = null;
                 switch (banner.getBannerType()) {
@@ -111,8 +111,8 @@ public class SavedController {
                         backend = ServiceBackend.MODRINTH;
                         author = authors.getAuthor(settings.get("_author_id"), backend);
                         break;
-                    case MCMARKET_AUTHOR:
-                        backend = ServiceBackend.MCMARKET;
+                    case BUILTBYBIT_AUTHOR:
+                        backend = ServiceBackend.BUILTBYBIT;
                         author = authors.getAuthor(Integer.parseInt(settings.get("_author_id")), backend);
                         break;
                     case POLYMART_AUTHOR:
@@ -137,7 +137,7 @@ public class SavedController {
             case SPONGE_RESOURCE:
             case CURSEFORGE_RESOURCE:
             case MODRINTH_RESOURCE:
-            case MCMARKET_RESOURCE:
+            case BUILTBYBIT_RESOURCE:
             case POLYMART_RESOURCE:
                 Resource resource = null;
                 author = null;
@@ -162,8 +162,8 @@ public class SavedController {
                         resource = resources.getResource(settings.get("_resource_id"), backend);
                         author = authors.getAuthor(resource.getAuthorName(), backend);
                         break;
-                    case MCMARKET_RESOURCE:
-                        backend = ServiceBackend.MCMARKET;
+                    case BUILTBYBIT_RESOURCE:
+                        backend = ServiceBackend.BUILTBYBIT;
                         resource = resources.getResource(Integer.parseInt(settings.get("_resource_id")), backend);
                         author = authors.getAuthor(resource.getAuthorId(), backend);
                         break;
@@ -208,10 +208,10 @@ public class SavedController {
 
                 layout = new ServerLayout(server, settings);
                 break;
-            case MCMARKET_MEMBER:
+            case BUILTBYBIT_MEMBER:
                 Member member = null;
-                if (banner.getBannerType() == BannerType.MCMARKET_MEMBER) {
-                    backend = ServiceBackend.MCMARKET;
+                if (banner.getBannerType() == BannerType.BUILTBYBIT_MEMBER) {
+                    backend = ServiceBackend.BUILTBYBIT;
                     member = members.getMember(Integer.parseInt(settings.get("_member_id")), backend);
                 }
 

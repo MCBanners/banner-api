@@ -2,7 +2,7 @@ package com.mcbanners.bannerapi.service.impl;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.mcbanners.bannerapi.net.CurseForgeClient;
-import com.mcbanners.bannerapi.net.MCMarketClient;
+import com.mcbanners.bannerapi.net.BuiltByBitClient;
 import com.mcbanners.bannerapi.net.ModrinthClient;
 import com.mcbanners.bannerapi.net.OreClient;
 import com.mcbanners.bannerapi.net.PolyMartClient;
@@ -10,8 +10,8 @@ import com.mcbanners.bannerapi.net.SpigotClient;
 import com.mcbanners.bannerapi.net.error.FurtherProcessingRequiredException;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeResource;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeResourceMember;
-import com.mcbanners.bannerapi.obj.backend.mcmarket.MCMarketAuthor;
-import com.mcbanners.bannerapi.obj.backend.mcmarket.MCMarketResource;
+import com.mcbanners.bannerapi.obj.backend.builtbybit.BuiltByBitAuthor;
+import com.mcbanners.bannerapi.obj.backend.builtbybit.BuiltByBitResource;
 import com.mcbanners.bannerapi.obj.backend.modrinth.ModrinthResource;
 import com.mcbanners.bannerapi.obj.backend.ore.OreResource;
 import com.mcbanners.bannerapi.obj.backend.polymart.PolyMartResource;
@@ -39,16 +39,16 @@ public class DefaultResourceService implements ResourceService {
     private final OreClient oreClient;
     private final CurseForgeClient curseForgeClient;
     private final ModrinthClient modrinthClient;
-    private final MCMarketClient mcMarketClient;
+    private final BuiltByBitClient builtByBitClient;
     private final PolyMartClient polyMartClient;
 
     @Autowired
-    public DefaultResourceService(SpigotClient spigotClient, OreClient oreClient, CurseForgeClient curseForgeClient, ModrinthClient modrinthClient, MCMarketClient mcMarketClient, PolyMartClient polyMartClient) {
+    public DefaultResourceService(SpigotClient spigotClient, OreClient oreClient, CurseForgeClient curseForgeClient, ModrinthClient modrinthClient, BuiltByBitClient builtByBitClient, PolyMartClient polyMartClient) {
         this.spigotClient = spigotClient;
         this.oreClient = oreClient;
         this.curseForgeClient = curseForgeClient;
         this.modrinthClient = modrinthClient;
-        this.mcMarketClient = mcMarketClient;
+        this.builtByBitClient = builtByBitClient;
         this.polyMartClient = polyMartClient;
     }
 
@@ -68,8 +68,8 @@ public class DefaultResourceService implements ResourceService {
                 return handleSpigot(resourceId);
             case CURSEFORGE:
                 return handleCurse(resourceId);
-            case MCMARKET:
-                return handleMcMarket(resourceId);
+            case BUILTBYBIT:
+                return handleBuiltByBit(resourceId);
             case POLYMART:
                 return handlePolyMart(resourceId);
             case ORE:
@@ -96,7 +96,7 @@ public class DefaultResourceService implements ResourceService {
             case CURSEFORGE:
             case SPIGOT:
             case POLYMART:
-            case MCMARKET:
+            case BUILTBYBIT:
             default:
                 return null;
         }
@@ -301,15 +301,15 @@ public class DefaultResourceService implements ResourceService {
         return Base64.getEncoder().encodeToString(body);
     }
 
-    // MC-Market handling
-    private Resource handleMcMarket(int resourceId) {
-        MCMarketResource resource = loadMCMarketResource(resourceId);
+    // BuiltByBit handling
+    private Resource handleBuiltByBit(int resourceId) {
+        BuiltByBitResource resource = loadBuiltByBitResource(resourceId);
 
         if (resource == null || resource.getResult().equals("error")) {
             return null;
         }
 
-        MCMarketAuthor author = loadMCMarketAuthor(resource.getData().getAuthorId());
+        BuiltByBitAuthor author = loadBuiltByBitAuthor(resource.getData().getAuthorId());
 
         if (author == null || author.getResult().equals("error")) {
             return null;
@@ -339,8 +339,8 @@ public class DefaultResourceService implements ResourceService {
                 null);
     }
 
-    private MCMarketResource loadMCMarketResource(int resourceId) {
-        ResponseEntity<MCMarketResource> resp = mcMarketClient.getResource(resourceId);
+    private BuiltByBitResource loadBuiltByBitResource(int resourceId) {
+        ResponseEntity<BuiltByBitResource> resp = builtByBitClient.getResource(resourceId);
         if (resp == null) {
             return null;
         }
@@ -348,8 +348,8 @@ public class DefaultResourceService implements ResourceService {
         return resp.getBody();
     }
 
-    private MCMarketAuthor loadMCMarketAuthor(int authorId) {
-        ResponseEntity<MCMarketAuthor> resp = mcMarketClient.getAuthor(authorId);
+    private BuiltByBitAuthor loadBuiltByBitAuthor(int authorId) {
+        ResponseEntity<BuiltByBitAuthor> resp = builtByBitClient.getAuthor(authorId);
         if (resp == null) {
             return null;
         }

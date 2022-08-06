@@ -57,9 +57,9 @@ public class ResourceController {
         return new ResponseEntity<>(Collections.singletonMap("valid", resource != null), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/mcmarket/{id}/isValid", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, Boolean>> getIsValidMCMarket(@PathVariable int id) {
-        Resource resource = this.resources.getResource(id, ServiceBackend.MCMARKET);
+    @GetMapping(value = "/builtbybit/{id}/isValid", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Boolean>> getIsValidBuiltByBit(@PathVariable int id) {
+        Resource resource = this.resources.getResource(id, ServiceBackend.BUILTBYBIT);
         return new ResponseEntity<>(Collections.singletonMap("valid", resource != null), HttpStatus.OK);
     }
 
@@ -114,19 +114,19 @@ public class ResourceController {
         return draw(resource, author, raw, ServiceBackend.MODRINTH, outputType);
     }
 
-    @GetMapping(value = "/mcmarket/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<byte[]> getBannerMCMarket(@PathVariable int id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
-        Resource resource = this.resources.getResource(id, ServiceBackend.MCMARKET);
+    @GetMapping(value = "/builtbybit/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<byte[]> getBannerBuiltByBit(@PathVariable int id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
+        Resource resource = this.resources.getResource(id, ServiceBackend.BUILTBYBIT);
         if (resource == null) {
             return null;
         }
 
-        Author author = this.authors.getAuthor(resource.getAuthorId(), ServiceBackend.MCMARKET);
+        Author author = this.authors.getAuthor(resource.getAuthorId(), ServiceBackend.BUILTBYBIT);
         if (author == null) {
             return null;
         }
 
-        return draw(resource, author, raw, ServiceBackend.MCMARKET, outputType);
+        return draw(resource, author, raw, ServiceBackend.BUILTBYBIT, outputType);
     }
 
     @GetMapping(value = "/sponge/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
