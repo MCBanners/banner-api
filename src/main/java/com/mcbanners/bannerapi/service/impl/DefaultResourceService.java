@@ -1,21 +1,23 @@
 package com.mcbanners.bannerapi.service.impl;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.mcbanners.bannerapi.net.CurseForgeClient;
 import com.mcbanners.bannerapi.net.BuiltByBitClient;
+import com.mcbanners.bannerapi.net.CurseForgeClient;
 import com.mcbanners.bannerapi.net.ModrinthClient;
 import com.mcbanners.bannerapi.net.OreClient;
 import com.mcbanners.bannerapi.net.PolyMartClient;
+import com.mcbanners.bannerapi.net.SpigetClient;
 import com.mcbanners.bannerapi.net.SpigotClient;
 import com.mcbanners.bannerapi.net.error.FurtherProcessingRequiredException;
-import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeResource;
-import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeResourceMember;
 import com.mcbanners.bannerapi.obj.backend.builtbybit.BuiltByBitAuthor;
 import com.mcbanners.bannerapi.obj.backend.builtbybit.BuiltByBitResource;
+import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeResource;
+import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeResourceMember;
 import com.mcbanners.bannerapi.obj.backend.modrinth.ModrinthResource;
 import com.mcbanners.bannerapi.obj.backend.ore.OreResource;
 import com.mcbanners.bannerapi.obj.backend.polymart.PolyMartResource;
 import com.mcbanners.bannerapi.obj.backend.polymart.PolyMartResourceData;
+import com.mcbanners.bannerapi.obj.backend.spiget.SpigetResource;
 import com.mcbanners.bannerapi.obj.backend.spigot.SpigotPremium;
 import com.mcbanners.bannerapi.obj.backend.spigot.SpigotResource;
 import com.mcbanners.bannerapi.obj.generic.PriceInformation;
@@ -41,15 +43,17 @@ public class DefaultResourceService implements ResourceService {
     private final ModrinthClient modrinthClient;
     private final BuiltByBitClient builtByBitClient;
     private final PolyMartClient polyMartClient;
+    private final SpigetClient spigetClient;
 
     @Autowired
-    public DefaultResourceService(SpigotClient spigotClient, OreClient oreClient, CurseForgeClient curseForgeClient, ModrinthClient modrinthClient, BuiltByBitClient builtByBitClient, PolyMartClient polyMartClient) {
+    public DefaultResourceService(SpigotClient spigotClient, OreClient oreClient, CurseForgeClient curseForgeClient, ModrinthClient modrinthClient, BuiltByBitClient builtByBitClient, PolyMartClient polyMartClient, SpigetClient spigetClient) {
         this.spigotClient = spigotClient;
         this.oreClient = oreClient;
         this.curseForgeClient = curseForgeClient;
         this.modrinthClient = modrinthClient;
         this.builtByBitClient = builtByBitClient;
         this.polyMartClient = polyMartClient;
+        this.spigetClient = spigetClient;
     }
 
 
@@ -110,10 +114,13 @@ public class DefaultResourceService implements ResourceService {
             return null;
         }
 
-        final String rawIcon = spigotResource.getIconLink();
-        final String[] iconSplit = rawIcon.split("\\?");
+        final SpigetResource spigetResource = loadSpigetResource(resourceId);
 
-        String spigotResourceIcon = loadSpigotResourceIcon(iconSplit[0]);
+//        final String rawIcon = spigotResource.getIconLink();
+//        final String[] iconSplit = rawIcon.split("\\?");
+//
+//        String spigotResourceIcon = loadSpigotResourceIcon(iconSplit[0]);
+        String spigotResourceIcon = spigetResource.getIcon().getData();
         if (spigotResourceIcon == null) {
             spigotResourceIcon = "";
         }
@@ -141,6 +148,14 @@ public class DefaultResourceService implements ResourceService {
             return null;
         }
 
+        return resp.getBody();
+    }
+
+    private SpigetResource loadSpigetResource(final int id) {
+        final ResponseEntity<SpigetResource> resp = spigetClient.getResource(id);
+        if (resp == null) {
+            return null;
+        }
         return resp.getBody();
     }
 
