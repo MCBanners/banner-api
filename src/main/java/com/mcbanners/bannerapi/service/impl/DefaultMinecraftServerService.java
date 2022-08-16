@@ -3,6 +3,7 @@ package com.mcbanners.bannerapi.service.impl;
 import com.mcbanners.bannerapi.net.McAPIClient;
 import com.mcbanners.bannerapi.obj.backend.mcapi.MinecraftServer;
 import com.mcbanners.bannerapi.service.api.MinecraftServerService;
+import com.mcbanners.bannerapi.util.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,11 @@ public class DefaultMinecraftServerService implements MinecraftServerService {
     }
 
     private MinecraftServer loadServer(String host, int port) {
-        return client.getMinecraftServer(host, port);
+        try {
+            return client.getMinecraftServer(host, port);
+        } catch (Exception e) {
+            Log.warn("Failed to load server " + host + ":" + port + " from McAPI");
+            return null;
+        }
     }
 }
