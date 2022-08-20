@@ -12,9 +12,8 @@ import java.util.Collections;
 import java.util.Map;
 
 @RestController
-@RequestMapping(ErrorController.ERROR_PATH)
+@RequestMapping("/error")
 public class ErrorController extends AbstractErrorController {
-    protected static final String ERROR_PATH = "/error";
 
     public ErrorController(ErrorAttributes attributes) {
         super(attributes, Collections.emptyList());
@@ -26,10 +25,5 @@ public class ErrorController extends AbstractErrorController {
                 getErrorAttributes(req, ErrorAttributeOptions.of(ErrorAttributeOptions.Include.MESSAGE)),
                 getStatus(req)
         );
-    }
-
-    @Override
-    public String getErrorPath() {
-        return ERROR_PATH;
     }
 }

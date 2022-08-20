@@ -1,5 +1,5 @@
 plugins {
-	id("org.springframework.boot") version "2.3.9.RELEASE"
+	id("org.springframework.boot") version "2.7.3"
 	id("io.spring.dependency-management") version "1.0.13.RELEASE"
 	id("java")
 }
@@ -9,7 +9,7 @@ version = "0.0.1-SNAPSHOT"
 
 java {
 	toolchain {
-		languageVersion.set(JavaLanguageVersion.of(8))
+		languageVersion.set(JavaLanguageVersion.of(17))
 	}
 }
 
@@ -18,20 +18,20 @@ repositories {
 }
 
 dependencies {
-	implementation(platform("org.springframework.cloud:spring-cloud-dependencies:Hoxton.SR10"))
+	implementation(platform("org.springframework.cloud:spring-cloud-dependencies:2021.0.3"))
 
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-cache")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
 	implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
-	implementation("com.github.ben-manes.caffeine:caffeine:2.9.0")
-	implementation("org.mariadb.jdbc:mariadb-java-client:2.7.2")
-	implementation("org.flywaydb:flyway-core:6.5.7")
-	implementation("io.jsonwebtoken:jjwt-api:0.11.2")
+	implementation("com.github.ben-manes.caffeine:caffeine:3.1.1")
+	implementation("org.mariadb.jdbc:mariadb-java-client:3.0.7")
+	implementation("org.flywaydb:flyway-mysql:9.1.6")
+	implementation("io.jsonwebtoken:jjwt-api:0.11.5")
 
-	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.2")
-	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.2")
+	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
+	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
 
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 }
