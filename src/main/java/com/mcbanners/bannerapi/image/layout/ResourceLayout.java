@@ -125,7 +125,10 @@ public class ResourceLayout extends Layout {
                 if (ratingAvg >= 1) {
                     ratingAvg--;
                     toOverlay = starFull;
-                } else if (ratingAvg >= 0.5) {
+                } else if (ratingAvg >= 0.75) {
+                    ratingAvg -= 0.75;
+                    toOverlay = starFull;
+                } else if (ratingAvg >= 0.25) {
                     ratingAvg -= 0.5;
                     toOverlay = starHalf;
                 } else {
