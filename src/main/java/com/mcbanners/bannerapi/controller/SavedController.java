@@ -175,7 +175,7 @@ public class SavedController {
                     case POLYMART_RESOURCE:
                         backend = ServiceBackend.POLYMART;
                         resource = resources.getResource(Integer.parseInt(settings.get("_resource_id")), backend);
-                        author = authors.getAuthor(resource.getAuthorId(), backend);
+                        author = authors.getAuthor(resource.getAuthorId(), Integer.parseInt(settings.get("_resource_id")), backend);
                         break;
                 }
 
