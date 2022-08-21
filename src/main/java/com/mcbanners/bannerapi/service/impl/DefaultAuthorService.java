@@ -263,7 +263,7 @@ public class DefaultAuthorService implements AuthorService {
         }
 
         return new Author(
-                author.getName(),
+                author.getUsername(),
                 projects.length,
                 modrinthAuthorAvatar,
                 totalDownloads,
