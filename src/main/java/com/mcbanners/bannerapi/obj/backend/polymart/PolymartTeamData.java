@@ -3,12 +3,13 @@ package com.mcbanners.bannerapi.obj.backend.polymart;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PolyMartAuthorUserData {
+public class PolymartTeamData {
     private int id;
-    private String username;
+    private String name;
     private String type;
+    private String username;
     private String profilePictureURL;
-    private PolyMartAuthorStatistics statistics;
+    private PolymartTeamStatistics statistics;
 
     public int getId() {
         return id;
@@ -18,12 +19,12 @@ public class PolyMartAuthorUserData {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getType() {
@@ -34,6 +35,14 @@ public class PolyMartAuthorUserData {
         this.type = type;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public String getProfilePictureURL() {
         return profilePictureURL;
     }
@@ -42,11 +51,11 @@ public class PolyMartAuthorUserData {
         this.profilePictureURL = profilePictureURL;
     }
 
-    public PolyMartAuthorStatistics getStatistics() {
+    public PolymartTeamStatistics getStatistics() {
         return statistics;
     }
 
-    public void setStatistics(PolyMartAuthorStatistics statistics) {
+    public void setStatistics(PolymartTeamStatistics statistics) {
         this.statistics = statistics;
     }
 }

@@ -3,16 +3,16 @@ package com.mcbanners.bannerapi.obj.backend.polymart;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PolyMartResourceData {
+public class PolymartResourceData {
     private int id;
     private String title;
-    private PolyMartResourceOwner owner;
+    private PolymartResourceOwner owner;
     private String team;
     private double price;
     private String currency;
     private int downloads;
     private String thumbnailURL;
-    private PolyMartResourceReviews reviews;
+    private PolymartResourceReviews reviews;
 
     public int getId() {
         return id;
@@ -30,11 +30,11 @@ public class PolyMartResourceData {
         this.title = title;
     }
 
-    public PolyMartResourceOwner getOwner() {
+    public PolymartResourceOwner getOwner() {
         return owner;
     }
 
-    public void setOwner(PolyMartResourceOwner owner) {
+    public void setOwner(PolymartResourceOwner owner) {
         this.owner = owner;
     }
 
@@ -78,11 +78,11 @@ public class PolyMartResourceData {
         this.thumbnailURL = thumbnailURL;
     }
 
-    public PolyMartResourceReviews getReviews() {
+    public PolymartResourceReviews getReviews() {
         return reviews;
     }
 
-    public void setReviews(PolyMartResourceReviews reviews) {
+    public void setReviews(PolymartResourceReviews reviews) {
         this.reviews = reviews;
     }
 }

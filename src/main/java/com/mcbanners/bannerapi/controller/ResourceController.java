@@ -64,7 +64,7 @@ public class ResourceController {
     }
 
     @GetMapping(value = "/polymart/{id}/isValid", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, Boolean>> getIsValidPolyMart(@PathVariable int id) {
+    public ResponseEntity<Map<String, Boolean>> getIsValidPolymart(@PathVariable int id) {
         Resource resource = this.resources.getResource(id, ServiceBackend.POLYMART);
         return new ResponseEntity<>(Collections.singletonMap("valid", resource != null), HttpStatus.OK);
     }
@@ -145,13 +145,13 @@ public class ResourceController {
     }
 
     @GetMapping(value = "/polymart/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<byte[]> getBannerPolyMart(@PathVariable int id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
+    public ResponseEntity<byte[]> getBannerPolymart(@PathVariable int id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
         Resource resource = this.resources.getResource(id, ServiceBackend.POLYMART);
         if (resource == null) {
             return null;
         }
 
-        Author author = this.authors.getAuthor(resource.getAuthorId(), ServiceBackend.POLYMART);
+        Author author = this.authors.getAuthor(resource.getAuthorId(), id, ServiceBackend.POLYMART);
         if (author == null) {
             return null;
         }

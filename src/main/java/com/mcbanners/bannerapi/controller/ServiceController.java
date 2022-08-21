@@ -9,6 +9,7 @@ import com.mcbanners.bannerapi.banner.param.GeneralParameter;
 import com.mcbanners.bannerapi.banner.param.MemberParameter;
 import com.mcbanners.bannerapi.banner.param.ResourceParameter;
 import com.mcbanners.bannerapi.banner.param.ServerParameter;
+import com.mcbanners.bannerapi.banner.param.TeamParameter;
 import com.mcbanners.bannerapi.util.ParamUtil;
 import com.mcbanners.bannerapi.util.StringUtil;
 import org.springframework.http.HttpStatus;
@@ -51,6 +52,7 @@ public class ServiceController {
         if (bypass || type.equals("author")) toSerialize.put("author", AuthorParameter.class);
         if (bypass || type.equals("resource")) toSerialize.put("resource", ResourceParameter.class);
         if (bypass || type.equals("member")) toSerialize.put("member", MemberParameter.class);
+        if (bypass || type.equals("team")) toSerialize.put("team", TeamParameter.class);
         if (bypass || type.equals("server")) toSerialize.put("server", ServerParameter.class);
 
         Object out;

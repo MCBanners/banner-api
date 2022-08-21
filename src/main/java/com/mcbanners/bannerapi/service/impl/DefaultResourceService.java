@@ -5,7 +5,7 @@ import com.mcbanners.bannerapi.net.BuiltByBitClient;
 import com.mcbanners.bannerapi.net.CurseForgeClient;
 import com.mcbanners.bannerapi.net.ModrinthClient;
 import com.mcbanners.bannerapi.net.OreClient;
-import com.mcbanners.bannerapi.net.PolyMartClient;
+import com.mcbanners.bannerapi.net.PolymartClient;
 import com.mcbanners.bannerapi.net.SpigotClient;
 import com.mcbanners.bannerapi.net.error.FurtherProcessingRequiredException;
 import com.mcbanners.bannerapi.obj.backend.builtbybit.BuiltByBitAuthor;
@@ -14,8 +14,8 @@ import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeResource;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeResourceMember;
 import com.mcbanners.bannerapi.obj.backend.modrinth.ModrinthResource;
 import com.mcbanners.bannerapi.obj.backend.ore.OreResource;
-import com.mcbanners.bannerapi.obj.backend.polymart.PolyMartResource;
-import com.mcbanners.bannerapi.obj.backend.polymart.PolyMartResourceData;
+import com.mcbanners.bannerapi.obj.backend.polymart.PolymartResource;
+import com.mcbanners.bannerapi.obj.backend.polymart.PolymartResourceData;
 import com.mcbanners.bannerapi.obj.backend.spigot.SpigotPremium;
 import com.mcbanners.bannerapi.obj.backend.spigot.SpigotResource;
 import com.mcbanners.bannerapi.obj.generic.PriceInformation;
@@ -40,16 +40,16 @@ public class DefaultResourceService implements ResourceService {
     private final CurseForgeClient curseForgeClient;
     private final ModrinthClient modrinthClient;
     private final BuiltByBitClient builtByBitClient;
-    private final PolyMartClient polyMartClient;
+    private final PolymartClient polymartClient;
 
     @Autowired
-    public DefaultResourceService(SpigotClient spigotClient, OreClient oreClient, CurseForgeClient curseForgeClient, ModrinthClient modrinthClient, BuiltByBitClient builtByBitClient, PolyMartClient polyMartClient) {
+    public DefaultResourceService(SpigotClient spigotClient, OreClient oreClient, CurseForgeClient curseForgeClient, ModrinthClient modrinthClient, BuiltByBitClient builtByBitClient, PolymartClient polymartClient) {
         this.spigotClient = spigotClient;
         this.oreClient = oreClient;
         this.curseForgeClient = curseForgeClient;
         this.modrinthClient = modrinthClient;
         this.builtByBitClient = builtByBitClient;
-        this.polyMartClient = polyMartClient;
+        this.polymartClient = polymartClient;
     }
 
 
@@ -71,7 +71,7 @@ public class DefaultResourceService implements ResourceService {
             case BUILTBYBIT:
                 return handleBuiltByBit(resourceId);
             case POLYMART:
-                return handlePolyMart(resourceId);
+                return handlePolymart(resourceId);
             case ORE:
             default:
                 return null;
@@ -356,16 +356,16 @@ public class DefaultResourceService implements ResourceService {
         return resp.getBody();
     }
 
-    // PolyMart handling
-    private Resource handlePolyMart(final int resourceId) {
-        final PolyMartResource resource = loadPolyMartResource(resourceId);
+    // Polymart handling
+    private Resource handlePolymart(final int resourceId) {
+        final PolymartResource resource = loadPolymartResource(resourceId);
 
         if (resource == null) {
             return null;
         }
 
-        final PolyMartResourceData data = resource.getResponse().getResource();
-        final String image = loadPolyMartImage(data.getThumbnailURL());
+        final PolymartResourceData data = resource.getResponse().getResource();
+        final String image = loadPolymartImage(data.getThumbnailURL());
 
         final boolean isPremium = !(data.getPrice() == 0.00);
 
@@ -384,8 +384,8 @@ public class DefaultResourceService implements ResourceService {
         );
     }
 
-    private PolyMartResource loadPolyMartResource(final int resourceId) {
-        final ResponseEntity<PolyMartResource> resp = polyMartClient.getResource(resourceId);
+    private PolymartResource loadPolymartResource(final int resourceId) {
+        final ResponseEntity<PolymartResource> resp = polymartClient.getResource(resourceId);
         if (resp == null) {
             return null;
         }
@@ -393,8 +393,8 @@ public class DefaultResourceService implements ResourceService {
         return resp.getBody();
     }
 
-    private String loadPolyMartImage(final String url) {
-        final ResponseEntity<byte[]> resp = polyMartClient.getIcon(url);
+    private String loadPolymartImage(final String url) {
+        final ResponseEntity<byte[]> resp = polymartClient.getIcon(url);
         if (resp == null) {
             return null;
         }

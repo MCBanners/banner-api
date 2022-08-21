@@ -3,7 +3,7 @@ package com.mcbanners.bannerapi.obj.backend.polymart;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PolyMartAuthorStatistics {
+public class PolymartTeamStatistics {
     private int resourceCount;
     private int resourceDownloads;
     private int resourceRatings;

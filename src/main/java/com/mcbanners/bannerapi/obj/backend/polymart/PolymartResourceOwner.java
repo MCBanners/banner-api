@@ -3,7 +3,7 @@ package com.mcbanners.bannerapi.obj.backend.polymart;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PolyMartResourceOwner {
+public class PolymartResourceOwner {
     private String name;
     private int id;
     private String type;
