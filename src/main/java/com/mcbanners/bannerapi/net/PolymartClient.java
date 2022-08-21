@@ -21,7 +21,7 @@ public class PolymartClient extends BasicHttpClient {
         try {
             return get(String.format("getResourceInfo/?resource_id=%d", id), PolymartResource.class);
         } catch (RestClientResponseException ex) {
-            Log.error("Failed to load PolyMart Resource by id %d: %s", id, ex.getMessage());
+            Log.error("Failed to load Polymart Resource by id %d: %s", id, ex.getMessage());
             ex.printStackTrace();
             return null;
         }
@@ -31,7 +31,7 @@ public class PolymartClient extends BasicHttpClient {
         try {
             return get(String.format("getAccountInfo/?user_id=%d", id), PolymartAuthor.class);
         } catch (RestClientResponseException ex) {
-            Log.error("Failed to load PolyMart Author by id %d: %s", id, ex.getMessage());
+            Log.error("Failed to load Polymart Author by id %d: %s", id, ex.getMessage());
             ex.printStackTrace();
             return null;
         }
@@ -41,7 +41,7 @@ public class PolymartClient extends BasicHttpClient {
         try {
             return get(String.format("getAccountInfo/?team_id=%d", id), PolymartTeam.class);
         } catch (RestClientResponseException ex) {
-            Log.error("Failed to load PolyMart Team by id %d: %s", id, ex.getMessage());
+            Log.error("Failed to load Polymart Team by id %d: %s", id, ex.getMessage());
             ex.printStackTrace();
             return null;
         }
@@ -54,7 +54,7 @@ public class PolymartClient extends BasicHttpClient {
                 return headers;
             });
         } catch (RestClientResponseException ex) {
-            Log.error("Failed to load PolyMart Icon by url %s: %s", url, ex.getMessage());
+            Log.error("Failed to load Polymart Icon by url %s: %s", url, ex.getMessage());
             ex.printStackTrace();
             return null;
         }

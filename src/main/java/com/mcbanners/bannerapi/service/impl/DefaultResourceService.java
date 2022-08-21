@@ -40,16 +40,16 @@ public class DefaultResourceService implements ResourceService {
     private final CurseForgeClient curseForgeClient;
     private final ModrinthClient modrinthClient;
     private final BuiltByBitClient builtByBitClient;
-    private final PolymartClient polyMartClient;
+    private final PolymartClient polymartClient;
 
     @Autowired
-    public DefaultResourceService(SpigotClient spigotClient, OreClient oreClient, CurseForgeClient curseForgeClient, ModrinthClient modrinthClient, BuiltByBitClient builtByBitClient, PolymartClient polyMartClient) {
+    public DefaultResourceService(SpigotClient spigotClient, OreClient oreClient, CurseForgeClient curseForgeClient, ModrinthClient modrinthClient, BuiltByBitClient builtByBitClient, PolymartClient polymartClient) {
         this.spigotClient = spigotClient;
         this.oreClient = oreClient;
         this.curseForgeClient = curseForgeClient;
         this.modrinthClient = modrinthClient;
         this.builtByBitClient = builtByBitClient;
-        this.polyMartClient = polyMartClient;
+        this.polymartClient = polymartClient;
     }
 
 
@@ -71,7 +71,7 @@ public class DefaultResourceService implements ResourceService {
             case BUILTBYBIT:
                 return handleBuiltByBit(resourceId);
             case POLYMART:
-                return handlePolyMart(resourceId);
+                return handlePolymart(resourceId);
             case ORE:
             default:
                 return null;
@@ -356,16 +356,16 @@ public class DefaultResourceService implements ResourceService {
         return resp.getBody();
     }
 
-    // PolyMart handling
-    private Resource handlePolyMart(final int resourceId) {
-        final PolymartResource resource = loadPolyMartResource(resourceId);
+    // Polymart handling
+    private Resource handlePolymart(final int resourceId) {
+        final PolymartResource resource = loadPolymartResource(resourceId);
 
         if (resource == null) {
             return null;
         }
 
         final PolymartResourceData data = resource.getResponse().getResource();
-        final String image = loadPolyMartImage(data.getThumbnailURL());
+        final String image = loadPolymartImage(data.getThumbnailURL());
 
         final boolean isPremium = !(data.getPrice() == 0.00);
 
@@ -384,8 +384,8 @@ public class DefaultResourceService implements ResourceService {
         );
     }
 
-    private PolymartResource loadPolyMartResource(final int resourceId) {
-        final ResponseEntity<PolymartResource> resp = polyMartClient.getResource(resourceId);
+    private PolymartResource loadPolymartResource(final int resourceId) {
+        final ResponseEntity<PolymartResource> resp = polymartClient.getResource(resourceId);
         if (resp == null) {
             return null;
         }
@@ -393,8 +393,8 @@ public class DefaultResourceService implements ResourceService {
         return resp.getBody();
     }
 
-    private String loadPolyMartImage(final String url) {
-        final ResponseEntity<byte[]> resp = polyMartClient.getIcon(url);
+    private String loadPolymartImage(final String url) {
+        final ResponseEntity<byte[]> resp = polymartClient.getIcon(url);
         if (resp == null) {
             return null;
         }

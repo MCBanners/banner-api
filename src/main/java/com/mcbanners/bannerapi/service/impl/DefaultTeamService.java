@@ -43,10 +43,11 @@ public class DefaultTeamService implements TeamService {
 
         final PolymartTeamData data = team.getResponse().getTeam();
         final PolymartTeamStatistics statistics = data.getStatistics();
+        final String image = loadPolymartTeamIcon(data.getProfilePictureURL());
 
         return new Team(
                 data.getName(),
-                data.getProfilePictureURL(),
+                image,
                 statistics.getResourceCount(),
                 statistics.getResourceDownloads(),
                 statistics.getResourceRatings(),

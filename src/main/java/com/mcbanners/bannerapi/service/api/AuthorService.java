@@ -14,7 +14,7 @@ public interface AuthorService {
     Author getAuthor(final int authorId, final ServiceBackend backend);
 
     /**
-     * PolyMart Workaround to get and author that could be a team
+     * Polymart Workaround to get and author that could be a team
      * 
      * @param authorId the author ID
      * @param resourceId the resource ID
