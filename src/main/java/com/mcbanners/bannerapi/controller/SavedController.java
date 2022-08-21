@@ -8,10 +8,12 @@ import com.mcbanners.bannerapi.image.layout.Layout;
 import com.mcbanners.bannerapi.image.layout.MemberLayout;
 import com.mcbanners.bannerapi.image.layout.ResourceLayout;
 import com.mcbanners.bannerapi.image.layout.ServerLayout;
+import com.mcbanners.bannerapi.image.layout.TeamLayout;
 import com.mcbanners.bannerapi.obj.backend.mcapi.MinecraftServer;
 import com.mcbanners.bannerapi.obj.generic.Author;
 import com.mcbanners.bannerapi.obj.generic.Member;
 import com.mcbanners.bannerapi.obj.generic.Resource;
+import com.mcbanners.bannerapi.obj.generic.Team;
 import com.mcbanners.bannerapi.persistence.SavedBanner;
 import com.mcbanners.bannerapi.persistence.SavedBannerRepository;
 import com.mcbanners.bannerapi.security.AuthedUserInformation;
@@ -20,6 +22,7 @@ import com.mcbanners.bannerapi.service.api.AuthorService;
 import com.mcbanners.bannerapi.service.api.MemberService;
 import com.mcbanners.bannerapi.service.api.MinecraftServerService;
 import com.mcbanners.bannerapi.service.api.ResourceService;
+import com.mcbanners.bannerapi.service.api.TeamService;
 import com.mcbanners.bannerapi.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -42,15 +45,17 @@ public class SavedController {
     private final AuthorService authors;
     private final MinecraftServerService servers;
     private final MemberService members;
+    private final TeamService teams;
     private final SavedBannerRepository repository;
 
     @Autowired
-    public SavedController(ResourceService resources, SavedBannerRepository repository, AuthorService authors, MinecraftServerService servers, MemberService members) {
+    public SavedController(ResourceService resources, SavedBannerRepository repository, AuthorService authors, MinecraftServerService servers, MemberService members, TeamService teams) {
         this.resources = resources;
         this.repository = repository;
         this.authors = authors;
         this.servers = servers;
         this.members = members;
+        this.teams = teams;
     }
 
     @PostMapping(value = "save/{type}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -222,10 +227,29 @@ public class SavedController {
                 }
 
                 if (member == null) {
-                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The stored author could not be found!");
+                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The member author could not be found!");
                 }
 
                 layout = new MemberLayout(member, settings, backend);
+                break;
+            case POLYMART_TEAM:
+                Team team = null;
+                if (banner.getBannerType() == BannerType.POLYMART_TEAM) {
+                    backend = ServiceBackend.POLYMART;
+                    team = teams.getTeam(Integer.parseInt(settings.get("_team_id")), backend);
+                }
+
+                settings.remove("_team_id");
+
+                if (backend == null) {
+                    throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Backend not set");
+                }
+
+                if (team == null) {
+                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The stored team could not be found!");
+                }
+
+                layout = new TeamLayout(team, settings, backend);
                 break;
         }
 

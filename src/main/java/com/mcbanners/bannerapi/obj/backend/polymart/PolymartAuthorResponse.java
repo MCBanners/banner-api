@@ -3,15 +3,15 @@ package com.mcbanners.bannerapi.obj.backend.polymart;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PolyMartAuthorResponse {
+public class PolymartAuthorResponse {
     private boolean success;
-    private PolyMartAuthorUserData user;
+    private PolymartAuthorUserData user;
 
-    public PolyMartAuthorUserData getUser() {
+    public PolymartAuthorUserData getUser() {
         return user;
     }
 
-    public void setUser(PolyMartAuthorUserData user) {
+    public void setUser(PolymartAuthorUserData user) {
         this.user = user;
     }
 

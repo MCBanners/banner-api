@@ -14,6 +14,16 @@ public interface AuthorService {
     Author getAuthor(final int authorId, final ServiceBackend backend);
 
     /**
+     * PolyMart Workaround to get and author that could be a team
+     * 
+     * @param authorId the author ID
+     * @param resourceId the resource ID
+     * @param backend the service bannerapi to query
+     * @return the generic Author object representing the author
+     */
+    Author getAuthor(final int authorId, final int resourceId, final ServiceBackend backend);
+
+    /**
      * Get an author by its name, if possible, on the providing API service (Spiget, Ore, etc)
      *
      * @param authorName the author name

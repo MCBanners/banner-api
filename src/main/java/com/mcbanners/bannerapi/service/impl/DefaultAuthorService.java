@@ -7,7 +7,7 @@ import com.mcbanners.bannerapi.net.BuiltByBitClient;
 import com.mcbanners.bannerapi.net.CurseForgeClient;
 import com.mcbanners.bannerapi.net.ModrinthClient;
 import com.mcbanners.bannerapi.net.OreClient;
-import com.mcbanners.bannerapi.net.PolyMartClient;
+import com.mcbanners.bannerapi.net.PolymartClient;
 import com.mcbanners.bannerapi.net.SpigotClient;
 import com.mcbanners.bannerapi.obj.backend.builtbybit.BuiltByBitAuthor;
 import com.mcbanners.bannerapi.obj.backend.builtbybit.BuiltByBitResourceBasic;
@@ -19,9 +19,14 @@ import com.mcbanners.bannerapi.obj.backend.modrinth.ModrinthResource;
 import com.mcbanners.bannerapi.obj.backend.modrinth.ModrinthUser;
 import com.mcbanners.bannerapi.obj.backend.ore.OreAuthor;
 import com.mcbanners.bannerapi.obj.backend.ore.OreResource;
-import com.mcbanners.bannerapi.obj.backend.polymart.PolyMartAuthor;
-import com.mcbanners.bannerapi.obj.backend.polymart.PolyMartAuthorStatistics;
-import com.mcbanners.bannerapi.obj.backend.polymart.PolyMartAuthorUserData;
+import com.mcbanners.bannerapi.obj.backend.polymart.PolymartAuthor;
+import com.mcbanners.bannerapi.obj.backend.polymart.PolymartAuthorStatistics;
+import com.mcbanners.bannerapi.obj.backend.polymart.PolymartAuthorUserData;
+import com.mcbanners.bannerapi.obj.backend.polymart.PolymartResource;
+import com.mcbanners.bannerapi.obj.backend.polymart.PolymartResourceData;
+import com.mcbanners.bannerapi.obj.backend.polymart.PolymartTeam;
+import com.mcbanners.bannerapi.obj.backend.polymart.PolymartTeamData;
+import com.mcbanners.bannerapi.obj.backend.polymart.PolymartTeamStatistics;
 import com.mcbanners.bannerapi.obj.backend.spigot.SpigotAuthor;
 import com.mcbanners.bannerapi.obj.backend.spigot.SpigotResource;
 import com.mcbanners.bannerapi.obj.generic.Author;
@@ -44,18 +49,18 @@ public class DefaultAuthorService implements AuthorService {
     private final OreClient oreClient;
     private final CurseForgeClient curseForgeClient;
     private final ModrinthClient modrinthClient;
-    private final PolyMartClient polyMartClient;
+    private final PolymartClient polymartClient;
     private final BuiltByBitClient builtByBitClient;
 
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Autowired
-    public DefaultAuthorService(SpigotClient spigotClient, OreClient oreClient, CurseForgeClient curseForgeClient, ModrinthClient modrinthClient, PolyMartClient polyMartClient, BuiltByBitClient builtByBitClient) {
+    public DefaultAuthorService(SpigotClient spigotClient, OreClient oreClient, CurseForgeClient curseForgeClient, ModrinthClient modrinthClient, PolymartClient polymartClient, BuiltByBitClient builtByBitClient) {
         this.spigotClient = spigotClient;
         this.oreClient = oreClient;
         this.curseForgeClient = curseForgeClient;
         this.modrinthClient = modrinthClient;
-        this.polyMartClient = polyMartClient;
+        this.polymartClient = polymartClient;
         this.builtByBitClient = builtByBitClient;
     }
 
@@ -75,14 +80,19 @@ public class DefaultAuthorService implements AuthorService {
                 return handleSpigot(authorId);
             case CURSEFORGE:
                 return handleCurseForge(authorId, null);
-            case POLYMART:
-                return handlePolyMart(authorId);
             case BUILTBYBIT:
                 return handleBuiltByBit(authorId);
+            case POLYMART:
+                return handlePolymart(authorId);
             case ORE:
             default:
                 return null;
         }
+    }
+
+    @Override
+    public Author getAuthor(int authorId, int resourceId, ServiceBackend backend) {
+        return handlePolymart(authorId, resourceId);
     }
 
     /**
@@ -430,17 +440,17 @@ public class DefaultAuthorService implements AuthorService {
         return Base64.getEncoder().encodeToString(body);
     }
 
-    // PolyMart Handling
-    private Author handlePolyMart(final int authorId) {
-        final PolyMartAuthor author = loadPolyMartAuthor(authorId);
+    // Regular Polymart Handling
+    private Author handlePolymart(final int authorId) {
+        final PolymartAuthor author = loadPolymartAuthor(authorId);
 
         if (author == null) {
             return null;
         }
 
-        final PolyMartAuthorUserData data = author.getResponse().getUser();
-        final PolyMartAuthorStatistics statistics = data.getStatistics();
-        final String authorImage = loadPolyMartImage(data.getProfilePictureURL());
+        final PolymartAuthorUserData data = author.getResponse().getUser();
+        final PolymartAuthorStatistics statistics = data.getStatistics();
+        final String authorImage = loadPolymartImage(data.getProfilePictureURL());
 
         return new Author(
                 data.getUsername(),
@@ -452,8 +462,69 @@ public class DefaultAuthorService implements AuthorService {
         );
     }
 
-    private PolyMartAuthor loadPolyMartAuthor(final int authorId) {
-        final ResponseEntity<PolyMartAuthor> resp = polyMartClient.getAuthor(authorId);
+    // Major Polymart Workaround
+    private Author handlePolymart(final int authorId, final int resourceId) {
+        final PolymartResource resource = loadPolymartResource(resourceId);
+
+        if (resource == null) {
+            return null;
+        }
+
+        final PolymartResourceData data = resource.getResponse().getResource();
+
+        String username;
+        int resourceCount;
+        String ownerImage;
+        int totalDownloads;
+        int resourceRatings;
+
+
+        if (data.getOwner().getType().equals("team")) {
+            // Handle team authors
+            final PolymartTeam team = loadPolymartTeam(data.getOwner().getId());
+
+            if (team == null) {
+                return null;
+            }
+
+            final PolymartTeamData teamData = team.getResponse().getTeam();
+            final PolymartTeamStatistics teamStatistics = teamData.getStatistics();
+
+            username = teamData.getName();
+            resourceCount = teamStatistics.getResourceCount();
+            ownerImage = loadPolymartImage(teamData.getProfilePictureURL());
+            totalDownloads = teamStatistics.getResourceDownloads();
+            resourceRatings = teamStatistics.getResourceRatings();
+        } else {
+            // Handle user authors
+            final PolymartAuthor author = loadPolymartAuthor(authorId);
+
+            if (author == null) {
+                return null;
+            }
+
+            final PolymartAuthorUserData authorData = author.getResponse().getUser();
+            final PolymartAuthorStatistics authorStatistics = authorData.getStatistics();
+
+            username = authorData.getUsername();
+            resourceCount = authorStatistics.getResourceCount();
+            ownerImage = loadPolymartImage(authorData.getProfilePictureURL());
+            totalDownloads = authorStatistics.getResourceDownloads();
+            resourceRatings = authorStatistics.getResourceRatings();
+        }
+
+        return new Author(
+                username,
+                resourceCount,
+                ownerImage,
+                totalDownloads,
+                -1,
+                resourceRatings
+        );
+    }
+
+    private PolymartResource loadPolymartResource(final int resourceId) {
+        final ResponseEntity<PolymartResource> resp = polymartClient.getResource(resourceId);
         if (resp == null) {
             return null;
         }
@@ -461,8 +532,26 @@ public class DefaultAuthorService implements AuthorService {
         return resp.getBody();
     }
 
-    private String loadPolyMartImage(final String url) {
-        final ResponseEntity<byte[]> resp = polyMartClient.getIcon(url);
+    private PolymartAuthor loadPolymartAuthor(final int authorId) {
+        final ResponseEntity<PolymartAuthor> resp = polymartClient.getAuthor(authorId);
+        if (resp == null) {
+            return null;
+        }
+
+        return resp.getBody();
+    }
+
+    private PolymartTeam loadPolymartTeam(final int teamId) {
+        final ResponseEntity<PolymartTeam> resp = polymartClient.getTeam(teamId);
+        if (resp == null) {
+            return null;
+        }
+
+        return resp.getBody();
+    }
+
+    private String loadPolymartImage(final String url) {
+        final ResponseEntity<byte[]> resp = polymartClient.getIcon(url);
         if (resp == null) {
             return null;
         }

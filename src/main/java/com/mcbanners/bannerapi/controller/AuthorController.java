@@ -59,7 +59,7 @@ public class AuthorController {
     }
 
     @GetMapping(value = "/polymart/{id}/isValid", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, Boolean>> getIsValidPolyMart(@PathVariable int id) {
+    public ResponseEntity<Map<String, Boolean>> getIsValidPolymart(@PathVariable int id) {
         Author author = this.authors.getAuthor(id, ServiceBackend.POLYMART);
         return new ResponseEntity<>(Collections.singletonMap("valid", author != null), HttpStatus.OK);
     }
@@ -116,7 +116,7 @@ public class AuthorController {
         return draw(author, raw, ServiceBackend.MODRINTH, outputType);
     }
     @GetMapping(value = "/polymart/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<byte[]> getBannerPolyMart(@PathVariable int id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
+    public ResponseEntity<byte[]> getBannerPolymart(@PathVariable int id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
         Author author = this.authors.getAuthor(id, ServiceBackend.POLYMART);
         if (author == null) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);

@@ -3,9 +3,9 @@ package com.mcbanners.bannerapi.obj.backend.polymart;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PolyMartResourceResponse {
+public class PolymartResourceResponse {
     private boolean success;
-    private PolyMartResourceData resource;
+    private PolymartResourceData resource;
 
     public boolean isSuccess() {
         return success;
@@ -15,11 +15,11 @@ public class PolyMartResourceResponse {
         this.success = success;
     }
 
-    public PolyMartResourceData getResource() {
+    public PolymartResourceData getResource() {
         return resource;
     }
 
-    public void setResource(PolyMartResourceData resource) {
+    public void setResource(PolymartResourceData resource) {
         this.resource = resource;
     }
 }

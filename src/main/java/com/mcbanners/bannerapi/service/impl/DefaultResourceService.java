@@ -5,7 +5,7 @@ import com.mcbanners.bannerapi.net.BuiltByBitClient;
 import com.mcbanners.bannerapi.net.CurseForgeClient;
 import com.mcbanners.bannerapi.net.ModrinthClient;
 import com.mcbanners.bannerapi.net.OreClient;
-import com.mcbanners.bannerapi.net.PolyMartClient;
+import com.mcbanners.bannerapi.net.PolymartClient;
 import com.mcbanners.bannerapi.net.SpigotClient;
 import com.mcbanners.bannerapi.net.error.FurtherProcessingRequiredException;
 import com.mcbanners.bannerapi.obj.backend.builtbybit.BuiltByBitAuthor;
@@ -14,8 +14,8 @@ import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeResource;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeResourceMember;
 import com.mcbanners.bannerapi.obj.backend.modrinth.ModrinthResource;
 import com.mcbanners.bannerapi.obj.backend.ore.OreResource;
-import com.mcbanners.bannerapi.obj.backend.polymart.PolyMartResource;
-import com.mcbanners.bannerapi.obj.backend.polymart.PolyMartResourceData;
+import com.mcbanners.bannerapi.obj.backend.polymart.PolymartResource;
+import com.mcbanners.bannerapi.obj.backend.polymart.PolymartResourceData;
 import com.mcbanners.bannerapi.obj.backend.spigot.SpigotPremium;
 import com.mcbanners.bannerapi.obj.backend.spigot.SpigotResource;
 import com.mcbanners.bannerapi.obj.generic.PriceInformation;
@@ -40,10 +40,10 @@ public class DefaultResourceService implements ResourceService {
     private final CurseForgeClient curseForgeClient;
     private final ModrinthClient modrinthClient;
     private final BuiltByBitClient builtByBitClient;
-    private final PolyMartClient polyMartClient;
+    private final PolymartClient polyMartClient;
 
     @Autowired
-    public DefaultResourceService(SpigotClient spigotClient, OreClient oreClient, CurseForgeClient curseForgeClient, ModrinthClient modrinthClient, BuiltByBitClient builtByBitClient, PolyMartClient polyMartClient) {
+    public DefaultResourceService(SpigotClient spigotClient, OreClient oreClient, CurseForgeClient curseForgeClient, ModrinthClient modrinthClient, BuiltByBitClient builtByBitClient, PolymartClient polyMartClient) {
         this.spigotClient = spigotClient;
         this.oreClient = oreClient;
         this.curseForgeClient = curseForgeClient;
@@ -358,13 +358,13 @@ public class DefaultResourceService implements ResourceService {
 
     // PolyMart handling
     private Resource handlePolyMart(final int resourceId) {
-        final PolyMartResource resource = loadPolyMartResource(resourceId);
+        final PolymartResource resource = loadPolyMartResource(resourceId);
 
         if (resource == null) {
             return null;
         }
 
-        final PolyMartResourceData data = resource.getResponse().getResource();
+        final PolymartResourceData data = resource.getResponse().getResource();
         final String image = loadPolyMartImage(data.getThumbnailURL());
 
         final boolean isPremium = !(data.getPrice() == 0.00);
@@ -384,8 +384,8 @@ public class DefaultResourceService implements ResourceService {
         );
     }
 
-    private PolyMartResource loadPolyMartResource(final int resourceId) {
-        final ResponseEntity<PolyMartResource> resp = polyMartClient.getResource(resourceId);
+    private PolymartResource loadPolyMartResource(final int resourceId) {
+        final ResponseEntity<PolymartResource> resp = polyMartClient.getResource(resourceId);
         if (resp == null) {
             return null;
         }
