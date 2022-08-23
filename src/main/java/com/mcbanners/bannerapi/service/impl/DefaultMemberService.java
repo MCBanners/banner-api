@@ -51,12 +51,10 @@ public class DefaultMemberService implements MemberService {
             return null;
         }
 
-        String avatarUrl = data.getAvatarUrl();
-        avatarUrl = avatarUrl.replace("https://static.mc-market.org", "https://cdn.builtbybit.com");
+        String avatarUrl = loadBuiltByBitClientMemberIcon(data.getAvatarUrl());
 
-        String memberIcon = loadBuiltByBitClientMemberIcon(avatarUrl);
-        if (memberIcon == null) {
-            memberIcon = "";
+        if (avatarUrl == null) {
+            avatarUrl = "";
         }
 
 
@@ -80,7 +78,7 @@ public class DefaultMemberService implements MemberService {
                 data.getUsername(),
                 rank,
                 sdf.format(date),
-                memberIcon,
+                avatarUrl,
                 data.getPostCount(),
                 data.getFeedbackPositive(),
                 data.getFeedbackNegative());

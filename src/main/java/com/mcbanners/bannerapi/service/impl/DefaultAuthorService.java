@@ -394,18 +394,16 @@ public class DefaultAuthorService implements AuthorService {
             totalReviews += resource.getReviewCount();
         }
 
-        String avatarUrl = author.getData().getAvatarUrl();
-        avatarUrl = avatarUrl.replace("https://static.mc-market.org", "https://cdn.builtbybit.com");
+        String avatarUrl = loadBuiltByBitAuthorIcon(author.getData().getAvatarUrl());
 
-        String builtByBitAuthorIcon = loadBuiltByBitAuthorIcon(avatarUrl);
-        if (builtByBitAuthorIcon == null) {
-            builtByBitAuthorIcon = "";
+        if (avatarUrl == null) {
+            avatarUrl = "";
         }
 
         return new Author(
                 author.getData().getUsername(),
                 author.getData().getResourceCount(),
-                builtByBitAuthorIcon,
+                avatarUrl,
                 totalDownloads,
                 -1,
                 totalReviews
