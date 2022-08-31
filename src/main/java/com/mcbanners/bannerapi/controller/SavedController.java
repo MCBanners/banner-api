@@ -25,6 +25,8 @@ import com.mcbanners.bannerapi.service.api.ResourceService;
 import com.mcbanners.bannerapi.service.api.TeamService;
 import com.mcbanners.bannerapi.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +42,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("saved")
+@CacheConfig(cacheNames = {"saved"})
 public class SavedController {
     private final ResourceService resources;
     private final AuthorService authors;
@@ -80,6 +83,7 @@ public class SavedController {
         }
     }
 
+    @Cacheable(unless = "#result == null")
     @GetMapping(value = "/{mnemonic}.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<byte[]> recall(@PathVariable String mnemonic, @PathVariable BannerOutputType outputType) {
         SavedBanner banner = repository.findByMnemonic(mnemonic);
