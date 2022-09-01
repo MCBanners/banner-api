@@ -31,7 +31,7 @@ public class JwtHandler {
     @PostConstruct
     public void postConstruct() {
         SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes());
-        this.parser = Jwts.parser().setSigningKey(secretKey);
+        this.parser = Jwts.parserBuilder().setSigningKey(secretKey).build();
     }
 
     public String getUri() {
