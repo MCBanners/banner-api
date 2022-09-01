@@ -159,18 +159,18 @@ public class DefaultResourceService implements ResourceService {
             return null;
         }
 
-        String oreResourceIcon = loadOreResourceIcon(oreResource.getIconUrl());
+        String oreResourceIcon = loadOreResourceIcon(oreResource.iconUrl());
         if (oreResourceIcon == null) {
             oreResourceIcon = "";
         }
 
         return new Resource(
                 oreResourceIcon,
-                oreResource.getName(),
+                oreResource.name(),
                 -1, // not known
-                oreResource.getNamespace().getOwner(), // username
-                new RatingInformation(oreResource.getStats().getStars()),
-                oreResource.getStats().getDownloads(),
+                oreResource.owner(), // username
+                new RatingInformation(oreResource.stars()),
+                oreResource.downloads(),
                 null,
                 null);
     }

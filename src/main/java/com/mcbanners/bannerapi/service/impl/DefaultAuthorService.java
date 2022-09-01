@@ -179,16 +179,15 @@ public class DefaultAuthorService implements AuthorService {
     // Ore handling
     private Author handleOre(String authorName) {
         OreResource[] resources = loadOreAuthorProjects(authorName);
-
         if (resources == null) {
             return null;
         }
 
+        // TODO: what if they have more than 25 projects
         int totalDownloads = 0, totalLikes = 0;
-
         for (OreResource resource : resources) {
-            totalDownloads += resource.getStats().getDownloads();
-            totalLikes += resource.getStats().getStars();
+            totalDownloads += resource.downloads();
+            totalLikes += resource.stars();
         }
 
         String oreAuthorAvatar = loadOreImageByUrl(authorName);
@@ -196,8 +195,9 @@ public class DefaultAuthorService implements AuthorService {
             oreAuthorAvatar = "";
         }
 
+        // TODO: what if they have no projects (resources[0]?)
         return new Author(
-                resources[0].getNamespace().getOwner(),
+                resources[0].owner(),
                 resources.length,
                 oreAuthorAvatar,
                 totalDownloads,
@@ -206,27 +206,18 @@ public class DefaultAuthorService implements AuthorService {
         );
     }
 
-    private OreAuthor loadOreAuthor(String authorId) {
-        ResponseEntity<OreAuthor> resp = oreClient.getAuthor(authorId);
-        if (resp == null) {
-            return null;
-        }
-
-        return resp.getBody();
-    }
-
     private OreResource[] loadOreAuthorProjects(String authorId) {
         ResponseEntity<JsonNode> resp = oreClient.getProjectsFromAuthor(authorId);
         if (resp == null) {
             return null;
         }
 
-        JsonNode data = resp.getBody().get("result");
-        if (!data.isArray()) {
+        JsonNode data = resp.getBody();
+        if (data == null || (!data.has("result") || !data.get("result").isArray())) {
             return null;
         }
 
-        return mapper.convertValue(data, OreResource[].class);
+        return mapper.convertValue(data.get("result"), OreResource[].class);
     }
 
     private String loadOreImageByUrl(String url) {

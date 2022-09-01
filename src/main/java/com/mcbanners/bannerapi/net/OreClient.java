@@ -6,92 +6,49 @@ import com.mcbanners.bannerapi.obj.backend.ore.OreAuthorization;
 import com.mcbanners.bannerapi.obj.backend.ore.OreResource;
 import com.mcbanners.bannerapi.util.Log;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientResponseException;
 
 import java.time.Instant;
-import java.time.format.DateTimeFormatter;
-import java.util.Collections;
 
 @Component
 public class OreClient extends BasicHttpClient {
     private static final String IMAGE_BASE_URL = "https://auth.spongepowered.org/avatar/";
-
-    private Instant expiration;
-    private String session;
+    private OreAuthorization authorization;
+    private boolean priorAuthorizationFailed;
 
     public OreClient() {
         super("https://ore.spongepowered.org/api/v2/");
-        auth();
-    }
-
-    public final ResponseEntity<OreAuthorization> initialAuthProcess() {
-        try {
-            return post("authenticate", OreAuthorization.class);
-        } catch (RestClientResponseException ex) {
-            Log.error("Failed to Authenticate to Ore API");
-            ex.printStackTrace();
-            if (ex.getRawStatusCode() == 401) {
-                auth();
-            }
-            return null;
-        }
-    }
-
-    public void auth() {
-        ResponseEntity<OreAuthorization> resp = initialAuthProcess();
-        if (resp == null) {
-            return;
-        }
-
-        OreAuthorization auth = resp.getBody();
-        this.expiration = Instant.from(DateTimeFormatter.ISO_OFFSET_DATE_TIME.parse(auth.getExpires()));
-        this.session = auth.getSession();
+        authorize();
     }
 
     public final ResponseEntity<OreAuthor> getAuthor(String authorId) {
         try {
-            HttpHeaders headers = new HttpHeaders();
-            headers.add(HttpHeaders.AUTHORIZATION, "OreApi session=" + this.session);
-            return get("users/" + authorId, OreAuthor.class, httpHeaders -> headers);
+            return get(String.format("users/%s", authorId), OreAuthor.class, this::injectAuthorization);
         } catch (RestClientResponseException ex) {
             Log.error("Failed to load Ore Author by authorId %s: %s", authorId, ex.getMessage());
             ex.printStackTrace();
-            if (ex.getRawStatusCode() == 401) {
-                auth();
-            }
             return null;
         }
     }
 
     public final ResponseEntity<JsonNode> getProjectsFromAuthor(String authorId) {
         try {
-            HttpHeaders headers = new HttpHeaders();
-            headers.add(HttpHeaders.AUTHORIZATION, "OreApi session=" + this.session);
-            return get("projects?owner=" + authorId, JsonNode.class, httpHeaders -> headers);
+            return get(String.format("projects?owner=%s", authorId), JsonNode.class, this::injectAuthorization);
         } catch (RestClientResponseException ex) {
             Log.error("Failed to load Ore Author by authorId %s: %s", authorId, ex.getMessage());
             ex.printStackTrace();
-            if (ex.getRawStatusCode() == 401) {
-                auth();
-            }
             return null;
         }
     }
 
     public final ResponseEntity<OreResource> getResource(String pluginId) {
         try {
-            HttpHeaders headers = new HttpHeaders();
-            headers.add(HttpHeaders.AUTHORIZATION, "OreApi session=" + this.session);
-            return get("projects/" + pluginId, OreResource.class, httpHeaders -> headers);
+            return get(String.format("projects/%s", pluginId), OreResource.class, this::injectAuthorization);
         } catch (RestClientResponseException ex) {
             Log.error("Failed to load Ore Resource by pluginId %s: %s", pluginId, ex.getMessage());
             ex.printStackTrace();
-            if (ex.getRawStatusCode() == 401) {
-                auth();
-            }
             return null;
         }
     }
@@ -104,11 +61,31 @@ public class OreClient extends BasicHttpClient {
         return getImage(IMAGE_BASE_URL + href + "?size=120x120");
     }
 
-    public Instant getExpiration() {
-        return expiration;
+    private void authorize() {
+        if (this.authorization == null || Instant.now().isAfter(this.authorization.expires())) {
+            try {
+                authorization = post("authenticate", OreAuthorization.class).getBody();
+                priorAuthorizationFailed = false;
+            } catch (RestClientResponseException ex) {
+                Log.error("Failed to Authenticate to Ore API");
+                ex.printStackTrace();
+
+                if (ex.getRawStatusCode() == 401 && !priorAuthorizationFailed) {
+                    Log.warn("Retrying authentication process...");
+                    priorAuthorizationFailed = true;
+                    authorize();
+                }
+            }
+        }
     }
 
-    public String getSession() {
-        return session;
+    private HttpHeaders injectAuthorization(HttpHeaders headers) {
+        authorize();
+
+        if (this.authorization != null) {
+            headers.add(HttpHeaders.AUTHORIZATION, String.format("OreApi session=%s", this.authorization.session()));
+        }
+
+        return headers;
     }
 }
