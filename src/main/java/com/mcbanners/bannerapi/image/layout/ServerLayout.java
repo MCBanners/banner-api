@@ -37,7 +37,7 @@ public class ServerLayout extends Layout {
 
         String serverTitle = (String) reader.getOrDefault(ServerParameter.SERVER_NAME_DISPLAY);
         if (serverTitle.isEmpty() || serverTitle.equalsIgnoreCase("unset")) {
-            serverTitle = server.getHost();
+            serverTitle = server.host();
         }
 
         this.serverTitle = serverTitle;
@@ -56,15 +56,15 @@ public class ServerLayout extends Layout {
     public List<BasicComponent> build() {
         Color textColor = getTextColor(template);
 
-        addComponent(new LogoComponent(logoX, BannerSprite.DEFAULT_SERVER_LOGO, server.getIcon(), logoSize));
+        addComponent(new LogoComponent(logoX, BannerSprite.DEFAULT_SERVER_LOGO, server.icon(), logoSize));
         addComponent(serverName.makeComponent(textColor, serverTitle));
-        addComponent(version.makeComponent(textColor, server.getVersion()));
+        addComponent(version.makeComponent(textColor, server.version()));
 
         if (enableMotd) {
-            addComponent(motd.makeComponent(textColor, server.getMotd().getFormatted(), true, motdMaxChars));
+            addComponent(motd.makeComponent(textColor, server.formattedMotd(), true, motdMaxChars));
         }
 
-        addComponent(players.makeComponent(textColor, String.format("%s / %s players online", server.getPlayers().getOnline(), server.getPlayers().getMax())));
+        addComponent(players.makeComponent(textColor, String.format("%s / %s players online", server.onlinePlayers(), server.maxPlayers())));
 
         return getComponents();
     }

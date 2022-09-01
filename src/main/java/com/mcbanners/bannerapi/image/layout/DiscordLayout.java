@@ -43,7 +43,7 @@ public class DiscordLayout extends Layout {
 
         String username = (String) reader.getOrDefault(DiscordParameter.DISCORD_NAME_DISPLAY);
         if (username.isEmpty() || username.equalsIgnoreCase("unset")) {
-            username = user.getName();
+            username = user.name();
         }
 
         this.username = username;
@@ -61,11 +61,11 @@ public class DiscordLayout extends Layout {
     public List<BasicComponent> build() {
         Color textColor = getTextColor(template);
 
-        addComponent(new LogoComponent(logoX, BannerSprite.DEFAULT_SERVER_LOGO, user.getIcon(), logoSize));
+        addComponent(new LogoComponent(logoX, BannerSprite.DEFAULT_SERVER_LOGO, user.icon(), logoSize));
         addComponent(discordName.makeComponent(textColor, username));
-        addComponent(id.makeComponent(textColor, String.format("ID: %s", user.getId())));
+        addComponent(id.makeComponent(textColor, String.format("ID: %s", user.id())));
 
-        final String updatedStatus = switch(user.getStatus()) {
+        final String updatedStatus = switch(user.status()) {
             case "online" -> "Online";
             case "idle" -> "Idle";
             case "dnd" -> "Do Not Disturb";
@@ -75,11 +75,11 @@ public class DiscordLayout extends Layout {
 
         addComponent(status.makeComponent(textColor, String.format("Status: %s", updatedStatus)));
 
-        if (user.getActivity() != null) {
-            addComponent(activity.makeComponent(textColor, String.format("Activity: %s", user.getActivity())));
+        if (user.activity() != null) {
+            addComponent(activity.makeComponent(textColor, String.format("Activity: %s", user.activity())));
         }
 
-        final Date date = Date.from(Instant.ofEpochMilli(user.getCreated()));
+        final Date date = Date.from(Instant.ofEpochMilli(user.created()));
         final SimpleDateFormat sdf = new SimpleDateFormat("M/dd/yyyy", Locale.ENGLISH);
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         addComponent(created.makeComponent(textColor, String.format("Created: %s", sdf.format(date))));
