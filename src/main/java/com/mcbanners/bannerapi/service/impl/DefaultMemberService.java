@@ -2,7 +2,6 @@ package com.mcbanners.bannerapi.service.impl;
 
 import com.mcbanners.bannerapi.net.BuiltByBitClient;
 import com.mcbanners.bannerapi.obj.backend.builtbybit.BuiltByBitMember;
-import com.mcbanners.bannerapi.obj.backend.builtbybit.BuiltByBitMemberData;
 import com.mcbanners.bannerapi.obj.generic.Member;
 import com.mcbanners.bannerapi.service.ServiceBackend;
 import com.mcbanners.bannerapi.service.api.MemberService;
@@ -41,47 +40,42 @@ public class DefaultMemberService implements MemberService {
     private Member handleBuiltByBit(int memberId) {
         BuiltByBitMember member = loadBuiltByBitClientMember(memberId);
 
-        if (member == null || member.getResult().equals("error")) {
+        if (member == null || member.result().equals("error")) {
             return null;
         }
 
-        BuiltByBitMemberData data = member.getData();
-
-        if (data == null) {
-            return null;
-        }
-
-        String avatarUrl = loadBuiltByBitClientMemberIcon(data.getAvatarUrl());
+        String avatarUrl = loadBuiltByBitClientMemberIcon(member.avatarUrl());
 
         if (avatarUrl == null) {
             avatarUrl = "";
         }
 
 
-        Instant instant = Instant.ofEpochSecond(data.getJoinDate());
+        Instant instant = Instant.ofEpochSecond(member.joinDate());
         Date date = Date.from(instant);
         SimpleDateFormat sdf = new SimpleDateFormat("M/dd/yyyy", Locale.ENGLISH);
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         String rank;
-        if (data.isUltimate()) {
+        if (member.ultimate()) {
             rank = "Ultimate";
-        } else if (!data.isUltimate() && data.isSupreme()) {
+        } else if (member.supreme()) {
             rank = "Supreme";
-        } else if (!data.isUltimate() && !data.isSupreme() && data.isPremium()) {
+        } else if (member.premium()) {
             rank = "Premium";
         } else {
             rank = "";
         }
 
         return new Member(
-                data.getUsername(),
+                member.username(),
                 rank,
                 sdf.format(date),
                 avatarUrl,
-                data.getPostCount(),
-                data.getFeedbackPositive(),
-                data.getFeedbackNegative());
+                member.postCount(),
+                member.feedbackPositive(),
+                member.feedbackNegative()
+        );
     }
 
     private BuiltByBitMember loadBuiltByBitClientMember(int memberId) {

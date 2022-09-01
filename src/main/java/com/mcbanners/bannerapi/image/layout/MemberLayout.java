@@ -51,15 +51,15 @@ public class MemberLayout extends Layout {
     public List<BasicComponent> build() {
         Color textColor = getTextColor(template);
 
-        addComponent(new LogoComponent(logoX, BannerSprite.DEFAULT_AUTHOR_LOGO, member.getIcon(), logoSize));
-        addComponent(memberName.makeComponent(textColor, member.getName()));
+        addComponent(new LogoComponent(logoX, BannerSprite.DEFAULT_AUTHOR_LOGO, member.icon(), logoSize));
+        addComponent(memberName.makeComponent(textColor, member.name()));
 
-        addComponent(rank.makeComponent(textColor, "Rank: " + member.getRank()));
+        addComponent(rank.makeComponent(textColor, "Rank: " + member.rank()));
 
-        addComponent(joined.makeComponent(textColor, "Joined: " + member.getJoinDate()));
-        addComponent(posts.makeComponent(textColor,  "Posts: " + NumberUtil.abbreviate(member.getPosts())));
+        addComponent(joined.makeComponent(textColor, "Joined: " + member.joinDate()));
+        addComponent(posts.makeComponent(textColor,  "Posts: " + NumberUtil.abbreviate(member.posts())));
 
-        int calculated = member.getPositiveFeedback() - member.getNegativeFeedback();
+        int calculated = member.positiveFeedback() - member.negativeFeedback();
         String sign;
         if (calculated > 0) {
             sign = "+";

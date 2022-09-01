@@ -51,15 +51,15 @@ public class AuthorLayout extends Layout {
     public List<BasicComponent> build() {
         Color textColor = getTextColor(template);
 
-        addComponent(new LogoComponent(logoX, BannerSprite.DEFAULT_AUTHOR_LOGO, author.getIcon(), logoSize));
-        addComponent(authorName.makeComponent(textColor, author.getName()));
-        addComponent(resourceCount.makeComponent(textColor, author.getResources() + " resources"));
-        if (author.getLikes() != -1) {
-            addComponent(likes.makeComponent(textColor, NumberUtil.abbreviate(author.getLikes()) + (backend == ServiceBackend.MODRINTH ? " followers" : " likes")));
+        addComponent(new LogoComponent(logoX, BannerSprite.DEFAULT_AUTHOR_LOGO, author.icon(), logoSize));
+        addComponent(authorName.makeComponent(textColor, author.name()));
+        addComponent(resourceCount.makeComponent(textColor, author.resources() + " resources"));
+        if (author.likes() != -1) {
+            addComponent(likes.makeComponent(textColor, NumberUtil.abbreviate(author.likes()) + (backend == ServiceBackend.MODRINTH ? " followers" : " likes")));
         }
-        addComponent(downloads.makeComponent(textColor, NumberUtil.abbreviate(author.getDownloads()) + " downloads"));
-        if (author.getRating() != -1) {
-            addComponent(reviews.makeComponent(textColor, NumberUtil.abbreviate(author.getRating()) + " reviews"));
+        addComponent(downloads.makeComponent(textColor, NumberUtil.abbreviate(author.downloads()) + " downloads"));
+        if (author.rating() != -1) {
+            addComponent(reviews.makeComponent(textColor, NumberUtil.abbreviate(author.rating()) + " reviews"));
         }
 
         return getComponents();

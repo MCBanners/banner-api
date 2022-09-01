@@ -377,7 +377,7 @@ public class DefaultAuthorService implements AuthorService {
     private Author handleBuiltByBit(int authorId) {
         BuiltByBitAuthor author = loadBuiltByBitAuthor(authorId);
 
-        if (author == null || author.getResult().equals("error")) {
+        if (author == null || author.result().equals("error")) {
             return null;
         }
 
@@ -394,15 +394,15 @@ public class DefaultAuthorService implements AuthorService {
             totalReviews += resource.getReviewCount();
         }
 
-        String avatarUrl = loadBuiltByBitAuthorIcon(author.getData().getAvatarUrl());
+        String avatarUrl = loadBuiltByBitAuthorIcon(author.avatarUrl());
 
         if (avatarUrl == null) {
             avatarUrl = "";
         }
 
         return new Author(
-                author.getData().getUsername(),
-                author.getData().getResourceCount(),
+                author.username(),
+                author.resourceCount(),
                 avatarUrl,
                 totalDownloads,
                 -1,

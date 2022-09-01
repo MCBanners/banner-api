@@ -49,11 +49,11 @@ public class TeamLayout extends Layout {
     public List<BasicComponent> build() {
         Color textColor = getTextColor(template);
 
-        addComponent(new LogoComponent(logoX, BannerSprite.DEFAULT_POLYMART_RES_LOGO, team.getIcon(), logoSize));
-        addComponent(teamName.makeComponent(textColor, team.getName()));
-        addComponent(resourceCount.makeComponent(textColor, team.getResourceCount() + " resources"));
-        addComponent(downloads.makeComponent(textColor, NumberUtil.abbreviate(team.getResourceDownloads()) + " downloads"));
-        addComponent(ratings.makeComponent(textColor, NumberUtil.abbreviate(team.getResourceRatings()) + " ratings"));
+        addComponent(new LogoComponent(logoX, BannerSprite.DEFAULT_POLYMART_RES_LOGO, team.icon(), logoSize));
+        addComponent(teamName.makeComponent(textColor, team.name()));
+        addComponent(resourceCount.makeComponent(textColor, team.resourceCount() + " resources"));
+        addComponent(downloads.makeComponent(textColor, NumberUtil.abbreviate(team.resourceDownloads()) + " downloads"));
+        addComponent(ratings.makeComponent(textColor, NumberUtil.abbreviate(team.resourceRatings()) + " ratings"));
 
         return getComponents();
     }

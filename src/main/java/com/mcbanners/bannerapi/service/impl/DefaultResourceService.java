@@ -304,38 +304,39 @@ public class DefaultResourceService implements ResourceService {
     private Resource handleBuiltByBit(int resourceId) {
         BuiltByBitResource resource = loadBuiltByBitResource(resourceId);
 
-        if (resource == null || resource.getResult().equals("error")) {
+        if (resource == null || resource.result().equals("error")) {
             return null;
         }
 
-        BuiltByBitAuthor author = loadBuiltByBitAuthor(resource.getData().getAuthorId());
+        BuiltByBitAuthor author = loadBuiltByBitAuthor(resource.authorId());
 
-        if (author == null || author.getResult().equals("error")) {
+        if (author == null || author.result().equals("error")) {
             return null;
         }
 
-        boolean isPremium = resource.getData().getPrice() != 0.0;
+        boolean isPremium = resource.price() != 0.0;
 
         int downloadsToShow;
 
         if (isPremium) {
-            downloadsToShow = resource.getData().getPurchaseCount();
+            downloadsToShow = resource.purchaseCount();
         } else {
-            downloadsToShow = resource.getData().getDownloadCount();
+            downloadsToShow = resource.downloadCount();
         }
 
         return new Resource(
                 "",
-                resource.getData().getTitle(),
-                author.getData().getMemberId(),
-                author.getData().getUsername(),
+                resource.title(),
+                author.authorId(),
+                author.username(),
                 new RatingInformation(
-                        resource.getData().getReviewCount(),
-                        resource.getData().getReviewAverage()
+                        resource.reviewCount(),
+                        resource.reviewAverage()
                 ),
                 downloadsToShow,
-                isPremium ? new PriceInformation(resource.getData().getPrice(), resource.getData().getCurrency().toUpperCase()) : null,
-                null);
+                isPremium ? new PriceInformation(resource.price(), resource.currency().toUpperCase()) : null,
+                null
+        );
     }
 
     private BuiltByBitResource loadBuiltByBitResource(int resourceId) {

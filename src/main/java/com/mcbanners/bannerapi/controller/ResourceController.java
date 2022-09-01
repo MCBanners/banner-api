@@ -54,8 +54,8 @@ public class ResourceController {
         }
 
         final Author author = switch (platform) {
-            case SPIGOT, POLYMART, BUILTBYBIT, CURSEFORGE -> this.authors.getAuthor(resource.getAuthorId(), platform);
-            case ORE, MODRINTH -> this.authors.getAuthor(resource.getAuthorName(), platform);
+            case SPIGOT, POLYMART, BUILTBYBIT, CURSEFORGE -> this.authors.getAuthor(resource.authorId(), platform);
+            case ORE, MODRINTH -> this.authors.getAuthor(resource.authorName(), platform);
         };
 
         if (author == null) {

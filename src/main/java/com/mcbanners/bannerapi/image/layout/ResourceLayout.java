@@ -55,7 +55,7 @@ public class ResourceLayout extends Layout {
 
         String resourceTitle = (String) reader.getOrDefault(ResourceParameter.RESOURCE_NAME_DISPLAY);
         if (resourceTitle.isEmpty() || resourceTitle.equalsIgnoreCase("unset")) {
-            resourceTitle = resource.getName();
+            resourceTitle = resource.name();
         }
 
         this.resourceTitle = resourceTitle;
@@ -101,13 +101,13 @@ public class ResourceLayout extends Layout {
                 throw new RuntimeException("not yet implemented");
         }
 
-        addComponent(new LogoComponent(logoX, defaultLogoOverride, resource.getLogo(), logoSize));
+        addComponent(new LogoComponent(logoX, defaultLogoOverride, resource.logo(), logoSize));
         addComponent(resourceName.makeComponent(textColor, resourceTitle));
-        addComponent(authorName.makeComponent(textColor, String.format("by %s", this.author.getName())));
+        addComponent(authorName.makeComponent(textColor, String.format("by %s", this.author.name())));
         if (backend != ServiceBackend.CURSEFORGE && backend != ServiceBackend.MODRINTH) {
-            addComponent(reviews.makeComponent(textColor, NumberUtil.abbreviate(resource.getRating().getCount()) + " reviews"));
+            addComponent(reviews.makeComponent(textColor, NumberUtil.abbreviate(resource.rating().getCount()) + " reviews"));
         } else {
-            Date date = Date.from(OffsetDateTime.parse(resource.getLastUpdated()).toInstant());
+            Date date = Date.from(OffsetDateTime.parse(resource.lastUpdated()).toInstant());
             SimpleDateFormat sdf = new SimpleDateFormat("M/dd/yyyy", Locale.ENGLISH);
             sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
             addComponent(updated.makeComponent(textColor, "Updated: " + sdf.format(date)));
@@ -117,7 +117,7 @@ public class ResourceLayout extends Layout {
         BufferedImage starHalf = BannerSprite.STAR_HALF.getImage();
         BufferedImage starNone = BannerSprite.STAR_NONE.getImage();
 
-        Double ratingAvg = resource.getRating().getAverageRating();
+        Double ratingAvg = resource.rating().getAverageRating();
         if (ratingAvg != null) {
             for (int i = 0; i < 5; i++) {
                 BufferedImage toOverlay;
@@ -141,15 +141,15 @@ public class ResourceLayout extends Layout {
             }
         }
 
-        PriceInformation priceInfo = resource.getPrice();
+        PriceInformation priceInfo = resource.price();
         boolean isPremium = priceInfo != null;
 
-        addComponent(downloads.makeComponent(textColor, NumberUtil.abbreviate(resource.getDownloadCount()) + " " + (isPremium ? "purchases" : "downloads")));
+        addComponent(downloads.makeComponent(textColor, NumberUtil.abbreviate(resource.downloadCount()) + " " + (isPremium ? "purchases" : "downloads")));
 
         if (isPremium) {
             addComponent(price.makeComponent(
                     textColor,
-                    String.format("%.2f %s", priceInfo.getAmount(), priceInfo.getCurrency())
+                    String.format("%.2f %s", priceInfo.amount(), priceInfo.currency())
             ));
         }
 

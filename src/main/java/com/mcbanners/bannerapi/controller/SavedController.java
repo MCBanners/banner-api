@@ -150,32 +150,32 @@ public class SavedController {
                     case SPIGOT_RESOURCE:
                         backend = ServiceBackend.SPIGOT;
                         resource = resources.getResource(Integer.parseInt(settings.get("_resource_id")), backend);
-                        author = authors.getAuthor(resource.getAuthorId(), backend);
+                        author = authors.getAuthor(resource.authorId(), backend);
                         break;
                     case SPONGE_RESOURCE:
                         backend = ServiceBackend.ORE;
                         resource = resources.getResource(settings.get("_resource_id"), backend);
-                        author = authors.getAuthor(resource.getAuthorName(), backend);
+                        author = authors.getAuthor(resource.authorName(), backend);
                         break;
                     case CURSEFORGE_RESOURCE:
                         backend = ServiceBackend.CURSEFORGE;
                         resource = resources.getResource(Integer.parseInt(settings.get("_resource_id")), backend);
-                        author = authors.getAuthor(resource.getAuthorId(), backend);
+                        author = authors.getAuthor(resource.authorId(), backend);
                         break;
                     case MODRINTH_RESOURCE:
                         backend = ServiceBackend.MODRINTH;
                         resource = resources.getResource(settings.get("_resource_id"), backend);
-                        author = authors.getAuthor(resource.getAuthorName(), backend);
+                        author = authors.getAuthor(resource.authorName(), backend);
                         break;
                     case BUILTBYBIT_RESOURCE:
                         backend = ServiceBackend.BUILTBYBIT;
                         resource = resources.getResource(Integer.parseInt(settings.get("_resource_id")), backend);
-                        author = authors.getAuthor(resource.getAuthorId(), backend);
+                        author = authors.getAuthor(resource.authorId(), backend);
                         break;
                     case POLYMART_RESOURCE:
                         backend = ServiceBackend.POLYMART;
                         resource = resources.getResource(Integer.parseInt(settings.get("_resource_id")), backend);
-                        author = authors.getAuthor(resource.getAuthorId(), Integer.parseInt(settings.get("_resource_id")), backend);
+                        author = authors.getAuthor(resource.authorId(), Integer.parseInt(settings.get("_resource_id")), backend);
                         break;
                 }
 
