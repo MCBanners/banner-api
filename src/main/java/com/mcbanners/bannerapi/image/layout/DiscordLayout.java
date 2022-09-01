@@ -8,12 +8,15 @@ import com.mcbanners.bannerapi.banner.param.ParameterReader;
 import com.mcbanners.bannerapi.banner.param.TextParameterReader;
 import com.mcbanners.bannerapi.image.ImageBuilder;
 import com.mcbanners.bannerapi.image.component.BasicComponent;
+import com.mcbanners.bannerapi.image.component.ImageComponent;
 import com.mcbanners.bannerapi.image.component.LogoComponent;
 import com.mcbanners.bannerapi.obj.backend.discord.DiscordUser;
 import org.apache.commons.lang.StringUtils;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.OffsetDateTime;
@@ -34,12 +37,13 @@ public class DiscordLayout extends Layout {
     private final TextParameterReader<DiscordParameter> status;
     private final TextParameterReader<DiscordParameter> activity;
     private final TextParameterReader<DiscordParameter> created;
+    private final String backgroundUrl;
 
     public DiscordLayout(DiscordUser user, Map<String, String> parameters) {
         this.user = user;
 
         ParameterReader<DiscordParameter> reader = new ParameterReader<>(DiscordParameter.class, parameters);
-        reader.addTextReaders("discord_name", "id", "status", "activity", "created");
+        reader.addTextReaders("discord_name", "id", "status", "activity", "created", "background");
 
         String username = (String) reader.getOrDefault(DiscordParameter.DISCORD_NAME_DISPLAY);
         if (username.isEmpty() || username.equalsIgnoreCase("unset")) {
@@ -54,12 +58,22 @@ public class DiscordLayout extends Layout {
         id = reader.getTextReader("id");
         status = reader.getTextReader("status");
         activity = reader.getTextReader("activity");
-         created = reader.getTextReader("created");
+        created = reader.getTextReader("created");
+        
+        backgroundUrl = (String) reader.getOrDefault(DiscordParameter.BACKGROUND_URL);
     }
 
     @Override
     public List<BasicComponent> build() {
         Color textColor = getTextColor(template);
+
+        if (!backgroundUrl.equals("")) {
+            try {
+                addComponent(new ImageComponent(0, 0, new URL(backgroundUrl)));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
         addComponent(new LogoComponent(logoX, BannerSprite.DEFAULT_SERVER_LOGO, user.getIcon(), logoSize));
         addComponent(discordName.makeComponent(textColor, username));

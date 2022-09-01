@@ -41,7 +41,9 @@ public enum DiscordParameter implements BannerParameter<Object> {
     CREATED_FONT_SIZE("created__font_size", 14, int.class),
     CREATED_BOLD("created__bold", false, boolean.class),
     CREATED_TEXT_ALIGN("created__text_align", BannerTextAlign.LEFT, BannerTextAlign.class),
-    CREATED_FONT_FACE("created__font_face", BannerFontFace.SOURCE_SANS_PRO, BannerFontFace.class);
+    CREATED_FONT_FACE("created__font_face", BannerFontFace.SOURCE_SANS_PRO, BannerFontFace.class),
+
+    BACKGROUND_URL("background__url", "", String.class);
 
     private final String key;
     private final Object def;

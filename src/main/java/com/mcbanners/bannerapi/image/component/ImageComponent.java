@@ -7,6 +7,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Base64;
 
 public class ImageComponent extends BasicComponent {
@@ -22,6 +23,10 @@ public class ImageComponent extends BasicComponent {
 
     public ImageComponent(int x, int y, ByteArrayInputStream overlay) throws IOException {
         this(x, y, ImageIO.read(overlay));
+    }
+
+    public ImageComponent(int x, int y, URL url) throws IOException {
+        this(x, y, ImageIO.read(url));
     }
 
     public ImageComponent(int x, int y, BufferedImage overlay) {
