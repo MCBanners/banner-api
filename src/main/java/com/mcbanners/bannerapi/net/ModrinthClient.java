@@ -3,6 +3,8 @@ package com.mcbanners.bannerapi.net;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.mcbanners.bannerapi.obj.backend.modrinth.ModrinthResource;
 import com.mcbanners.bannerapi.obj.backend.modrinth.ModrinthUser;
+import com.mcbanners.bannerapi.obj.deserializers.modrinth.ModrinthResourceDeserializer;
+import com.mcbanners.bannerapi.obj.deserializers.modrinth.ModrinthUserDeserializer;
 import com.mcbanners.bannerapi.util.Log;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,11 +30,11 @@ public class ModrinthClient extends BasicHttpClient {
         return null;
     }
 
-    public final ResponseEntity<ArrayNode> getMainProjectAuthor(String authorId) {
+    public final ResponseEntity<ModrinthUser> getMainProjectAuthor(String projectId) {
         try {
-            return get("project/" + authorId + "/members", ArrayNode.class);
+            return get("project/" + projectId + "/members", ModrinthUser.class);
         } catch (RestClientResponseException ex) {
-            Log.error("Failed to load Modrinth Team by teamId %s: %s", authorId, ex.getMessage());
+            Log.error("Failed to load Modrinth Team by projectId %s: %s", projectId, ex.getMessage());
             ex.printStackTrace();
             return null;
         }
@@ -48,24 +50,11 @@ public class ModrinthClient extends BasicHttpClient {
         }
     }
 
-    public final ResponseEntity<ArrayNode> getUserProjects(String username) {
+    public final ResponseEntity<ModrinthResource[]> getUserProjects(String username) {
         try {
-            return get("user/" + username + "/projects", ArrayNode.class);
+            return get("user/" + username + "/projects", ModrinthResource[].class);
         } catch (RestClientResponseException ex) {
             Log.error("Failed to load Modrinth User by username %s: %s", username, ex.getMessage());
-            ex.printStackTrace();
-            return null;
-        }
-    }
-
-    public final ResponseEntity<byte[]> getResourceIcon(String url) {
-        try {
-            return get(url, "", byte[].class, headers -> {
-                headers.setAccept(Collections.singletonList(MediaType.IMAGE_PNG));
-                return headers;
-            });
-        } catch (RestClientResponseException ex) {
-            Log.error("Failed to load Modrinth Resource Icon by url %s: %s", url, ex.getMessage());
             ex.printStackTrace();
             return null;
         }

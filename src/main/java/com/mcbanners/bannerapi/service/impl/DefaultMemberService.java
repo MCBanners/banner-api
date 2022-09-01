@@ -40,7 +40,7 @@ public class DefaultMemberService implements MemberService {
     private Member handleBuiltByBit(int memberId) {
         BuiltByBitMember member = loadBuiltByBitClientMember(memberId);
 
-        if (member == null || member.result().equals("error")) {
+        if (member == null) {
             return null;
         }
 
@@ -88,7 +88,7 @@ public class DefaultMemberService implements MemberService {
     }
 
     private String loadBuiltByBitClientMemberIcon(String url) {
-        ResponseEntity<byte[]> resp = builtByBitClient.getIcon(url);
+        ResponseEntity<byte[]> resp = builtByBitClient.getImage(url);
         if (resp == null) {
             return null;
         }

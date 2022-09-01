@@ -1,9 +1,7 @@
 package com.mcbanners.bannerapi.service.impl;
 
 import com.mcbanners.bannerapi.net.PolymartClient;
-import com.mcbanners.bannerapi.obj.backend.polymart.PolymartTeam;
-import com.mcbanners.bannerapi.obj.backend.polymart.PolymartTeamData;
-import com.mcbanners.bannerapi.obj.backend.polymart.PolymartTeamStatistics;
+import com.mcbanners.bannerapi.obj.backend.polymart.PolymartAuthor;
 import com.mcbanners.bannerapi.obj.generic.Team;
 import com.mcbanners.bannerapi.service.ServiceBackend;
 import com.mcbanners.bannerapi.service.api.TeamService;
@@ -35,28 +33,25 @@ public class DefaultTeamService implements TeamService {
     }
 
     private Team handlePolymart(int teamId) {
-        final PolymartTeam team = loadPolymartTeam(teamId);
-
+        final PolymartAuthor team = loadPolymartTeam(teamId);
         if (team == null) {
             return null;
         }
 
-        final PolymartTeamData data = team.getResponse().getTeam();
-        final PolymartTeamStatistics statistics = data.getStatistics();
-        final String image = loadPolymartTeamIcon(data.getProfilePictureURL());
+        final String image = loadPolymartTeamIcon(team.profilePictureURL());
 
         return new Team(
-                data.getName(),
+                team.username(),
                 image,
-                statistics.getResourceCount(),
-                statistics.getResourceDownloads(),
-                statistics.getResourceRatings(),
-                statistics.getResourceAverageRating()
+                team.resourceCount(),
+                team.resourceDownloads(),
+                team.resourceRatings(),
+                team.resourceAverageRating()
         );
     }
 
-    private PolymartTeam loadPolymartTeam(int teamId) {
-        ResponseEntity<PolymartTeam> resp = polymartClient.getTeam(teamId);
+    private PolymartAuthor loadPolymartTeam(int teamId) {
+        ResponseEntity<PolymartAuthor> resp = polymartClient.getTeam(teamId);
         if (resp == null) {
             return null;
         }
@@ -65,7 +60,7 @@ public class DefaultTeamService implements TeamService {
     }
 
     private String loadPolymartTeamIcon(String url) {
-        ResponseEntity<byte[]> resp = polymartClient.getIcon(url);
+        ResponseEntity<byte[]> resp = polymartClient.getImage(url);
         if (resp == null) {
             return null;
         }

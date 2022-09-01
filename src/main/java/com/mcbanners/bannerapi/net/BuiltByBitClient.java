@@ -75,17 +75,4 @@ public class BuiltByBitClient extends BasicHttpClient {
 
         return null;
     }
-
-    public ResponseEntity<byte[]> getIcon(String url) {
-        try {
-            return get(url, "", byte[].class, headers -> {
-                headers.setAccept(Collections.singletonList(MediaType.IMAGE_PNG));
-                return headers;
-            });
-        } catch (RestClientResponseException ex) {
-            Log.error("Failed to load BuiltByBit Resource Icon by url %s: %s", url, ex.getMessage());
-            ex.printStackTrace();
-            return null;
-        }
-    }
 }

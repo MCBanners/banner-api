@@ -1,12 +1,15 @@
 package com.mcbanners.bannerapi.net;
 
+import com.mcbanners.bannerapi.util.Log;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Collections;
 import java.util.function.Function;
 
 public abstract class BasicHttpClient {
@@ -17,6 +20,29 @@ public abstract class BasicHttpClient {
     public BasicHttpClient(String baseURL) {
         this.baseURL = baseURL;
         this.template = new RestTemplate();
+    }
+
+    /**
+     * Make a GET request to the specified URL, receiving a PNG image in return.
+     *
+     * @param url the url to load the image from
+     * @return the byte array of the image, or null if the url is invalid or if the image could not be loaded
+     */
+    public final ResponseEntity<byte[]> getImage(String url) {
+        if (url == null || url.isEmpty() || url.isBlank()) {
+            return null;
+        }
+
+        try {
+            return get(url, "", byte[].class, headers -> {
+                headers.setAccept(Collections.singletonList(MediaType.IMAGE_PNG));
+                return headers;
+            });
+        } catch (RestClientResponseException ex) {
+            Log.error("Failed to load image by url %s: %s", url, ex.getMessage());
+            ex.printStackTrace();
+            return null;
+        }
     }
 
     /**

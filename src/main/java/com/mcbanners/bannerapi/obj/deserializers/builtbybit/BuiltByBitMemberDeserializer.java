@@ -24,7 +24,6 @@ public class BuiltByBitMemberDeserializer extends StdDeserializer<BuiltByBitMemb
         final JsonNode memberNode = rootNode.get("data");
 
         return new BuiltByBitMember(
-                rootNode.get("result").asText(),
                 memberNode.get("member_id").asInt(),
                 memberNode.get("username").asText(),
                 memberNode.get("join_date").asLong(),

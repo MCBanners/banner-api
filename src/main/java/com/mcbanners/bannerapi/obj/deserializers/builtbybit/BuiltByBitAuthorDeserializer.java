@@ -24,7 +24,6 @@ public class BuiltByBitAuthorDeserializer extends StdDeserializer<BuiltByBitAuth
         final JsonNode authorNode = rootNode.get("data");
 
         return new BuiltByBitAuthor(
-                rootNode.get("result").asText(),
                 authorNode.get("member_id").asInt(),
                 authorNode.get("username").asText(),
                 authorNode.get("resource_count").asInt(),

@@ -1,6 +1,5 @@
 package com.mcbanners.bannerapi.service.impl;
 
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.mcbanners.bannerapi.net.BuiltByBitClient;
 import com.mcbanners.bannerapi.net.CurseForgeClient;
 import com.mcbanners.bannerapi.net.ModrinthClient;
@@ -11,11 +10,10 @@ import com.mcbanners.bannerapi.net.error.FurtherProcessingRequiredException;
 import com.mcbanners.bannerapi.obj.backend.builtbybit.BuiltByBitAuthor;
 import com.mcbanners.bannerapi.obj.backend.builtbybit.BuiltByBitResource;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeResource;
-import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeResourceMember;
 import com.mcbanners.bannerapi.obj.backend.modrinth.ModrinthResource;
+import com.mcbanners.bannerapi.obj.backend.modrinth.ModrinthUser;
 import com.mcbanners.bannerapi.obj.backend.ore.OreResource;
 import com.mcbanners.bannerapi.obj.backend.polymart.PolymartResource;
-import com.mcbanners.bannerapi.obj.backend.polymart.PolymartResourceData;
 import com.mcbanners.bannerapi.obj.backend.spigot.SpigotPremium;
 import com.mcbanners.bannerapi.obj.backend.spigot.SpigotResource;
 import com.mcbanners.bannerapi.obj.generic.PriceInformation;
@@ -145,7 +143,7 @@ public class DefaultResourceService implements ResourceService {
     }
 
     private String loadSpigotResourceIcon(String url) {
-        ResponseEntity<byte[]> resp = spigotClient.getResourceIcon(url);
+        ResponseEntity<byte[]> resp = spigotClient.getImage(url);
         if (resp == null) {
             return null;
         }
@@ -203,22 +201,26 @@ public class DefaultResourceService implements ResourceService {
             return null;
         }
 
-        CurseForgeResourceMember author = curseForgeResource.getMembers().stream().filter(member -> member.getTitle().equalsIgnoreCase("Owner")).findFirst().orElse(null);
+        CurseForgeResource.Member author = curseForgeResource.members().stream()
+                .filter(member -> member.title().equalsIgnoreCase("Owner"))
+                .findFirst().orElse(null);
+
         if (author == null) {
             return null;
         }
 
-        String curseForgeResourceIcon = loadCurseForgeResourceIcon(curseForgeResource.getThumbnail());
+        String curseForgeResourceIcon = loadCurseForgeResourceIcon(curseForgeResource.thumbnail());
 
         return new Resource(
                 curseForgeResourceIcon,
-                curseForgeResource.getTitle(),
-                author.getId(),
-                author.getUsername(),
+                curseForgeResource.title(),
+                author.id(),
+                author.username(),
                 new RatingInformation(0, 0.0),
-                curseForgeResource.getDownloads().getTotal(),
+                curseForgeResource.totalDownloads(),
                 null,
-                curseForgeResource.getDownload().getUploadedAt());
+                curseForgeResource.uploadedAt()
+        );
     }
 
     private CurseForgeResource loadCurseForgeResource(int resourceId) throws FurtherProcessingRequiredException {
@@ -239,7 +241,7 @@ public class DefaultResourceService implements ResourceService {
     }
 
     private String loadCurseForgeResourceIcon(String url) {
-        ResponseEntity<byte[]> resp = curseForgeClient.getResourceIcon(url);
+        ResponseEntity<byte[]> resp = curseForgeClient.getImage(url);
         if (resp == null) {
             return null;
         }
@@ -255,20 +257,25 @@ public class DefaultResourceService implements ResourceService {
             return null;
         }
 
-        String modrinthResourceIcon = loadModrinthResourceIcon(modrinthResource.getIconUrl());
+        String modrinthResourceIcon = loadModrinthResourceIcon(modrinthResource.iconUrl());
         if (modrinthResourceIcon == null) {
             modrinthResourceIcon = "";
         }
 
+        ModrinthUser mainAuthor = loadModrinthMainProjectAuthor(pluginId);
+        if (mainAuthor == null) {
+            return null;
+        }
+
         return new Resource(
                 modrinthResourceIcon,
-                modrinthResource.getTitle(),
+                modrinthResource.title(),
                 -1,
-                determineModrinthResourceAuthor(pluginId),
+                mainAuthor.username(),
                 new RatingInformation(0, 0.0),
-                modrinthResource.getDownloads(),
+                modrinthResource.downloads(),
                 null,
-                modrinthResource.getUpdated());
+                modrinthResource.updated());
     }
 
     private ModrinthResource loadModrinthResource(String pluginId) {
@@ -280,18 +287,17 @@ public class DefaultResourceService implements ResourceService {
         return resp.getBody();
     }
 
-    private String determineModrinthResourceAuthor(String pluginId) {
-        ResponseEntity<ArrayNode> resp = modrinthClient.getMainProjectAuthor(pluginId);
+    private ModrinthUser loadModrinthMainProjectAuthor(String pluginId) {
+        ResponseEntity<ModrinthUser> resp = modrinthClient.getMainProjectAuthor(pluginId);
         if (resp == null) {
             return null;
         }
 
-        ArrayNode team = resp.getBody();
-        return team.get(0).get("user").get("username").textValue();
+        return resp.getBody();
     }
 
     private String loadModrinthResourceIcon(String url) {
-        ResponseEntity<byte[]> resp = modrinthClient.getResourceIcon(url);
+        ResponseEntity<byte[]> resp = modrinthClient.getImage(url);
         if (resp == null) {
             return null;
         }
@@ -304,13 +310,13 @@ public class DefaultResourceService implements ResourceService {
     private Resource handleBuiltByBit(int resourceId) {
         BuiltByBitResource resource = loadBuiltByBitResource(resourceId);
 
-        if (resource == null || resource.result().equals("error")) {
+        if (resource == null) {
             return null;
         }
 
         BuiltByBitAuthor author = loadBuiltByBitAuthor(resource.authorId());
 
-        if (author == null || author.result().equals("error")) {
+        if (author == null) {
             return null;
         }
 
@@ -360,27 +366,24 @@ public class DefaultResourceService implements ResourceService {
     // Polymart handling
     private Resource handlePolymart(final int resourceId) {
         final PolymartResource resource = loadPolymartResource(resourceId);
-
         if (resource == null) {
             return null;
         }
 
-        final PolymartResourceData data = resource.getResponse().getResource();
-        final String image = loadPolymartImage(data.getThumbnailURL());
-
-        final boolean isPremium = !(data.getPrice() == 0.00);
+        final String image = loadPolymartImage(resource.thumbnailURL());
+        final boolean isPremium = !(resource.price() == 0.00);
 
         return new Resource(
                 image,
-                data.getTitle(),
-                data.getOwner().getId(),
-                data.getOwner().getName(),
+                resource.title(),
+                resource.ownerId(),
+                resource.ownerName(),
                 new RatingInformation(
-                        data.getReviews().getCount(),
-                        (double) data.getReviews().getStars()
+                        resource.reviewCount(),
+                        (double) resource.stars()
                 ),
-                data.getDownloads(),
-                isPremium ? new PriceInformation(data.getPrice(), data.getCurrency().toUpperCase(Locale.ROOT)) : null,
+                resource.downloads(),
+                isPremium ? new PriceInformation(resource.price(), resource.currency().toUpperCase(Locale.ROOT)) : null,
                 null
         );
     }
@@ -395,7 +398,7 @@ public class DefaultResourceService implements ResourceService {
     }
 
     private String loadPolymartImage(final String url) {
-        final ResponseEntity<byte[]> resp = polymartClient.getIcon(url);
+        final ResponseEntity<byte[]> resp = polymartClient.getImage(url);
         if (resp == null) {
             return null;
         }

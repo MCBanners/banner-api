@@ -5,7 +5,6 @@ import com.mcbanners.bannerapi.obj.deserializers.builtbybit.BuiltByBitResourceDe
 
 @JsonDeserialize(using = BuiltByBitResourceDeserializer.class)
 public record BuiltByBitResource(
-        String result,
         int resourceId,
         int authorId,
         String title,

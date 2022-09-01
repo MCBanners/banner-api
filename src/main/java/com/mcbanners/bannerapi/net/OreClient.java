@@ -104,23 +104,6 @@ public class OreClient extends BasicHttpClient {
         return getImage(IMAGE_BASE_URL + href + "?size=120x120");
     }
 
-    public final ResponseEntity<byte[]> getAuthApiImage(String link) {
-        return getImage(link.trim());
-    }
-
-    public final ResponseEntity<byte[]> getImage(String url) {
-        try {
-            return get(url, "", byte[].class, headers -> {
-                headers.setAccept(Collections.singletonList(MediaType.IMAGE_PNG));
-                return headers;
-            });
-        } catch (RestClientResponseException ex) {
-            Log.error("Failed to load Ore Image from URL %s: %s", url, ex.getMessage());
-            ex.printStackTrace();
-            return null;
-        }
-    }
-
     public Instant getExpiration() {
         return expiration;
     }

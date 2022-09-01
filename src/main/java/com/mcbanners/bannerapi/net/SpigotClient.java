@@ -45,17 +45,4 @@ public final class SpigotClient extends BasicHttpClient {
             return null;
         }
     }
-
-    public ResponseEntity<byte[]> getResourceIcon(String url) {
-        try {
-            return get(url, "", byte[].class, headers -> {
-                headers.setAccept(Collections.singletonList(MediaType.IMAGE_PNG));
-                return headers;
-            });
-        } catch (RestClientResponseException ex) {
-            Log.error("Failed to load Spigot Resource Icon by url %s: %s", url, ex.getMessage());
-            ex.printStackTrace();
-            return null;
-        }
-    }
 }

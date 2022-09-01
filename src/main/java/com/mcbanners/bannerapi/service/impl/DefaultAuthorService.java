@@ -10,23 +10,16 @@ import com.mcbanners.bannerapi.net.OreClient;
 import com.mcbanners.bannerapi.net.PolymartClient;
 import com.mcbanners.bannerapi.net.SpigotClient;
 import com.mcbanners.bannerapi.obj.backend.builtbybit.BuiltByBitAuthor;
+import com.mcbanners.bannerapi.obj.backend.builtbybit.BuiltByBitResource;
 import com.mcbanners.bannerapi.obj.backend.builtbybit.BuiltByBitResourceBasic;
-import com.mcbanners.bannerapi.obj.backend.builtbybit.BuiltByBitResourceBasicData;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeAuthor;
-import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeProject;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeResource;
 import com.mcbanners.bannerapi.obj.backend.modrinth.ModrinthResource;
 import com.mcbanners.bannerapi.obj.backend.modrinth.ModrinthUser;
 import com.mcbanners.bannerapi.obj.backend.ore.OreAuthor;
 import com.mcbanners.bannerapi.obj.backend.ore.OreResource;
 import com.mcbanners.bannerapi.obj.backend.polymart.PolymartAuthor;
-import com.mcbanners.bannerapi.obj.backend.polymart.PolymartAuthorStatistics;
-import com.mcbanners.bannerapi.obj.backend.polymart.PolymartAuthorUserData;
 import com.mcbanners.bannerapi.obj.backend.polymart.PolymartResource;
-import com.mcbanners.bannerapi.obj.backend.polymart.PolymartResourceData;
-import com.mcbanners.bannerapi.obj.backend.polymart.PolymartTeam;
-import com.mcbanners.bannerapi.obj.backend.polymart.PolymartTeamData;
-import com.mcbanners.bannerapi.obj.backend.polymart.PolymartTeamStatistics;
 import com.mcbanners.bannerapi.obj.backend.spigot.SpigotAuthor;
 import com.mcbanners.bannerapi.obj.backend.spigot.SpigotResource;
 import com.mcbanners.bannerapi.obj.generic.Author;
@@ -174,7 +167,7 @@ public class DefaultAuthorService implements AuthorService {
     }
 
     private String loadSpigotAuthorIcon(String url) {
-        ResponseEntity<byte[]> resp = spigotClient.getResourceIcon(url);
+        ResponseEntity<byte[]> resp = spigotClient.getImage(url);
         if (resp == null) {
             return null;
         }
@@ -249,31 +242,28 @@ public class DefaultAuthorService implements AuthorService {
     // Modrinth Handling
     private Author handleModrinth(String authorName) {
         ModrinthUser author = loadModrinthUser(authorName);
-
         if (author == null) {
             return null;
         }
 
         ModrinthResource[] projects = loadAllModrinthResourcesByAuthor(authorName);
-
         if (projects == null) {
             return null;
         }
 
         int totalDownloads = 0, totalFollowers = 0;
-
         for (ModrinthResource project : projects) {
-            totalDownloads += project.getDownloads();
-            totalFollowers += project.getFollowers();
+            totalDownloads += project.downloads();
+            totalFollowers += project.followers();
         }
 
-        String modrinthAuthorAvatar = loadModrinthAuthorIcon(author.getAvatarUrl());
+        String modrinthAuthorAvatar = loadModrinthAuthorIcon(author.avatarUrl());
         if (modrinthAuthorAvatar == null) {
             modrinthAuthorAvatar = "";
         }
 
         return new Author(
-                author.getUsername(),
+                author.username(),
                 projects.length,
                 modrinthAuthorAvatar,
                 totalDownloads,
@@ -283,7 +273,7 @@ public class DefaultAuthorService implements AuthorService {
     }
 
     private String loadModrinthAuthorIcon(String url) {
-        ResponseEntity<byte[]> resp = modrinthClient.getResourceIcon(url);
+        ResponseEntity<byte[]> resp = modrinthClient.getImage(url);
         if (resp == null) {
             return null;
         }
@@ -302,13 +292,12 @@ public class DefaultAuthorService implements AuthorService {
     }
 
     private ModrinthResource[] loadAllModrinthResourcesByAuthor(String username) {
-        ResponseEntity<ArrayNode> resp = modrinthClient.getUserProjects(username);
+        ResponseEntity<ModrinthResource[]> resp = modrinthClient.getUserProjects(username);
         if (resp == null) {
             return null;
         }
 
-        ArrayNode projects = resp.getBody();
-        return mapper.convertValue(projects, ModrinthResource[].class);
+        return resp.getBody();
     }
 
     // Curse handling
@@ -330,12 +319,12 @@ public class DefaultAuthorService implements AuthorService {
         int totalDownloads = 0;
 
         for (CurseForgeResource resource : resources) {
-            totalDownloads += resource.getDownloads().getTotal();
+            totalDownloads += resource.totalDownloads();
         }
 
         return new Author(
-                author.getUsername(),
-                author.getProjects().size(),
+                author.username(),
+                author.projects().size(),
                 "",
                 totalDownloads,
                 -1,
@@ -364,8 +353,8 @@ public class DefaultAuthorService implements AuthorService {
     private List<CurseForgeResource> loadAllCurseForgeResourcesByAuthor(CurseForgeAuthor author) {
         List<CurseForgeResource> resources = new ArrayList<>();
 
-        for (CurseForgeProject project : author.getProjects()) {
-            ResponseEntity<CurseForgeResource> resp = curseForgeClient.getResource(project.getId());
+        for (CurseForgeAuthor.Project project : author.projects()) {
+            ResponseEntity<CurseForgeResource> resp = curseForgeClient.getResource(project.id());
             if (resp != null) {
                 resources.add(resp.getBody());
             }
@@ -377,21 +366,21 @@ public class DefaultAuthorService implements AuthorService {
     private Author handleBuiltByBit(int authorId) {
         BuiltByBitAuthor author = loadBuiltByBitAuthor(authorId);
 
-        if (author == null || author.result().equals("error")) {
+        if (author == null) {
             return null;
         }
 
         BuiltByBitResourceBasic resources = loadBuiltByBitAuthorBasic(authorId);
 
-        if (resources == null || resources.getData().length == 0) {
+        if (resources == null || resources.resources().size() == 0) {
             return null;
         }
 
         int totalDownloads = 0, totalReviews = 0;
 
-        for (final BuiltByBitResourceBasicData resource : resources.getData()) {
-            totalDownloads += resource.getDownloadCount();
-            totalReviews += resource.getReviewCount();
+        for (final BuiltByBitResource resource : resources.resources()) {
+            totalDownloads += resource.downloadCount();
+            totalReviews += resource.reviewCount();
         }
 
         String avatarUrl = loadBuiltByBitAuthorIcon(author.avatarUrl());
@@ -429,7 +418,7 @@ public class DefaultAuthorService implements AuthorService {
     }
 
     private String loadBuiltByBitAuthorIcon(String url) {
-        ResponseEntity<byte[]> resp = builtByBitClient.getIcon(url);
+        ResponseEntity<byte[]> resp = builtByBitClient.getImage(url);
         if (resp == null) {
             return null;
         }
@@ -441,83 +430,45 @@ public class DefaultAuthorService implements AuthorService {
     // Regular Polymart Handling
     private Author handlePolymart(final int authorId) {
         final PolymartAuthor author = loadPolymartAuthor(authorId);
-
         if (author == null) {
             return null;
         }
 
-        final PolymartAuthorUserData data = author.getResponse().getUser();
-        final PolymartAuthorStatistics statistics = data.getStatistics();
-        final String authorImage = loadPolymartImage(data.getProfilePictureURL());
+        final String authorImage = loadPolymartImage(author.profilePictureURL());
 
         return new Author(
-                data.getUsername(),
-                statistics.getResourceCount(),
+                author.username(),
+                author.resourceCount(),
                 authorImage,
-                statistics.getResourceDownloads(),
+                author.resourceDownloads(),
                 -1,
-                statistics.getResourceRatings()
+                author.resourceRatings()
         );
     }
 
     // Major Polymart Workaround
     private Author handlePolymart(final int authorId, final int resourceId) {
         final PolymartResource resource = loadPolymartResource(resourceId);
-
         if (resource == null) {
             return null;
         }
 
-        final PolymartResourceData data = resource.getResponse().getResource();
+        final PolymartAuthor author = resource.ownerType().equals("user")
+                ? loadPolymartAuthor(authorId) : loadPolymartTeam(resource.ownerId());
 
-        String username;
-        int resourceCount;
-        String ownerImage;
-        int totalDownloads;
-        int resourceRatings;
-
-
-        if (data.getOwner().getType().equals("team")) {
-            // Handle team authors
-            final PolymartTeam team = loadPolymartTeam(data.getOwner().getId());
-
-            if (team == null) {
-                return null;
-            }
-
-            final PolymartTeamData teamData = team.getResponse().getTeam();
-            final PolymartTeamStatistics teamStatistics = teamData.getStatistics();
-
-            username = teamData.getName();
-            resourceCount = teamStatistics.getResourceCount();
-            ownerImage = loadPolymartImage(teamData.getProfilePictureURL());
-            totalDownloads = teamStatistics.getResourceDownloads();
-            resourceRatings = teamStatistics.getResourceRatings();
-        } else {
-            // Handle user authors
-            final PolymartAuthor author = loadPolymartAuthor(authorId);
-
-            if (author == null) {
-                return null;
-            }
-
-            final PolymartAuthorUserData authorData = author.getResponse().getUser();
-            final PolymartAuthorStatistics authorStatistics = authorData.getStatistics();
-
-            username = authorData.getUsername();
-            resourceCount = authorStatistics.getResourceCount();
-            ownerImage = loadPolymartImage(authorData.getProfilePictureURL());
-            totalDownloads = authorStatistics.getResourceDownloads();
-            resourceRatings = authorStatistics.getResourceRatings();
+        if (author == null) {
+            return null;
         }
 
+        String ownerImage = loadPolymartImage(author.profilePictureURL());
+
         return new Author(
-                username,
-                resourceCount,
+                author.username(),
+                author.resourceCount(),
                 ownerImage,
-                totalDownloads,
+                author.resourceDownloads(),
                 -1,
-                resourceRatings
+                author.resourceRatings()
         );
     }
 
@@ -539,8 +490,8 @@ public class DefaultAuthorService implements AuthorService {
         return resp.getBody();
     }
 
-    private PolymartTeam loadPolymartTeam(final int teamId) {
-        final ResponseEntity<PolymartTeam> resp = polymartClient.getTeam(teamId);
+    private PolymartAuthor loadPolymartTeam(final int teamId) {
+        final ResponseEntity<PolymartAuthor> resp = polymartClient.getTeam(teamId);
         if (resp == null) {
             return null;
         }
@@ -549,7 +500,7 @@ public class DefaultAuthorService implements AuthorService {
     }
 
     private String loadPolymartImage(final String url) {
-        final ResponseEntity<byte[]> resp = polymartClient.getIcon(url);
+        final ResponseEntity<byte[]> resp = polymartClient.getImage(url);
         if (resp == null) {
             return null;
         }

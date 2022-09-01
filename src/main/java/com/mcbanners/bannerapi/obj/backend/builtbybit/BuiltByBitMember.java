@@ -5,7 +5,6 @@ import com.mcbanners.bannerapi.obj.deserializers.builtbybit.BuiltByBitMemberDese
 
 @JsonDeserialize(using = BuiltByBitMemberDeserializer.class)
 public record BuiltByBitMember(
-        String result,
         int memberId,
         String username,
         long joinDate,
