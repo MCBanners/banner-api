@@ -23,6 +23,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addFormatters(FormatterRegistry registry) {
         registry.addConverter(new BannerTypeEnumToStringConverter());
         registry.addConverter(new BannerOutputTypeEnumToStringConverter());
+        registry.addConverter(new ServiceBackendEnumToStringConverter());
     }
 
     @Override
