@@ -14,7 +14,6 @@ import com.mcbanners.bannerapi.obj.backend.modrinth.ModrinthResource;
 import com.mcbanners.bannerapi.obj.backend.modrinth.ModrinthUser;
 import com.mcbanners.bannerapi.obj.backend.ore.OreResource;
 import com.mcbanners.bannerapi.obj.backend.polymart.PolymartResource;
-import com.mcbanners.bannerapi.obj.backend.spigot.SpigotPremium;
 import com.mcbanners.bannerapi.obj.backend.spigot.SpigotResource;
 import com.mcbanners.bannerapi.obj.generic.PriceInformation;
 import com.mcbanners.bannerapi.obj.generic.RatingInformation;
@@ -102,35 +101,34 @@ public class DefaultResourceService implements ResourceService {
 
     // Spigot handling
     private Resource handleSpigot(int resourceId) {
-        SpigotResource spigotResource = loadSpigotResource(resourceId);
-
-        if (spigotResource == null) {
+        SpigotResource resource = loadSpigotResource(resourceId);
+        if (resource == null) {
             return null;
         }
 
-        final String rawIcon = spigotResource.getIconLink();
+        final String rawIcon = resource.iconLink();
         final String[] iconSplit = rawIcon.split("\\?");
 
-        String spigotResourceIcon = loadSpigotResourceIcon(iconSplit[0]);
-        if (spigotResourceIcon == null) {
-            spigotResourceIcon = "";
+        String icon = loadSpigotResourceIcon(iconSplit[0]);
+        if (icon == null) {
+            icon = "";
         }
 
-        SpigotPremium premium = spigotResource.getPremium();
-        boolean isPremium = !premium.getPrice().equals("0.00");
+        boolean isPremium = !resource.price().equals("0.00");
 
         return new Resource(
-                spigotResourceIcon,
-                spigotResource.getTitle(),
-                Integer.parseInt(spigotResource.getAuthor().getId()),
-                spigotResource.getAuthor().getUsername(),
+                icon,
+                resource.title(),
+                Integer.parseInt(resource.authorId()),
+                resource.authorUsername(),
                 new RatingInformation(
-                        Integer.parseInt(spigotResource.getStats().getReviews().getUnique()),
-                        Double.parseDouble(spigotResource.getStats().getRating())
+                        Integer.parseInt(resource.uniqueReviews()),
+                        Double.parseDouble(resource.rating())
                 ),
-                Integer.parseInt(spigotResource.getStats().getDownloads()),
-                isPremium ? new PriceInformation(Double.parseDouble(premium.getPrice()), premium.getCurrency().toUpperCase()) : null,
-                null);
+                Integer.parseInt(resource.downloads()),
+                isPremium ? new PriceInformation(Double.parseDouble(resource.price()), resource.currency().toUpperCase()) : null,
+                null
+        );
     }
 
     private SpigotResource loadSpigotResource(int resourceId) {

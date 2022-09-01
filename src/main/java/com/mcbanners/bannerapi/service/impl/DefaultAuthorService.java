@@ -125,11 +125,11 @@ public class DefaultAuthorService implements AuthorService {
         int totalDownloads = 0, totalReviews = 0;
 
         for (SpigotResource resource : resources) {
-            totalDownloads += Integer.parseInt(resource.getStats().getDownloads());
-            totalReviews += Integer.parseInt(resource.getStats().getReviews().getTotal());
+            totalDownloads += Integer.parseInt(resource.downloads());
+            totalReviews += Integer.parseInt(resource.totalReviews());
         }
 
-        final String rawIcon = author.getAvatar();
+        final String rawIcon = author.avatar();
         final String[] iconSplit = rawIcon.split("\\?");
 
         String spigotAuthorIcon = loadSpigotAuthorIcon(iconSplit[0]);
@@ -139,8 +139,8 @@ public class DefaultAuthorService implements AuthorService {
         }
 
         return new Author(
-                author.getUsername(),
-                Integer.parseInt(author.getResourceCount()),
+                author.username(),
+                Integer.parseInt(author.resourceCount()),
                 spigotAuthorIcon,
                 totalDownloads,
                 -1,
