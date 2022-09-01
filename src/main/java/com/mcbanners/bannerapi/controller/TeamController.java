@@ -31,21 +31,17 @@ public class TeamController {
 
     @GetMapping(value = "/polymart/{id}/isValid", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Boolean>> getIsValid(@PathVariable int id) {
-        Team team = this.teams.getTeam(id, ServiceBackend.POLYMART);
+        final Team team = this.teams.getTeam(id, ServiceBackend.POLYMART);
         return new ResponseEntity<>(Collections.singletonMap("valid", team != null), HttpStatus.OK);
     }
 
     @GetMapping(value = "/polymart/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<byte[]> getBanner(@PathVariable int id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
-        Team team = this.teams.getTeam(id, ServiceBackend.POLYMART);
+        final Team team = this.teams.getTeam(id, ServiceBackend.POLYMART);
         if (team == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return draw(team, raw, ServiceBackend.POLYMART, outputType);
-    }
-
-    private ResponseEntity<byte[]> draw(Team team, Map<String, String> raw, ServiceBackend backend, BannerOutputType outputType) {
-        return BannerImageWriter.write(new TeamLayout(team, raw, backend).draw(outputType), outputType);
+        return BannerImageWriter.write(new TeamLayout(team, raw, ServiceBackend.POLYMART).draw(outputType), outputType);
     }
 }
