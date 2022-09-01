@@ -105,7 +105,7 @@ public class ResourceLayout extends Layout {
         addComponent(resourceName.makeComponent(textColor, resourceTitle));
         addComponent(authorName.makeComponent(textColor, String.format("by %s", this.author.name())));
         if (backend != ServiceBackend.CURSEFORGE && backend != ServiceBackend.MODRINTH) {
-            addComponent(reviews.makeComponent(textColor, NumberUtil.abbreviate(resource.rating().getCount()) + " reviews"));
+            addComponent(reviews.makeComponent(textColor, NumberUtil.abbreviate(resource.rating().count()) + " reviews"));
         } else {
             Date date = Date.from(OffsetDateTime.parse(resource.lastUpdated()).toInstant());
             SimpleDateFormat sdf = new SimpleDateFormat("M/dd/yyyy", Locale.ENGLISH);
@@ -117,7 +117,7 @@ public class ResourceLayout extends Layout {
         BufferedImage starHalf = BannerSprite.STAR_HALF.getImage();
         BufferedImage starNone = BannerSprite.STAR_NONE.getImage();
 
-        Double ratingAvg = resource.rating().getAverageRating();
+        Double ratingAvg = resource.rating().averageRating();
         if (ratingAvg != null) {
             for (int i = 0; i < 5; i++) {
                 BufferedImage toOverlay;
