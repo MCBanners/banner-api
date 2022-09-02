@@ -33,7 +33,7 @@ public class DefaultTeamService implements TeamService {
         final PolymartAuthor team = fetchTeam(teamId);
         return team == null ? null : new Team(
                 team.username(),
-                fetchIcon(team.profilePictureURL()),
+                polymartClient.getBase64Image(team.profilePictureURL()),
                 team.resourceCount(),
                 team.resourceDownloads(),
                 team.resourceRatings(),
@@ -44,10 +44,5 @@ public class DefaultTeamService implements TeamService {
     private PolymartAuthor fetchTeam(int teamId) {
         final ResponseEntity<PolymartAuthor> resp = polymartClient.getTeam(teamId);
         return resp == null ? null : resp.getBody();
-    }
-
-    private String fetchIcon(String url) {
-        final ResponseEntity<byte[]> resp = polymartClient.getImage(url);
-        return resp == null ? null : Base64.getEncoder().encodeToString(resp.getBody());
     }
 }

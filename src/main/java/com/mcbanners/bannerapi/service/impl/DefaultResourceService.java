@@ -26,7 +26,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Base64;
 import java.util.Locale;
 
 @Service
@@ -109,7 +108,7 @@ public class DefaultResourceService implements ResourceService {
         final String rawIcon = resource.iconLink();
         final String[] iconSplit = rawIcon.split("\\?");
 
-        String icon = loadSpigotResourceIcon(iconSplit[0]);
+        String icon = spigotClient.getBase64Image(iconSplit[0]);
         if (icon == null) {
             icon = "";
         }
@@ -136,11 +135,6 @@ public class DefaultResourceService implements ResourceService {
         return resp == null ? null : resp.getBody();
     }
 
-    private String loadSpigotResourceIcon(String url) {
-        final ResponseEntity<byte[]> resp = spigotClient.getImage(url);
-        return resp == null ? null : Base64.getEncoder().encodeToString(resp.getBody());
-    }
-
     // Ore handling
     private Resource handleOre(String pluginId) {
         OreResource oreResource = loadOreResource(pluginId);
@@ -148,7 +142,7 @@ public class DefaultResourceService implements ResourceService {
             return null;
         }
 
-        String oreResourceIcon = loadOreResourceIcon(oreResource.iconUrl());
+        String oreResourceIcon = oreClient.getBase64Image(oreResource.iconUrl());
         if (oreResourceIcon == null) {
             oreResourceIcon = "";
         }
@@ -169,11 +163,6 @@ public class DefaultResourceService implements ResourceService {
         return resp == null ? null : resp.getBody();
     }
 
-    private String loadOreResourceIcon(String href) {
-        final ResponseEntity<byte[]> resp = oreClient.getImage(href);
-        return resp == null ? null : Base64.getEncoder().encodeToString(resp.getBody());
-    }
-
     // Curse handling
     private Resource handleCurse(int resourceId) throws FurtherProcessingRequiredException {
         CurseForgeResource curseForgeResource = loadCurseForgeResource(resourceId);
@@ -189,7 +178,7 @@ public class DefaultResourceService implements ResourceService {
             return null;
         }
 
-        String curseForgeResourceIcon = loadCurseForgeResourceIcon(curseForgeResource.thumbnail());
+        String curseForgeResourceIcon = curseForgeClient.getBase64Image(curseForgeResource.thumbnail());
 
         return new Resource(
                 curseForgeResourceIcon,
@@ -220,11 +209,6 @@ public class DefaultResourceService implements ResourceService {
 
     }
 
-    private String loadCurseForgeResourceIcon(String url) {
-        final ResponseEntity<byte[]> resp = curseForgeClient.getImage(url);
-        return resp == null ? null : Base64.getEncoder().encodeToString(resp.getBody());
-    }
-
     // Modrinth Handling
     private Resource handleModrinth(String pluginId) {
         ModrinthResource modrinthResource = loadModrinthResource(pluginId);
@@ -232,7 +216,7 @@ public class DefaultResourceService implements ResourceService {
             return null;
         }
 
-        String modrinthResourceIcon = loadModrinthResourceIcon(modrinthResource.iconUrl());
+        String modrinthResourceIcon = modrinthClient.getBase64Image(modrinthResource.iconUrl());
         if (modrinthResourceIcon == null) {
             modrinthResourceIcon = "";
         }
@@ -261,11 +245,6 @@ public class DefaultResourceService implements ResourceService {
     private ModrinthUser loadModrinthMainProjectAuthor(String pluginId) {
         final ResponseEntity<ModrinthUser> resp = modrinthClient.getMainProjectAuthor(pluginId);
         return resp == null ? null : resp.getBody();
-    }
-
-    private String loadModrinthResourceIcon(String url) {
-        final ResponseEntity<byte[]> resp = modrinthClient.getImage(url);
-        return resp == null ? null : Base64.getEncoder().encodeToString(resp.getBody());
     }
 
     // BuiltByBit handling
@@ -324,7 +303,7 @@ public class DefaultResourceService implements ResourceService {
             return null;
         }
 
-        final String image = loadPolymartImage(resource.thumbnailURL());
+        final String image = polymartClient.getBase64Image(resource.thumbnailURL());
         final boolean isPremium = !(resource.price() == 0.00);
 
         return new Resource(
@@ -345,10 +324,5 @@ public class DefaultResourceService implements ResourceService {
     private PolymartResource loadPolymartResource(final int resourceId) {
         final ResponseEntity<PolymartResource> resp = polymartClient.getResource(resourceId);
         return resp == null ? null : resp.getBody();
-    }
-
-    private String loadPolymartImage(final String url) {
-        final ResponseEntity<byte[]> resp = polymartClient.getImage(url);
-        return resp == null ? null : Base64.getEncoder().encodeToString(resp.getBody());
     }
 }

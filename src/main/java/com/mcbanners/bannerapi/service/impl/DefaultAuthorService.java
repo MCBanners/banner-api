@@ -30,7 +30,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 
 @Service
@@ -42,7 +41,6 @@ public class DefaultAuthorService implements AuthorService {
     private final ModrinthClient modrinthClient;
     private final PolymartClient polymartClient;
     private final BuiltByBitClient builtByBitClient;
-
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Autowired
@@ -82,6 +80,7 @@ public class DefaultAuthorService implements AuthorService {
     }
 
     @Override
+    @Cacheable(unless = "#result == null")
     public Author getAuthor(int authorId, int resourceId, ServiceBackend backend) {
         return handlePolymart(authorId, resourceId);
     }
@@ -130,7 +129,7 @@ public class DefaultAuthorService implements AuthorService {
         final String rawIcon = author.avatar();
         final String[] iconSplit = rawIcon.split("\\?");
 
-        String spigotAuthorIcon = loadSpigotAuthorIcon(iconSplit[0]);
+        String spigotAuthorIcon = spigotClient.getBase64Image(iconSplit[0]);
 
         if (spigotAuthorIcon == null) {
             spigotAuthorIcon = "";
@@ -156,11 +155,6 @@ public class DefaultAuthorService implements AuthorService {
         return resp == null ? null : resp.getBody();
     }
 
-    private String loadSpigotAuthorIcon(String url) {
-        final ResponseEntity<byte[]> resp = spigotClient.getImage(url);
-        return resp == null ? null : Base64.getEncoder().encodeToString(resp.getBody());
-    }
-
     // Ore handling
     private Author handleOre(String authorName) {
         OreResource[] resources = loadOreAuthorProjects(authorName);
@@ -175,7 +169,8 @@ public class DefaultAuthorService implements AuthorService {
             totalLikes += resource.stars();
         }
 
-        String oreAuthorAvatar = loadOreImageByUrl(authorName);
+        // Todo figure out why this is weird
+        String oreAuthorAvatar = oreClient.getBase64Image(authorName);
         if (oreAuthorAvatar == null) {
             oreAuthorAvatar = "";
         }
@@ -205,11 +200,6 @@ public class DefaultAuthorService implements AuthorService {
         return mapper.convertValue(data.get("result"), OreResource[].class);
     }
 
-    private String loadOreImageByUrl(String url) {
-        final ResponseEntity<byte[]> resp = oreClient.getAuthorIcon(url);
-        return resp == null ? null : Base64.getEncoder().encodeToString(resp.getBody());
-    }
-
     // Modrinth Handling
     private Author handleModrinth(String authorName) {
         ModrinthUser author = loadModrinthUser(authorName);
@@ -228,7 +218,7 @@ public class DefaultAuthorService implements AuthorService {
             totalFollowers += project.followers();
         }
 
-        String modrinthAuthorAvatar = loadModrinthAuthorIcon(author.avatarUrl());
+        String modrinthAuthorAvatar = modrinthClient.getBase64Image(author.avatarUrl());
         if (modrinthAuthorAvatar == null) {
             modrinthAuthorAvatar = "";
         }
@@ -241,11 +231,6 @@ public class DefaultAuthorService implements AuthorService {
                 totalFollowers,
                 -1
         );
-    }
-
-    private String loadModrinthAuthorIcon(String url) {
-        final ResponseEntity<byte[]> resp = modrinthClient.getImage(url);
-        return resp == null ? null : Base64.getEncoder().encodeToString(resp.getBody());
     }
 
     private ModrinthUser loadModrinthUser(String username) {
@@ -333,7 +318,7 @@ public class DefaultAuthorService implements AuthorService {
             totalReviews += resource.reviewCount();
         }
 
-        String avatarUrl = loadBuiltByBitAuthorIcon(author.avatarUrl());
+        String avatarUrl = builtByBitClient.getBase64Image(author.avatarUrl());
 
         if (avatarUrl == null) {
             avatarUrl = "";
@@ -359,11 +344,6 @@ public class DefaultAuthorService implements AuthorService {
         return resp == null ? null : resp.getBody();
     }
 
-    private String loadBuiltByBitAuthorIcon(String url) {
-        final ResponseEntity<byte[]> resp = builtByBitClient.getImage(url);
-        return resp == null ? null : Base64.getEncoder().encodeToString(resp.getBody());
-    }
-
     // Regular Polymart Handling
     private Author handlePolymart(final int authorId) {
         final PolymartAuthor author = loadPolymartAuthor(authorId);
@@ -371,7 +351,7 @@ public class DefaultAuthorService implements AuthorService {
             return null;
         }
 
-        final String authorImage = loadPolymartImage(author.profilePictureURL());
+        final String authorImage = polymartClient.getBase64Image(author.profilePictureURL());
 
         return new Author(
                 author.username(),
@@ -397,7 +377,7 @@ public class DefaultAuthorService implements AuthorService {
             return null;
         }
 
-        String ownerImage = loadPolymartImage(author.profilePictureURL());
+        String ownerImage = polymartClient.getBase64Image(author.profilePictureURL());
 
         return new Author(
                 author.username(),
@@ -422,10 +402,5 @@ public class DefaultAuthorService implements AuthorService {
     private PolymartAuthor loadPolymartTeam(final int teamId) {
         final ResponseEntity<PolymartAuthor> resp = polymartClient.getTeam(teamId);
         return resp == null ? null : resp.getBody();
-    }
-
-    private String loadPolymartImage(final String url) {
-        final ResponseEntity<byte[]> resp = polymartClient.getImage(url);
-        return resp == null ? null : Base64.getEncoder().encodeToString(resp.getBody());
     }
 }

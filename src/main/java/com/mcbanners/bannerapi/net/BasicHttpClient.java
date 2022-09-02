@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Base64;
 import java.util.Collections;
 import java.util.function.Function;
 
@@ -43,6 +44,17 @@ public abstract class BasicHttpClient {
             ex.printStackTrace();
             return null;
         }
+    }
+
+    /**
+     * Make a GET request to the image URL specified, returning the Base64-Encoded image in return
+     *
+     * @param url the url to load the image from
+     * @return the base64-encoded image, or null if the url is invalid or if the image could not be loaded
+     */
+    public final String getBase64Image(final String url) {
+        final ResponseEntity<byte[]> resp = getImage(url);
+        return resp == null ? null : Base64.getEncoder().encodeToString(resp.getBody());
     }
 
     /**

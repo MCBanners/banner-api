@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.util.Base64;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -41,7 +40,7 @@ public class DefaultMemberService implements MemberService {
             return null;
         }
 
-        String avatarUrl = fetchIcon(member.avatarUrl());
+        String avatarUrl = builtByBitClient.getBase64Image(member.avatarUrl());
 
         if (avatarUrl == null) {
             avatarUrl = "";
@@ -78,10 +77,5 @@ public class DefaultMemberService implements MemberService {
     private BuiltByBitMember fetchMember(int memberId) {
         final ResponseEntity<BuiltByBitMember> resp = builtByBitClient.getMember(memberId);
         return resp == null ? null : resp.getBody();
-    }
-
-    private String fetchIcon(String url) {
-        final ResponseEntity<byte[]> resp = builtByBitClient.getImage(url);
-        return resp == null ? null : Base64.getEncoder().encodeToString(resp.getBody());
     }
 }
