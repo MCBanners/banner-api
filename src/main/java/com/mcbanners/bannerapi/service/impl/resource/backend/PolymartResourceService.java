@@ -20,8 +20,8 @@ public class PolymartResourceService {
         this.client = client;
     }
 
-    public Resource handlePolymart(final int resourceId) {
-        final PolymartResource resource = loadPolymartResource(resourceId);
+    public Resource handle(final int resourceId) {
+        final PolymartResource resource = loadResource(resourceId);
         if (resource == null) {
             return null;
         }
@@ -44,7 +44,7 @@ public class PolymartResourceService {
         );
     }
 
-    private PolymartResource loadPolymartResource(final int resourceId) {
+    private PolymartResource loadResource(final int resourceId) {
         final ResponseEntity<PolymartResource> resp = client.getResource(resourceId);
         return resp == null ? null : resp.getBody();
     }

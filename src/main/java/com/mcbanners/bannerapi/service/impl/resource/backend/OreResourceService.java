@@ -17,8 +17,8 @@ public class OreResourceService {
         this.client = client;
     }
 
-    public Resource handleOre(String pluginId) {
-        OreResource oreResource = loadOreResource(pluginId);
+    public Resource handle(String pluginId) {
+        OreResource oreResource = loadResource(pluginId);
         if (oreResource == null) {
             return null;
         }
@@ -39,7 +39,7 @@ public class OreResourceService {
                 null);
     }
 
-    private OreResource loadOreResource(String pluginId) {
+    private OreResource loadResource(String pluginId) {
         final ResponseEntity<OreResource> resp = client.getResource(pluginId);
         return resp == null ? null : resp.getBody();
     }

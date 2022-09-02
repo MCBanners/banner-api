@@ -19,14 +19,14 @@ public class BuiltByBitResourceService {
         this.client = client;
     }
 
-    public Resource handleBuiltByBit(int resourceId) {
-        BuiltByBitResource resource = loadBuiltByBitResource(resourceId);
+    public Resource handle(int resourceId) {
+        BuiltByBitResource resource = loadResource(resourceId);
 
         if (resource == null) {
             return null;
         }
 
-        BuiltByBitAuthor author = loadBuiltByBitAuthor(resource.authorId());
+        BuiltByBitAuthor author = loadAuthor(resource.authorId());
 
         if (author == null) {
             return null;
@@ -57,12 +57,12 @@ public class BuiltByBitResourceService {
         );
     }
 
-    private BuiltByBitResource loadBuiltByBitResource(int resourceId) {
+    private BuiltByBitResource loadResource(int resourceId) {
         final ResponseEntity<BuiltByBitResource> resp = client.getResource(resourceId);
         return resp == null ? null : resp.getBody();
     }
 
-    private BuiltByBitAuthor loadBuiltByBitAuthor(int authorId) {
+    private BuiltByBitAuthor loadAuthor(int authorId) {
         final ResponseEntity<BuiltByBitAuthor> resp = client.getAuthor(authorId);
         return resp == null ? null : resp.getBody();
     }

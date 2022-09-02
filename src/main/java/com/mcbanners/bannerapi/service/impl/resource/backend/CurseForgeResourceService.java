@@ -1,7 +1,6 @@
 package com.mcbanners.bannerapi.service.impl.resource.backend;
 
 import com.mcbanners.bannerapi.net.CurseForgeClient;
-import com.mcbanners.bannerapi.net.SpigotClient;
 import com.mcbanners.bannerapi.net.error.FurtherProcessingRequiredException;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeResource;
 import com.mcbanners.bannerapi.obj.generic.RatingInformation;
@@ -19,8 +18,8 @@ public class CurseForgeResourceService {
         this.client = client;
     }
 
-    public Resource handleCurse(int resourceId) throws FurtherProcessingRequiredException {
-        CurseForgeResource curseForgeResource = loadCurseForgeResource(resourceId);
+    public Resource handle(int resourceId) throws FurtherProcessingRequiredException {
+        CurseForgeResource curseForgeResource = loadResource(resourceId);
         if (curseForgeResource == null) {
             return null;
         }
@@ -47,7 +46,7 @@ public class CurseForgeResourceService {
         );
     }
 
-    private CurseForgeResource loadCurseForgeResource(int resourceId) throws FurtherProcessingRequiredException {
+    private CurseForgeResource loadResource(int resourceId) throws FurtherProcessingRequiredException {
         ResponseEntity<CurseForgeResource> resp = client.getResource(resourceId);
         if (resp == null) {
             return null;

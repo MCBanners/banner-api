@@ -20,8 +20,8 @@ public class OreAuthorService {
         this.mapper = new ObjectMapper();
     }
 
-    public Author handleOre(String authorName) {
-        OreResource[] resources = loadOreAuthorProjects(authorName);
+    public Author handle(String authorName) {
+        OreResource[] resources = loadAllResourcesByAuthor(authorName);
         if (resources == null) {
             return null;
         }
@@ -50,7 +50,7 @@ public class OreAuthorService {
         );
     }
 
-    private OreResource[] loadOreAuthorProjects(String authorId) {
+    private OreResource[] loadAllResourcesByAuthor(String authorId) {
         ResponseEntity<JsonNode> resp = client.getProjectsFromAuthor(authorId);
         if (resp == null) {
             return null;

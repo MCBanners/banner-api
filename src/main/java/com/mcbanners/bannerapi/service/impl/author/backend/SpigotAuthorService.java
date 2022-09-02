@@ -11,15 +11,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class SpigotAuthorService {
     private final SpigotClient client;
-
     @Autowired
     public SpigotAuthorService(SpigotClient client) {
         this.client = client;
     }
 
-    public Author handleSpigot(int authorId) {
-        SpigotAuthor author = loadSpigotAuthor(authorId);
-        SpigotResource[] resources = loadAllSpigotResourcesByAuthor(authorId);
+    public Author handle(int authorId) {
+        SpigotAuthor author = loadAuthor(authorId);
+        SpigotResource[] resources = loadAllResourcesByAuthor(authorId);
 
         if (author == null || resources == null) {
             return null;
@@ -51,12 +50,12 @@ public class SpigotAuthorService {
         );
     }
 
-    private SpigotAuthor loadSpigotAuthor(int authorId) {
+    private SpigotAuthor loadAuthor(int authorId) {
         final ResponseEntity<SpigotAuthor> resp = client.getAuthor(authorId);
         return resp == null ? null : resp.getBody();
     }
 
-    private SpigotResource[] loadAllSpigotResourcesByAuthor(int authorId) {
+    private SpigotResource[] loadAllResourcesByAuthor(int authorId) {
         final ResponseEntity<SpigotResource[]> resp = client.getAllByAuthor(authorId);
         return resp == null ? null : resp.getBody();
     }

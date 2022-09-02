@@ -18,14 +18,14 @@ public class BuiltByBitAuthorService {
         this.client = client;
     }
 
-    public Author handleBuiltByBit(int authorId) {
-        BuiltByBitAuthor author = loadBuiltByBitAuthor(authorId);
+    public Author handle(int authorId) {
+        BuiltByBitAuthor author = loadAuthor(authorId);
 
         if (author == null) {
             return null;
         }
 
-        BuiltByBitResourceBasic resources = loadBuiltByBitAuthorBasic(authorId);
+        BuiltByBitResourceBasic resources = loadResourceBasic(authorId);
 
         if (resources == null || resources.resources().size() == 0) {
             return null;
@@ -54,12 +54,12 @@ public class BuiltByBitAuthorService {
         );
     }
 
-    private BuiltByBitResourceBasic loadBuiltByBitAuthorBasic(int authorId) {
+    private BuiltByBitResourceBasic loadResourceBasic(int authorId) {
         final ResponseEntity<BuiltByBitResourceBasic> resp = client.getAllByAuthor(authorId);
         return resp == null ? null : resp.getBody();
     }
 
-    private BuiltByBitAuthor loadBuiltByBitAuthor(int authorId) {
+    private BuiltByBitAuthor loadAuthor(int authorId) {
         final ResponseEntity<BuiltByBitAuthor> resp = client.getAuthor(authorId);
         return resp == null ? null : resp.getBody();
     }

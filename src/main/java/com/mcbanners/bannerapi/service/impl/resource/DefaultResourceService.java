@@ -46,10 +46,10 @@ public class DefaultResourceService implements ResourceService {
     @Cacheable(unless = "#result == null")
     public Resource getResource(int resourceId, ServiceBackend backend) throws FurtherProcessingRequiredException {
         return switch (backend) {
-            case SPIGOT -> spigot.handleSpigot(resourceId);
-            case CURSEFORGE -> curseForge.handleCurse(resourceId);
-            case BUILTBYBIT -> builtByBit.handleBuiltByBit(resourceId);
-            case POLYMART -> polymart.handlePolymart(resourceId);
+            case SPIGOT -> spigot.handle(resourceId);
+            case CURSEFORGE -> curseForge.handle(resourceId);
+            case BUILTBYBIT -> builtByBit.handle(resourceId);
+            case POLYMART -> polymart.handle(resourceId);
             case ORE, MODRINTH -> null;
         };
     }
@@ -65,8 +65,8 @@ public class DefaultResourceService implements ResourceService {
     @Cacheable(unless = "#result == null")
     public Resource getResource(String pluginId, ServiceBackend backend) {
         return switch (backend) {
-            case ORE -> ore.handleOre(pluginId);
-            case MODRINTH -> modrinth.handleModrinth(pluginId);
+            case ORE -> ore.handle(pluginId);
+            case MODRINTH -> modrinth.handle(pluginId);
             case CURSEFORGE, SPIGOT, POLYMART, BUILTBYBIT -> null;
         };
     }

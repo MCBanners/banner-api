@@ -18,8 +18,8 @@ public class ModrinthResourceService {
         this.client = client;
     }
 
-    public Resource handleModrinth(String pluginId) {
-        ModrinthResource modrinthResource = loadModrinthResource(pluginId);
+    public Resource handle(String pluginId) {
+        ModrinthResource modrinthResource = loadResource(pluginId);
         if (modrinthResource == null) {
             return null;
         }
@@ -29,7 +29,7 @@ public class ModrinthResourceService {
             modrinthResourceIcon = "";
         }
 
-        ModrinthUser mainAuthor = loadModrinthMainProjectAuthor(pluginId);
+        ModrinthUser mainAuthor = loadMainProjectAuthor(pluginId);
         if (mainAuthor == null) {
             return null;
         }
@@ -45,12 +45,12 @@ public class ModrinthResourceService {
                 modrinthResource.updated());
     }
 
-    private ModrinthResource loadModrinthResource(String pluginId) {
+    private ModrinthResource loadResource(String pluginId) {
         final ResponseEntity<ModrinthResource> resp = client.getResource(pluginId);
         return resp == null ? null : resp.getBody();
     }
 
-    private ModrinthUser loadModrinthMainProjectAuthor(String pluginId) {
+    private ModrinthUser loadMainProjectAuthor(String pluginId) {
         final ResponseEntity<ModrinthUser> resp = client.getMainProjectAuthor(pluginId);
         return resp == null ? null : resp.getBody();
     }

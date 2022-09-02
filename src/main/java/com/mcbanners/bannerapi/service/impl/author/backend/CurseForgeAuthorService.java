@@ -20,20 +20,20 @@ public class CurseForgeAuthorService {
         this.client = client;
     }
 
-    public Author handleCurseForge(int authorId, String authorName) {
+    public Author handle(int authorId, String authorName) {
         CurseForgeAuthor author;
 
         if (authorId != 0) {
-            author = loadCurseForgeAuthor(authorId);
+            author = loadAuthor(authorId);
         } else {
-            author = loadCurseForgeAuthor(authorName);
+            author = loadAuthor(authorName);
         }
 
         if (author == null) {
             return null;
         }
 
-        List<CurseForgeResource> resources = loadAllCurseForgeResourcesByAuthor(author);
+        List<CurseForgeResource> resources = loadAllResourcesByAuthor(author);
 
         int totalDownloads = 0;
 
@@ -51,17 +51,17 @@ public class CurseForgeAuthorService {
         );
     }
 
-    private CurseForgeAuthor loadCurseForgeAuthor(int authorId) {
+    private CurseForgeAuthor loadAuthor(int authorId) {
         final ResponseEntity<CurseForgeAuthor> resp = client.getAuthor(authorId);
         return resp == null ? null : resp.getBody();
     }
 
-    private CurseForgeAuthor loadCurseForgeAuthor(String authorName) {
+    private CurseForgeAuthor loadAuthor(String authorName) {
         final ResponseEntity<CurseForgeAuthor> resp = client.getAuthor(authorName);
         return resp == null ? null : resp.getBody();
     }
 
-    private List<CurseForgeResource> loadAllCurseForgeResourcesByAuthor(CurseForgeAuthor author) {
+    private List<CurseForgeResource> loadAllResourcesByAuthor(CurseForgeAuthor author) {
         List<CurseForgeResource> resources = new ArrayList<>();
 
         for (CurseForgeAuthor.Project project : author.projects()) {

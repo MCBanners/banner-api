@@ -17,13 +17,13 @@ public class ModrinthAuthorService {
         this.client = client;
     }
 
-    public Author handleModrinth(String authorName) {
-        ModrinthUser author = loadModrinthUser(authorName);
+    public Author handle(String authorName) {
+        ModrinthUser author = loadUser(authorName);
         if (author == null) {
             return null;
         }
 
-        ModrinthResource[] projects = loadAllModrinthResourcesByAuthor(authorName);
+        ModrinthResource[] projects = loadAllResourcesByAuthor(authorName);
         if (projects == null) {
             return null;
         }
@@ -49,12 +49,12 @@ public class ModrinthAuthorService {
         );
     }
 
-    private ModrinthUser loadModrinthUser(String username) {
+    private ModrinthUser loadUser(String username) {
         final ResponseEntity<ModrinthUser> resp = client.getUserInformation(username);
         return resp == null ? null : resp.getBody();
     }
 
-    private ModrinthResource[] loadAllModrinthResourcesByAuthor(String username) {
+    private ModrinthResource[] loadAllResourcesByAuthor(String username) {
         final ResponseEntity<ModrinthResource[]> resp = client.getUserProjects(username);
         return resp == null ? null : resp.getBody();
     }

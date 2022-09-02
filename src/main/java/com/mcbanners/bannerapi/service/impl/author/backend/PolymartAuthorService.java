@@ -17,8 +17,8 @@ public class PolymartAuthorService {
         this.client = client;
     }
 
-    public Author handlePolymart(final int authorId) {
-        final PolymartAuthor author = loadPolymartAuthor(authorId);
+    public Author handle(final int authorId) {
+        final PolymartAuthor author = loadAuthor(authorId);
         if (author == null) {
             return null;
         }
@@ -36,14 +36,14 @@ public class PolymartAuthorService {
     }
 
     // Major Polymart Workaround
-    public Author handlePolymart(final int authorId, final int resourceId) {
-        final PolymartResource resource = loadPolymartResource(resourceId);
+    public Author handle(final int authorId, final int resourceId) {
+        final PolymartResource resource = loadResource(resourceId);
         if (resource == null) {
             return null;
         }
 
         final PolymartAuthor author = resource.ownerType().equals("user")
-                ? loadPolymartAuthor(authorId) : loadPolymartTeam(resource.ownerId());
+                ? loadAuthor(authorId) : loadTeam(resource.ownerId());
 
         if (author == null) {
             return null;
@@ -61,17 +61,17 @@ public class PolymartAuthorService {
         );
     }
 
-    private PolymartResource loadPolymartResource(final int resourceId) {
+    private PolymartResource loadResource(final int resourceId) {
         final ResponseEntity<PolymartResource> resp = client.getResource(resourceId);
         return resp == null ? null : resp.getBody();
     }
 
-    private PolymartAuthor loadPolymartAuthor(final int authorId) {
+    private PolymartAuthor loadAuthor(final int authorId) {
         final ResponseEntity<PolymartAuthor> resp = client.getAuthor(authorId);
         return resp == null ? null : resp.getBody();
     }
 
-    private PolymartAuthor loadPolymartTeam(final int teamId) {
+    private PolymartAuthor loadTeam(final int teamId) {
         final ResponseEntity<PolymartAuthor> resp = client.getTeam(teamId);
         return resp == null ? null : resp.getBody();
     }

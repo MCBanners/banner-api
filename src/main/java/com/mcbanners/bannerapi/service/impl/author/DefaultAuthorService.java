@@ -45,10 +45,10 @@ public class DefaultAuthorService implements AuthorService {
     @Cacheable(unless = "#result == null")
     public Author getAuthor(int authorId, ServiceBackend backend) {
         return switch (backend) {
-            case SPIGOT -> spigot.handleSpigot(authorId);
-            case CURSEFORGE -> curseForge.handleCurseForge(authorId, null);
-            case BUILTBYBIT -> builtByBit.handleBuiltByBit(authorId);
-            case POLYMART -> polymart.handlePolymart(authorId);
+            case SPIGOT -> spigot.handle(authorId);
+            case CURSEFORGE -> curseForge.handle(authorId, null);
+            case BUILTBYBIT -> builtByBit.handle(authorId);
+            case POLYMART -> polymart.handle(authorId);
             case ORE, MODRINTH -> null;
         };
     }
@@ -64,7 +64,7 @@ public class DefaultAuthorService implements AuthorService {
     @Override
     @Cacheable(unless = "#result == null")
     public Author getAuthor(int authorId, int resourceId, ServiceBackend backend) {
-        return polymart.handlePolymart(authorId, resourceId);
+        return polymart.handle(authorId, resourceId);
     }
 
     /**
@@ -78,9 +78,9 @@ public class DefaultAuthorService implements AuthorService {
     @Cacheable(unless = "#result == null")
     public Author getAuthor(String authorName, ServiceBackend backend) {
         return switch (backend) {
-            case ORE -> ore.handleOre(authorName);
-            case CURSEFORGE -> curseForge.handleCurseForge(0, authorName);
-            case MODRINTH -> modrinth.handleModrinth(authorName);
+            case ORE -> ore.handle(authorName);
+            case CURSEFORGE -> curseForge.handle(0, authorName);
+            case MODRINTH -> modrinth.handle(authorName);
             case SPIGOT, POLYMART, BUILTBYBIT -> null;
         };
     }

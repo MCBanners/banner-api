@@ -18,8 +18,8 @@ public class SpigotResourceService {
         this.client = client;
     }
 
-    public Resource handleSpigot(int resourceId) {
-        SpigotResource resource = loadSpigotResource(resourceId);
+    public Resource handle(int resourceId) {
+        SpigotResource resource = loadResource(resourceId);
         if (resource == null) {
             return null;
         }
@@ -49,7 +49,7 @@ public class SpigotResourceService {
         );
     }
 
-    private SpigotResource loadSpigotResource(int resourceId) {
+    private SpigotResource loadResource(int resourceId) {
         final ResponseEntity<SpigotResource> resp = client.getResource(resourceId);
         return resp == null ? null : resp.getBody();
     }
