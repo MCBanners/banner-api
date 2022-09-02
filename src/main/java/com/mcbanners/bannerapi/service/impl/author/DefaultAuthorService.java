@@ -44,21 +44,23 @@ public class DefaultAuthorService implements AuthorService {
     @Override
     @Cacheable(unless = "#result == null")
     public Author getAuthor(int authorId, ServiceBackend backend) {
-        switch (backend) {
-            case SPIGOT:
-                return spigot.handleSpigot(authorId);
-            case CURSEFORGE:
-                return curseForge.handleCurseForge(authorId, null);
-            case BUILTBYBIT:
-                return builtByBit.handleBuiltByBit(authorId);
-            case POLYMART:
-                return polymart.handlePolymart(authorId);
-            case ORE:
-            default:
-                return null;
-        }
+        return switch (backend) {
+            case SPIGOT -> spigot.handleSpigot(authorId);
+            case CURSEFORGE -> curseForge.handleCurseForge(authorId, null);
+            case BUILTBYBIT -> builtByBit.handleBuiltByBit(authorId);
+            case POLYMART -> polymart.handlePolymart(authorId);
+            case ORE, MODRINTH -> null;
+        };
     }
 
+    /**
+     * Get an author by its id and related resource id on the specified service backend (only Polymart for now?)
+     *
+     * @param authorId the author ID
+     * @param resourceId the resource ID
+     * @param backend the service backend to query
+     * @return the Author object or null if the author could not be found.
+     */
     @Override
     @Cacheable(unless = "#result == null")
     public Author getAuthor(int authorId, int resourceId, ServiceBackend backend) {
@@ -75,18 +77,11 @@ public class DefaultAuthorService implements AuthorService {
     @Override
     @Cacheable(unless = "#result == null")
     public Author getAuthor(String authorName, ServiceBackend backend) {
-        switch (backend) {
-            case ORE:
-                return ore.handleOre(authorName);
-            case CURSEFORGE:
-                return curseForge.handleCurseForge(0, authorName);
-            case MODRINTH:
-                return modrinth.handleModrinth(authorName);
-            case SPIGOT:
-            case POLYMART:
-            case BUILTBYBIT:
-            default:
-                return null;
-        }
+        return switch (backend) {
+            case ORE -> ore.handleOre(authorName);
+            case CURSEFORGE -> curseForge.handleCurseForge(0, authorName);
+            case MODRINTH -> modrinth.handleModrinth(authorName);
+            case SPIGOT, POLYMART, BUILTBYBIT -> null;
+        };
     }
 }
