@@ -1,4 +1,4 @@
-package com.mcbanners.bannerapi.service.impl.resource.backend;
+package com.mcbanners.bannerapi.service.resource.backend;
 
 import com.mcbanners.bannerapi.net.OreClient;
 import com.mcbanners.bannerapi.obj.backend.ore.OreResource;

@@ -1,4 +1,4 @@
-package com.mcbanners.bannerapi.service.impl.author.backend;
+package com.mcbanners.bannerapi.service.author.backend;
 
 import com.mcbanners.bannerapi.net.ModrinthClient;
 import com.mcbanners.bannerapi.obj.backend.modrinth.ModrinthResource;

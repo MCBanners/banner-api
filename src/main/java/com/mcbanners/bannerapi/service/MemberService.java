@@ -1,10 +1,9 @@
-package com.mcbanners.bannerapi.service.impl;
+package com.mcbanners.bannerapi.service;
 
 import com.mcbanners.bannerapi.net.BuiltByBitClient;
 import com.mcbanners.bannerapi.obj.backend.builtbybit.BuiltByBitMember;
 import com.mcbanners.bannerapi.obj.generic.Member;
 import com.mcbanners.bannerapi.service.ServiceBackend;
-import com.mcbanners.bannerapi.service.api.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -19,15 +18,14 @@ import java.util.TimeZone;
 
 @Service
 @CacheConfig(cacheNames = {"member"})
-public class DefaultMemberService implements MemberService {
+public class MemberService {
     private final BuiltByBitClient builtByBitClient;
 
     @Autowired
-    public DefaultMemberService(BuiltByBitClient builtByBitClient) {
+    public MemberService(BuiltByBitClient builtByBitClient) {
         this.builtByBitClient = builtByBitClient;
     }
 
-    @Override
     @Cacheable(unless = "#result == null")
     public Member getMember(int memberId, ServiceBackend backend) {
         return backend == ServiceBackend.BUILTBYBIT ? handleBuiltByBit(memberId) : null;

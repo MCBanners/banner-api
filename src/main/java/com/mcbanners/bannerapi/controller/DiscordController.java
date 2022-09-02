@@ -4,7 +4,7 @@ import com.mcbanners.bannerapi.banner.BannerOutputType;
 import com.mcbanners.bannerapi.image.BannerImageWriter;
 import com.mcbanners.bannerapi.image.layout.DiscordLayout;
 import com.mcbanners.bannerapi.obj.backend.discord.DiscordUser;
-import com.mcbanners.bannerapi.service.api.DiscordService;
+import com.mcbanners.bannerapi.service.DiscordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

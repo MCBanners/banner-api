@@ -1,4 +1,4 @@
-package com.mcbanners.bannerapi.service.impl.author.backend;
+package com.mcbanners.bannerapi.service.author.backend;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

@@ -1,29 +1,25 @@
-package com.mcbanners.bannerapi.service.impl;
+package com.mcbanners.bannerapi.service;
 
 import com.mcbanners.bannerapi.net.PolymartClient;
 import com.mcbanners.bannerapi.obj.backend.polymart.PolymartAuthor;
 import com.mcbanners.bannerapi.obj.generic.Team;
 import com.mcbanners.bannerapi.service.ServiceBackend;
-import com.mcbanners.bannerapi.service.api.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Base64;
-
 @Service
 @CacheConfig(cacheNames = {"team"})
-public class DefaultTeamService implements TeamService {
+public class TeamService {
     private final PolymartClient polymartClient;
 
     @Autowired
-    public DefaultTeamService(PolymartClient polymartClient) {
+    public TeamService(PolymartClient polymartClient) {
         this.polymartClient = polymartClient;
     }
 
-    @Override
     @Cacheable(unless = "#result == null")
     public Team getTeam(int teamId, ServiceBackend backend) {
         return backend == ServiceBackend.POLYMART ? handlePolymart(teamId) : null;

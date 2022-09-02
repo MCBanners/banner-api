@@ -4,7 +4,7 @@ import com.mcbanners.bannerapi.banner.BannerOutputType;
 import com.mcbanners.bannerapi.image.BannerImageWriter;
 import com.mcbanners.bannerapi.image.layout.ServerLayout;
 import com.mcbanners.bannerapi.obj.backend.mcapi.MinecraftServer;
-import com.mcbanners.bannerapi.service.api.MinecraftServerService;
+import com.mcbanners.bannerapi.service.MinecraftServerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

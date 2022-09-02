@@ -5,7 +5,7 @@ import com.mcbanners.bannerapi.image.BannerImageWriter;
 import com.mcbanners.bannerapi.image.layout.TeamLayout;
 import com.mcbanners.bannerapi.obj.generic.Team;
 import com.mcbanners.bannerapi.service.ServiceBackend;
-import com.mcbanners.bannerapi.service.api.TeamService;
+import com.mcbanners.bannerapi.service.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

@@ -1,4 +1,4 @@
-package com.mcbanners.bannerapi.service.impl.resource.backend;
+package com.mcbanners.bannerapi.service.resource.backend;
 
 import com.mcbanners.bannerapi.net.CurseForgeClient;
 import com.mcbanners.bannerapi.net.error.FurtherProcessingRequiredException;

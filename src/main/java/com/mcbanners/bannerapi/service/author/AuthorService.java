@@ -1,14 +1,13 @@
-package com.mcbanners.bannerapi.service.impl.author;
+package com.mcbanners.bannerapi.service.author;
 
 import com.mcbanners.bannerapi.obj.generic.Author;
 import com.mcbanners.bannerapi.service.ServiceBackend;
-import com.mcbanners.bannerapi.service.api.AuthorService;
-import com.mcbanners.bannerapi.service.impl.author.backend.BuiltByBitAuthorService;
-import com.mcbanners.bannerapi.service.impl.author.backend.CurseForgeAuthorService;
-import com.mcbanners.bannerapi.service.impl.author.backend.ModrinthAuthorService;
-import com.mcbanners.bannerapi.service.impl.author.backend.OreAuthorService;
-import com.mcbanners.bannerapi.service.impl.author.backend.PolymartAuthorService;
-import com.mcbanners.bannerapi.service.impl.author.backend.SpigotAuthorService;
+import com.mcbanners.bannerapi.service.author.backend.BuiltByBitAuthorService;
+import com.mcbanners.bannerapi.service.author.backend.CurseForgeAuthorService;
+import com.mcbanners.bannerapi.service.author.backend.ModrinthAuthorService;
+import com.mcbanners.bannerapi.service.author.backend.OreAuthorService;
+import com.mcbanners.bannerapi.service.author.backend.PolymartAuthorService;
+import com.mcbanners.bannerapi.service.author.backend.SpigotAuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -16,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @CacheConfig(cacheNames = {"author"})
-public class DefaultAuthorService implements AuthorService {
+public class AuthorService {
     private final SpigotAuthorService spigot;
     private final OreAuthorService ore;
     private final CurseForgeAuthorService curseForge;
@@ -25,7 +24,7 @@ public class DefaultAuthorService implements AuthorService {
     private final BuiltByBitAuthorService builtByBit;
 
     @Autowired
-    public DefaultAuthorService(SpigotAuthorService spigot, OreAuthorService ore, CurseForgeAuthorService curseForge, ModrinthAuthorService modrinth, PolymartAuthorService polymart, BuiltByBitAuthorService builtByBit) {
+    public AuthorService(SpigotAuthorService spigot, OreAuthorService ore, CurseForgeAuthorService curseForge, ModrinthAuthorService modrinth, PolymartAuthorService polymart, BuiltByBitAuthorService builtByBit) {
         this.spigot = spigot;
         this.ore = ore;
         this.curseForge = curseForge;
@@ -41,7 +40,6 @@ public class DefaultAuthorService implements AuthorService {
      * @param backend  the service backend to query
      * @return the Author object or null if the service backend does not support the operation or the author could not be found.
      */
-    @Override
     @Cacheable(unless = "#result == null")
     public Author getAuthor(int authorId, ServiceBackend backend) {
         return switch (backend) {
@@ -61,7 +59,6 @@ public class DefaultAuthorService implements AuthorService {
      * @param backend the service backend to query
      * @return the Author object or null if the author could not be found.
      */
-    @Override
     @Cacheable(unless = "#result == null")
     public Author getAuthor(int authorId, int resourceId, ServiceBackend backend) {
         return polymart.handle(authorId, resourceId);
@@ -74,7 +71,6 @@ public class DefaultAuthorService implements AuthorService {
      * @param backend    the service backend to query
      * @return the Author object or null if the service bannerapi does not support the operation or the author could not be found.
      */
-    @Override
     @Cacheable(unless = "#result == null")
     public Author getAuthor(String authorName, ServiceBackend backend) {
         return switch (backend) {

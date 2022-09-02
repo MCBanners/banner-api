@@ -1,4 +1,4 @@
-package com.mcbanners.bannerapi.service.impl.author.backend;
+package com.mcbanners.bannerapi.service.author.backend;
 
 import com.mcbanners.bannerapi.net.CurseForgeClient;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeAuthor;
