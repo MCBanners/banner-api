@@ -132,22 +132,13 @@ public class DefaultResourceService implements ResourceService {
     }
 
     private SpigotResource loadSpigotResource(int resourceId) {
-        ResponseEntity<SpigotResource> resp = spigotClient.getResource(resourceId);
-        if (resp == null) {
-            return null;
-        }
-
-        return resp.getBody();
+        final ResponseEntity<SpigotResource> resp = spigotClient.getResource(resourceId);
+        return resp == null ? null : resp.getBody();
     }
 
     private String loadSpigotResourceIcon(String url) {
-        ResponseEntity<byte[]> resp = spigotClient.getImage(url);
-        if (resp == null) {
-            return null;
-        }
-
-        byte[] body = resp.getBody();
-        return Base64.getEncoder().encodeToString(body);
+        final ResponseEntity<byte[]> resp = spigotClient.getImage(url);
+        return resp == null ? null : Base64.getEncoder().encodeToString(resp.getBody());
     }
 
     // Ore handling
@@ -174,22 +165,13 @@ public class DefaultResourceService implements ResourceService {
     }
 
     private OreResource loadOreResource(String pluginId) {
-        ResponseEntity<OreResource> resp = oreClient.getResource(pluginId);
-        if (resp == null) {
-            return null;
-        }
-
-        return resp.getBody();
+        final ResponseEntity<OreResource> resp = oreClient.getResource(pluginId);
+        return resp == null ? null : resp.getBody();
     }
 
     private String loadOreResourceIcon(String href) {
-        ResponseEntity<byte[]> resp = oreClient.getImage(href);
-        if (resp == null) {
-            return null;
-        }
-
-        byte[] body = resp.getBody();
-        return Base64.getEncoder().encodeToString(body);
+        final ResponseEntity<byte[]> resp = oreClient.getImage(href);
+        return resp == null ? null : Base64.getEncoder().encodeToString(resp.getBody());
     }
 
     // Curse handling
@@ -239,13 +221,8 @@ public class DefaultResourceService implements ResourceService {
     }
 
     private String loadCurseForgeResourceIcon(String url) {
-        ResponseEntity<byte[]> resp = curseForgeClient.getImage(url);
-        if (resp == null) {
-            return null;
-        }
-
-        byte[] body = resp.getBody();
-        return Base64.getEncoder().encodeToString(body);
+        final ResponseEntity<byte[]> resp = curseForgeClient.getImage(url);
+        return resp == null ? null : Base64.getEncoder().encodeToString(resp.getBody());
     }
 
     // Modrinth Handling
@@ -277,31 +254,18 @@ public class DefaultResourceService implements ResourceService {
     }
 
     private ModrinthResource loadModrinthResource(String pluginId) {
-        ResponseEntity<ModrinthResource> resp = modrinthClient.getResource(pluginId);
-        if (resp == null) {
-            return null;
-        }
-
-        return resp.getBody();
+        final ResponseEntity<ModrinthResource> resp = modrinthClient.getResource(pluginId);
+        return resp == null ? null : resp.getBody();
     }
 
     private ModrinthUser loadModrinthMainProjectAuthor(String pluginId) {
-        ResponseEntity<ModrinthUser> resp = modrinthClient.getMainProjectAuthor(pluginId);
-        if (resp == null) {
-            return null;
-        }
-
-        return resp.getBody();
+        final ResponseEntity<ModrinthUser> resp = modrinthClient.getMainProjectAuthor(pluginId);
+        return resp == null ? null : resp.getBody();
     }
 
     private String loadModrinthResourceIcon(String url) {
-        ResponseEntity<byte[]> resp = modrinthClient.getImage(url);
-        if (resp == null) {
-            return null;
-        }
-
-        byte[] body = resp.getBody();
-        return Base64.getEncoder().encodeToString(body);
+        final ResponseEntity<byte[]> resp = modrinthClient.getImage(url);
+        return resp == null ? null : Base64.getEncoder().encodeToString(resp.getBody());
     }
 
     // BuiltByBit handling
@@ -344,21 +308,13 @@ public class DefaultResourceService implements ResourceService {
     }
 
     private BuiltByBitResource loadBuiltByBitResource(int resourceId) {
-        ResponseEntity<BuiltByBitResource> resp = builtByBitClient.getResource(resourceId);
-        if (resp == null) {
-            return null;
-        }
-
-        return resp.getBody();
+        final ResponseEntity<BuiltByBitResource> resp = builtByBitClient.getResource(resourceId);
+        return resp == null ? null : resp.getBody();
     }
 
     private BuiltByBitAuthor loadBuiltByBitAuthor(int authorId) {
-        ResponseEntity<BuiltByBitAuthor> resp = builtByBitClient.getAuthor(authorId);
-        if (resp == null) {
-            return null;
-        }
-
-        return resp.getBody();
+        final ResponseEntity<BuiltByBitAuthor> resp = builtByBitClient.getAuthor(authorId);
+        return resp == null ? null : resp.getBody();
     }
 
     // Polymart handling
@@ -388,20 +344,11 @@ public class DefaultResourceService implements ResourceService {
 
     private PolymartResource loadPolymartResource(final int resourceId) {
         final ResponseEntity<PolymartResource> resp = polymartClient.getResource(resourceId);
-        if (resp == null) {
-            return null;
-        }
-
-        return resp.getBody();
+        return resp == null ? null : resp.getBody();
     }
 
     private String loadPolymartImage(final String url) {
         final ResponseEntity<byte[]> resp = polymartClient.getImage(url);
-        if (resp == null) {
-            return null;
-        }
-
-        final byte[] body = resp.getBody();
-        return Base64.getEncoder().encodeToString(body);
+        return resp == null ? null : Base64.getEncoder().encodeToString(resp.getBody());
     }
 }

@@ -2,7 +2,6 @@ package com.mcbanners.bannerapi.service.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.mcbanners.bannerapi.net.BuiltByBitClient;
 import com.mcbanners.bannerapi.net.CurseForgeClient;
 import com.mcbanners.bannerapi.net.ModrinthClient;
@@ -16,7 +15,6 @@ import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeAuthor;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeResource;
 import com.mcbanners.bannerapi.obj.backend.modrinth.ModrinthResource;
 import com.mcbanners.bannerapi.obj.backend.modrinth.ModrinthUser;
-import com.mcbanners.bannerapi.obj.backend.ore.OreAuthor;
 import com.mcbanners.bannerapi.obj.backend.ore.OreResource;
 import com.mcbanners.bannerapi.obj.backend.polymart.PolymartAuthor;
 import com.mcbanners.bannerapi.obj.backend.polymart.PolymartResource;
@@ -149,31 +147,18 @@ public class DefaultAuthorService implements AuthorService {
     }
 
     private SpigotAuthor loadSpigotAuthor(int authorId) {
-        ResponseEntity<SpigotAuthor> resp = spigotClient.getAuthor(authorId);
-        if (resp == null) {
-            return null;
-        }
-
-        return resp.getBody();
+        final ResponseEntity<SpigotAuthor> resp = spigotClient.getAuthor(authorId);
+        return resp == null ? null : resp.getBody();
     }
 
     private SpigotResource[] loadAllSpigotResourcesByAuthor(int authorId) {
-        ResponseEntity<SpigotResource[]> resp = spigotClient.getAllByAuthor(authorId);
-        if (resp == null) {
-            return null;
-        }
-
-        return resp.getBody();
+        final ResponseEntity<SpigotResource[]> resp = spigotClient.getAllByAuthor(authorId);
+        return resp == null ? null : resp.getBody();
     }
 
     private String loadSpigotAuthorIcon(String url) {
-        ResponseEntity<byte[]> resp = spigotClient.getImage(url);
-        if (resp == null) {
-            return null;
-        }
-
-        byte[] body = resp.getBody();
-        return Base64.getEncoder().encodeToString(body);
+        final ResponseEntity<byte[]> resp = spigotClient.getImage(url);
+        return resp == null ? null : Base64.getEncoder().encodeToString(resp.getBody());
     }
 
     // Ore handling
@@ -221,13 +206,8 @@ public class DefaultAuthorService implements AuthorService {
     }
 
     private String loadOreImageByUrl(String url) {
-        ResponseEntity<byte[]> resp = oreClient.getAuthorIcon(url);
-        if (resp == null) {
-            return null;
-        }
-
-        byte[] body = resp.getBody();
-        return Base64.getEncoder().encodeToString(body);
+        final ResponseEntity<byte[]> resp = oreClient.getAuthorIcon(url);
+        return resp == null ? null : Base64.getEncoder().encodeToString(resp.getBody());
     }
 
     // Modrinth Handling
@@ -264,31 +244,18 @@ public class DefaultAuthorService implements AuthorService {
     }
 
     private String loadModrinthAuthorIcon(String url) {
-        ResponseEntity<byte[]> resp = modrinthClient.getImage(url);
-        if (resp == null) {
-            return null;
-        }
-
-        byte[] body = resp.getBody();
-        return Base64.getEncoder().encodeToString(body);
+        final ResponseEntity<byte[]> resp = modrinthClient.getImage(url);
+        return resp == null ? null : Base64.getEncoder().encodeToString(resp.getBody());
     }
 
     private ModrinthUser loadModrinthUser(String username) {
-        ResponseEntity<ModrinthUser> resp = modrinthClient.getUserInformation(username);
-        if (resp == null) {
-            return null;
-        }
-
-        return resp.getBody();
+        final ResponseEntity<ModrinthUser> resp = modrinthClient.getUserInformation(username);
+        return resp == null ? null : resp.getBody();
     }
 
     private ModrinthResource[] loadAllModrinthResourcesByAuthor(String username) {
-        ResponseEntity<ModrinthResource[]> resp = modrinthClient.getUserProjects(username);
-        if (resp == null) {
-            return null;
-        }
-
-        return resp.getBody();
+        final ResponseEntity<ModrinthResource[]> resp = modrinthClient.getUserProjects(username);
+        return resp == null ? null : resp.getBody();
     }
 
     // Curse handling
@@ -324,21 +291,13 @@ public class DefaultAuthorService implements AuthorService {
     }
 
     private CurseForgeAuthor loadCurseForgeAuthor(int authorId) {
-        ResponseEntity<CurseForgeAuthor> resp = curseForgeClient.getAuthor(authorId);
-        if (resp == null) {
-            return null;
-        }
-
-        return resp.getBody();
+        final ResponseEntity<CurseForgeAuthor> resp = curseForgeClient.getAuthor(authorId);
+        return resp == null ? null : resp.getBody();
     }
 
     private CurseForgeAuthor loadCurseForgeAuthor(String authorName) {
-        ResponseEntity<CurseForgeAuthor> resp = curseForgeClient.getAuthor(authorName);
-        if (resp == null) {
-            return null;
-        }
-
-        return resp.getBody();
+        final ResponseEntity<CurseForgeAuthor> resp = curseForgeClient.getAuthor(authorName);
+        return resp == null ? null : resp.getBody();
     }
 
     private List<CurseForgeResource> loadAllCurseForgeResourcesByAuthor(CurseForgeAuthor author) {
@@ -391,31 +350,18 @@ public class DefaultAuthorService implements AuthorService {
     }
 
     private BuiltByBitResourceBasic loadBuiltByBitAuthorBasic(int authorId) {
-        ResponseEntity<BuiltByBitResourceBasic> resp = builtByBitClient.getAllByAuthor(authorId);
-        if (resp == null) {
-            return null;
-        }
-
-        return resp.getBody();
+        final ResponseEntity<BuiltByBitResourceBasic> resp = builtByBitClient.getAllByAuthor(authorId);
+        return resp == null ? null : resp.getBody();
     }
 
     private BuiltByBitAuthor loadBuiltByBitAuthor(int authorId) {
-        ResponseEntity<BuiltByBitAuthor> resp = builtByBitClient.getAuthor(authorId);
-        if (resp == null) {
-            return null;
-        }
-
-        return resp.getBody();
+        final ResponseEntity<BuiltByBitAuthor> resp = builtByBitClient.getAuthor(authorId);
+        return resp == null ? null : resp.getBody();
     }
 
     private String loadBuiltByBitAuthorIcon(String url) {
-        ResponseEntity<byte[]> resp = builtByBitClient.getImage(url);
-        if (resp == null) {
-            return null;
-        }
-
-        byte[] body = resp.getBody();
-        return Base64.getEncoder().encodeToString(body);
+        final ResponseEntity<byte[]> resp = builtByBitClient.getImage(url);
+        return resp == null ? null : Base64.getEncoder().encodeToString(resp.getBody());
     }
 
     // Regular Polymart Handling
@@ -465,38 +411,21 @@ public class DefaultAuthorService implements AuthorService {
 
     private PolymartResource loadPolymartResource(final int resourceId) {
         final ResponseEntity<PolymartResource> resp = polymartClient.getResource(resourceId);
-        if (resp == null) {
-            return null;
-        }
-
-        return resp.getBody();
+        return resp == null ? null : resp.getBody();
     }
 
     private PolymartAuthor loadPolymartAuthor(final int authorId) {
         final ResponseEntity<PolymartAuthor> resp = polymartClient.getAuthor(authorId);
-        if (resp == null) {
-            return null;
-        }
-
-        return resp.getBody();
+        return resp == null ? null : resp.getBody();
     }
 
     private PolymartAuthor loadPolymartTeam(final int teamId) {
         final ResponseEntity<PolymartAuthor> resp = polymartClient.getTeam(teamId);
-        if (resp == null) {
-            return null;
-        }
-
-        return resp.getBody();
+        return resp == null ? null : resp.getBody();
     }
 
     private String loadPolymartImage(final String url) {
         final ResponseEntity<byte[]> resp = polymartClient.getImage(url);
-        if (resp == null) {
-            return null;
-        }
-
-        final byte[] body = resp.getBody();
-        return Base64.getEncoder().encodeToString(body);
+        return resp == null ? null : Base64.getEncoder().encodeToString(resp.getBody());
     }
 }
