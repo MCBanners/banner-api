@@ -15,5 +15,6 @@ public record CurseForgeResource(
         String uploadedAt,
         List<Member> members
 ) {
-    public record Member(int id, String title, String username) {}
+    public record Member(int id, String title, String username) {
+    }
 }

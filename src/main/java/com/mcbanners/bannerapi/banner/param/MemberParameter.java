@@ -41,7 +41,7 @@ public enum MemberParameter implements BannerParameter<Object> {
     private final String key;
     private final Object def;
     private final Class<?> type;
-    
+
     MemberParameter(String key, Object def, Class<?> type) {
         this.key = key;
         this.def = def;

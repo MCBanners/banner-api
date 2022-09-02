@@ -14,4 +14,5 @@ public record OreResource(
         int stars,
         String lastUpdated,
         String iconUrl
-) {}
+) {
+}

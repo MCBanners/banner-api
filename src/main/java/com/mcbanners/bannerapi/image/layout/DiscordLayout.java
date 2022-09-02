@@ -10,13 +10,11 @@ import com.mcbanners.bannerapi.image.ImageBuilder;
 import com.mcbanners.bannerapi.image.component.BasicComponent;
 import com.mcbanners.bannerapi.image.component.LogoComponent;
 import com.mcbanners.bannerapi.obj.backend.discord.DiscordUser;
-import org.apache.commons.lang.StringUtils;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.time.OffsetDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -54,7 +52,7 @@ public class DiscordLayout extends Layout {
         id = reader.getTextReader("id");
         status = reader.getTextReader("status");
         activity = reader.getTextReader("activity");
-         created = reader.getTextReader("created");
+        created = reader.getTextReader("created");
     }
 
     @Override
@@ -65,7 +63,7 @@ public class DiscordLayout extends Layout {
         addComponent(discordName.makeComponent(textColor, username));
         addComponent(id.makeComponent(textColor, String.format("ID: %s", user.id())));
 
-        final String updatedStatus = switch(user.status()) {
+        final String updatedStatus = switch (user.status()) {
             case "online" -> "Online";
             case "idle" -> "Idle";
             case "dnd" -> "Do Not Disturb";

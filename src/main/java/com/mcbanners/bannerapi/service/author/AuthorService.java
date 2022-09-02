@@ -54,9 +54,9 @@ public class AuthorService {
     /**
      * Get an author by its id and related resource id on the specified service backend (only Polymart for now?)
      *
-     * @param authorId the author ID
+     * @param authorId   the author ID
      * @param resourceId the resource ID
-     * @param backend the service backend to query
+     * @param backend    the service backend to query
      * @return the Author object or null if the author could not be found.
      */
     @Cacheable(unless = "#result == null")

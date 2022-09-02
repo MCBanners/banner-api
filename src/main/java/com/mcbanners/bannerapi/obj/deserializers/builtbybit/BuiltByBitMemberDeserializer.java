@@ -19,7 +19,7 @@ public class BuiltByBitMemberDeserializer extends StdDeserializer<BuiltByBitMemb
     }
 
     @Override
-    public BuiltByBitMember deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JacksonException {
+    public BuiltByBitMember deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
         final JsonNode rootNode = jp.getCodec().readTree(jp);
         final JsonNode memberNode = rootNode.get("data");
 

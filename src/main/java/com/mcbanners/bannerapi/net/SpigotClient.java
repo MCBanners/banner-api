@@ -3,12 +3,9 @@ package com.mcbanners.bannerapi.net;
 import com.mcbanners.bannerapi.obj.backend.spigot.SpigotAuthor;
 import com.mcbanners.bannerapi.obj.backend.spigot.SpigotResource;
 import com.mcbanners.bannerapi.util.Log;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientResponseException;
-
-import java.util.Collections;
 
 @Component
 public final class SpigotClient extends BasicHttpClient {

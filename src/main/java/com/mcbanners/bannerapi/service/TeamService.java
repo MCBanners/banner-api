@@ -3,7 +3,6 @@ package com.mcbanners.bannerapi.service;
 import com.mcbanners.bannerapi.net.PolymartClient;
 import com.mcbanners.bannerapi.obj.backend.polymart.PolymartAuthor;
 import com.mcbanners.bannerapi.obj.generic.Team;
-import com.mcbanners.bannerapi.service.ServiceBackend;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;

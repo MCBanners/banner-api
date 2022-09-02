@@ -11,5 +11,6 @@ public record CurseForgeAuthor(
         String username,
         List<Project> projects
 ) {
-    public record Project(int id, String name) {}
+    public record Project(int id, String name) {
+    }
 }

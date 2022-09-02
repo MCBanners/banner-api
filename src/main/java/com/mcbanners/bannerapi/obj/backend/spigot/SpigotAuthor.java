@@ -9,4 +9,5 @@ public record SpigotAuthor(
         String username,
         String resourceCount,
         String avatar
-) {}
+) {
+}

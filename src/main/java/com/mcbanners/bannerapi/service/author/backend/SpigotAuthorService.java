@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class SpigotAuthorService {
     private final SpigotClient client;
+
     @Autowired
     public SpigotAuthorService(SpigotClient client) {
         this.client = client;

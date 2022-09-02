@@ -12,4 +12,5 @@ public record ModrinthResource(
         int downloads,
         int followers,
         String iconUrl
-) {}
+) {
+}

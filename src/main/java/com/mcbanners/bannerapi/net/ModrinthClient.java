@@ -1,17 +1,11 @@
 package com.mcbanners.bannerapi.net;
 
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.mcbanners.bannerapi.obj.backend.modrinth.ModrinthResource;
 import com.mcbanners.bannerapi.obj.backend.modrinth.ModrinthUser;
-import com.mcbanners.bannerapi.obj.deserializers.modrinth.ModrinthResourceDeserializer;
-import com.mcbanners.bannerapi.obj.deserializers.modrinth.ModrinthUserDeserializer;
 import com.mcbanners.bannerapi.util.Log;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientResponseException;
-
-import java.util.Collections;
 
 @Component
 public class ModrinthClient extends BasicHttpClient {

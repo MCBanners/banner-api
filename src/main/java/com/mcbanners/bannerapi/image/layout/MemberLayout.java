@@ -57,7 +57,7 @@ public class MemberLayout extends Layout {
         addComponent(rank.makeComponent(textColor, "Rank: " + member.rank()));
 
         addComponent(joined.makeComponent(textColor, "Joined: " + member.joinDate()));
-        addComponent(posts.makeComponent(textColor,  "Posts: " + NumberUtil.abbreviate(member.posts())));
+        addComponent(posts.makeComponent(textColor, "Posts: " + NumberUtil.abbreviate(member.posts())));
 
         int calculated = member.positiveFeedback() - member.negativeFeedback();
         String sign;
@@ -68,7 +68,7 @@ public class MemberLayout extends Layout {
         } else {
             sign = "";
         }
-        addComponent(likes.makeComponent(textColor,  "Feedback: " + sign + calculated));
+        addComponent(likes.makeComponent(textColor, "Feedback: " + sign + calculated));
 
         return getComponents();
     }

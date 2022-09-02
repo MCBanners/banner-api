@@ -19,4 +19,5 @@ public record SpigotResource(
         String rating,
         String authorId,
         String authorUsername
-) {}
+) {
+}

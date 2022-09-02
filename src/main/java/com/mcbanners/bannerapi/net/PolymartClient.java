@@ -3,12 +3,9 @@ package com.mcbanners.bannerapi.net;
 import com.mcbanners.bannerapi.obj.backend.polymart.PolymartAuthor;
 import com.mcbanners.bannerapi.obj.backend.polymart.PolymartResource;
 import com.mcbanners.bannerapi.util.Log;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientResponseException;
-
-import java.util.Collections;
 
 @Component
 public class PolymartClient extends BasicHttpClient {

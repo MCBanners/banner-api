@@ -10,4 +10,5 @@ public record ModrinthUser(
         String username,
         String name,
         String avatarUrl
-) {}
+) {
+}

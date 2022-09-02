@@ -6,4 +6,5 @@ import com.mcbanners.bannerapi.obj.deserializers.builtbybit.BuiltByBitResourceBa
 import java.util.List;
 
 @JsonDeserialize(using = BuiltByBitResourceBasicDeserializer.class)
-public record BuiltByBitResourceBasic(List<BuiltByBitResource> resources) {}
+public record BuiltByBitResourceBasic(List<BuiltByBitResource> resources) {
+}

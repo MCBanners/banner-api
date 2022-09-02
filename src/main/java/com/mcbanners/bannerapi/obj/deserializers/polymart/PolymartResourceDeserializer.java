@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import com.mcbanners.bannerapi.obj.backend.polymart.PolymartAuthor;
 import com.mcbanners.bannerapi.obj.backend.polymart.PolymartResource;
 
 import java.io.IOException;
@@ -20,7 +19,7 @@ public class PolymartResourceDeserializer extends StdDeserializer<PolymartResour
     }
 
     @Override
-    public PolymartResource deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JacksonException {
+    public PolymartResource deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         JsonNode root = (JsonNode) p.getCodec().readTree(p).get("response");
         JsonNode resourceNode = root.get("resource");
         JsonNode ownerNode = resourceNode.get("owner");

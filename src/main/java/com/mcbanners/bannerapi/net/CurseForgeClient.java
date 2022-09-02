@@ -4,12 +4,9 @@ import com.mcbanners.bannerapi.net.error.FurtherProcessingRequiredException;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeAuthor;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeResource;
 import com.mcbanners.bannerapi.util.Log;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientResponseException;
-
-import java.util.Collections;
 
 @Component
 public class CurseForgeClient extends BasicHttpClient {

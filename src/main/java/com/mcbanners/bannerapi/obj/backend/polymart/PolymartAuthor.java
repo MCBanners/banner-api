@@ -13,4 +13,5 @@ public record PolymartAuthor(
         int resourceDownloads,
         int resourceRatings,
         double resourceAverageRating
-) {}
+) {
+}

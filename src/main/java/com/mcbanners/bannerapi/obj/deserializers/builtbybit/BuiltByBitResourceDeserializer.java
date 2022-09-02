@@ -19,7 +19,7 @@ public class BuiltByBitResourceDeserializer extends StdDeserializer<BuiltByBitRe
     }
 
     @Override
-    public BuiltByBitResource deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JacksonException {
+    public BuiltByBitResource deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
         final JsonNode rootNode = jp.getCodec().readTree(jp);
         final JsonNode resourceNode = rootNode.has("data") ? rootNode.get("data") : rootNode;
 

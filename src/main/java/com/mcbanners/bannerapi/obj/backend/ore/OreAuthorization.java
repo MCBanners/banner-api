@@ -6,4 +6,5 @@ import com.mcbanners.bannerapi.obj.deserializers.ore.OreAuthorizationDeserialize
 import java.time.Instant;
 
 @JsonDeserialize(using = OreAuthorizationDeserializer.class)
-public record OreAuthorization(String session, Instant expires) {}
+public record OreAuthorization(String session, Instant expires) {
+}

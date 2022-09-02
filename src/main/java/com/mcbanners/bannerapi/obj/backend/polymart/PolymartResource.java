@@ -17,4 +17,5 @@ public record PolymartResource(
         String thumbnailURL,
         int reviewCount,
         int stars
-) {}
+) {
+}
