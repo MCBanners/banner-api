@@ -6,12 +6,13 @@ import com.mcbanners.bannerapi.obj.backend.builtbybit.BuiltByBitResource;
 import com.mcbanners.bannerapi.obj.generic.PriceInformation;
 import com.mcbanners.bannerapi.obj.generic.RatingInformation;
 import com.mcbanners.bannerapi.obj.generic.Resource;
+import com.mcbanners.bannerapi.service.api.BasicHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
-public class BuiltByBitResourceService {
+public class BuiltByBitResourceService extends BasicHandler<Resource> {
     private final BuiltByBitClient client;
 
     @Autowired
@@ -19,6 +20,7 @@ public class BuiltByBitResourceService {
         this.client = client;
     }
 
+    @Override
     public Resource handle(int resourceId) {
         BuiltByBitResource resource = loadResource(resourceId);
 

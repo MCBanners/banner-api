@@ -31,43 +31,18 @@ public class AuthorController {
 
     @GetMapping(value = "/{platform}/{id}/isValid", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Boolean>> checkValid(@PathVariable ServiceBackend platform, @PathVariable String id) {
-        final Author author = switch (platform) {
-            case SPIGOT, POLYMART, BUILTBYBIT -> this.authors.getAuthor(Integer.parseInt(id), platform);
-            case ORE, MODRINTH -> this.authors.getAuthor(id, platform);
-            case CURSEFORGE -> {
-                try {
-                    yield this.authors.getAuthor(Integer.parseInt(id), platform);
-                } catch (NumberFormatException ex) {
-                    yield this.authors.getAuthor(id, platform);
-                }
-            }
-        };
+        final Author author = this.authors.getAuthor(id, platform);
         return new ResponseEntity<>(Collections.singletonMap("valid", author != null), HttpStatus.OK);
     }
 
     @GetMapping(value = "/{platform}/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<byte[]> getBanner(@PathVariable ServiceBackend platform, @PathVariable String id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
-        final Author author = switch (platform) {
-            case SPIGOT, POLYMART, BUILTBYBIT -> this.authors.getAuthor(Integer.parseInt(id), platform);
-            case ORE, MODRINTH -> this.authors.getAuthor(id, platform);
-            case CURSEFORGE -> {
-                try {
-                    yield this.authors.getAuthor(Integer.parseInt(id), platform);
-                } catch (NumberFormatException ex) {
-                    yield this.authors.getAuthor(id, platform);
-                }
-            }
-        };
-
+    public ResponseEntity<byte[]> getBanner(@PathVariable ServiceBackend platform, @PathVariable String id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> rawParams) {
+        final Author author = this.authors.getAuthor(id, platform);
         if (author == null) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
 
-        return draw(author, raw, platform, outputType);
-    }
-
-    private ResponseEntity<byte[]> draw(Author author, Map<String, String> raw, ServiceBackend backend, BannerOutputType outputType) {
-        return BannerImageWriter.write(new AuthorLayout(author, raw, backend).draw(outputType), outputType);
+        return BannerImageWriter.write(new AuthorLayout(author, rawParams, platform).draw(outputType), outputType);
     }
 }
 

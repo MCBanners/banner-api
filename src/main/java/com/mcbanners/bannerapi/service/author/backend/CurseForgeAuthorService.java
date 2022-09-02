@@ -4,6 +4,7 @@ import com.mcbanners.bannerapi.net.CurseForgeClient;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeAuthor;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeResource;
 import com.mcbanners.bannerapi.obj.generic.Author;
+import com.mcbanners.bannerapi.service.api.BasicHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class CurseForgeAuthorService {
+public class CurseForgeAuthorService extends BasicHandler<Author> {
     private final CurseForgeClient client;
 
     @Autowired
@@ -20,15 +21,21 @@ public class CurseForgeAuthorService {
         this.client = client;
     }
 
-    public Author handle(int authorId, String authorName) {
-        CurseForgeAuthor author;
-
-        if (authorId != 0) {
-            author = loadAuthor(authorId);
-        } else {
-            author = loadAuthor(authorName);
+    @Override
+    public Author handle(String id) {
+        try {
+            return handle(Integer.parseInt(id));
+        } catch (NumberFormatException ignored) {
+            return handle(loadAuthor(id));
         }
+    }
 
+    @Override
+    public Author handle(int id) {
+        return handle(loadAuthor(id));
+    }
+
+    private Author handle(final CurseForgeAuthor author) {
         if (author == null) {
             return null;
         }
@@ -36,7 +43,6 @@ public class CurseForgeAuthorService {
         List<CurseForgeResource> resources = loadAllResourcesByAuthor(author);
 
         int totalDownloads = 0;
-
         for (CurseForgeResource resource : resources) {
             totalDownloads += resource.totalDownloads();
         }

@@ -4,12 +4,13 @@ import com.mcbanners.bannerapi.net.ModrinthClient;
 import com.mcbanners.bannerapi.obj.backend.modrinth.ModrinthResource;
 import com.mcbanners.bannerapi.obj.backend.modrinth.ModrinthUser;
 import com.mcbanners.bannerapi.obj.generic.Author;
+import com.mcbanners.bannerapi.service.api.BasicHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ModrinthAuthorService {
+public class ModrinthAuthorService extends BasicHandler<Author> {
     private final ModrinthClient client;
 
     @Autowired
@@ -17,6 +18,7 @@ public class ModrinthAuthorService {
         this.client = client;
     }
 
+    @Override
     public Author handle(String authorName) {
         ModrinthUser author = loadUser(authorName);
         if (author == null) {

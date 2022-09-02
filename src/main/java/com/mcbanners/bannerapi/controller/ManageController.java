@@ -37,7 +37,6 @@ public class ManageController {
     @PutMapping(value = "update/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public SavedBanner updateBanner(AuthedUserInformation authedUserInformation, @PathVariable Long id, @RequestParam Map<String, String> raw) {
         SavedBanner banner = verifyRequest(authedUserInformation, id);
-
         banner.setSettings(raw);
 
         return repository.save(banner);

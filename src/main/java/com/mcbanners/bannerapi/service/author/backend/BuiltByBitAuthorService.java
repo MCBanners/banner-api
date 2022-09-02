@@ -5,12 +5,13 @@ import com.mcbanners.bannerapi.obj.backend.builtbybit.BuiltByBitAuthor;
 import com.mcbanners.bannerapi.obj.backend.builtbybit.BuiltByBitResource;
 import com.mcbanners.bannerapi.obj.backend.builtbybit.BuiltByBitResourceBasic;
 import com.mcbanners.bannerapi.obj.generic.Author;
+import com.mcbanners.bannerapi.service.api.BasicHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
-public class BuiltByBitAuthorService {
+public class BuiltByBitAuthorService extends BasicHandler<Author> {
     private final BuiltByBitClient client;
 
     @Autowired
@@ -18,6 +19,7 @@ public class BuiltByBitAuthorService {
         this.client = client;
     }
 
+    @Override
     public Author handle(int authorId) {
         BuiltByBitAuthor author = loadAuthor(authorId);
 

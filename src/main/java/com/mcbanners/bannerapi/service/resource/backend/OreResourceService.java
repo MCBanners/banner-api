@@ -4,12 +4,13 @@ import com.mcbanners.bannerapi.net.OreClient;
 import com.mcbanners.bannerapi.obj.backend.ore.OreResource;
 import com.mcbanners.bannerapi.obj.generic.RatingInformation;
 import com.mcbanners.bannerapi.obj.generic.Resource;
+import com.mcbanners.bannerapi.service.api.BasicHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
-public class OreResourceService {
+public class OreResourceService extends BasicHandler<Resource> {
     private final OreClient client;
 
     @Autowired
@@ -17,6 +18,7 @@ public class OreResourceService {
         this.client = client;
     }
 
+    @Override
     public Resource handle(String pluginId) {
         OreResource oreResource = loadResource(pluginId);
         if (oreResource == null) {

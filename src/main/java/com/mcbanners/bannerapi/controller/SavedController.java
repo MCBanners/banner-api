@@ -82,177 +82,106 @@ public class SavedController {
 
     @GetMapping(value = "/{mnemonic}.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<byte[]> recall(@PathVariable String mnemonic, @PathVariable BannerOutputType outputType) {
-        SavedBanner banner = repository.findByMnemonic(mnemonic);
+        final SavedBanner banner = repository.findByMnemonic(mnemonic);
         if (banner == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Banner not found");
         }
 
-        Map<String, String> settings = banner.getSettings();
-
-        ServiceBackend backend = null;
-        Layout layout = null;
-        switch (banner.getBannerType()) {
-            case SPIGOT_AUTHOR:
-            case SPONGE_AUTHOR:
-            case CURSEFORGE_AUTHOR:
-            case MODRINTH_AUTHOR:
-            case BUILTBYBIT_AUTHOR:
-            case POLYMART_AUTHOR:
-                Author author = null;
-                switch (banner.getBannerType()) {
-                    case SPIGOT_AUTHOR:
-                        backend = ServiceBackend.SPIGOT;
-                        author = authors.getAuthor(Integer.parseInt(settings.get("_author_id")), backend);
-                        break;
-                    case SPONGE_AUTHOR:
-                        backend = ServiceBackend.ORE;
-                        author = authors.getAuthor(settings.get("_author_id"), backend);
-                        break;
-                    case CURSEFORGE_AUTHOR:
-                        backend = ServiceBackend.CURSEFORGE;
-                        author = authors.getAuthor(Integer.parseInt(settings.get("_author_id")), backend);
-                        break;
-                    case MODRINTH_AUTHOR:
-                        backend = ServiceBackend.MODRINTH;
-                        author = authors.getAuthor(settings.get("_author_id"), backend);
-                        break;
-                    case BUILTBYBIT_AUTHOR:
-                        backend = ServiceBackend.BUILTBYBIT;
-                        author = authors.getAuthor(Integer.parseInt(settings.get("_author_id")), backend);
-                        break;
-                    case POLYMART_AUTHOR:
-                        backend = ServiceBackend.POLYMART;
-                        author = authors.getAuthor(Integer.parseInt(settings.get("_author_id")), backend);
-                        break;
-                }
-
-                settings.remove("_author_id");
-
-                if (backend == null) {
-                    throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Backend not set");
-                }
-
-                if (author == null) {
-                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The stored author could not be found!");
-                }
-
-                layout = new AuthorLayout(author, settings, backend);
-                break;
-            case SPIGOT_RESOURCE:
-            case SPONGE_RESOURCE:
-            case CURSEFORGE_RESOURCE:
-            case MODRINTH_RESOURCE:
-            case BUILTBYBIT_RESOURCE:
-            case POLYMART_RESOURCE:
-                Resource resource = null;
-                author = null;
-                switch (banner.getBannerType()) {
-                    case SPIGOT_RESOURCE:
-                        backend = ServiceBackend.SPIGOT;
-                        resource = resources.getResource(Integer.parseInt(settings.get("_resource_id")), backend);
-                        author = authors.getAuthor(resource.authorId(), backend);
-                        break;
-                    case SPONGE_RESOURCE:
-                        backend = ServiceBackend.ORE;
-                        resource = resources.getResource(settings.get("_resource_id"), backend);
-                        author = authors.getAuthor(resource.authorName(), backend);
-                        break;
-                    case CURSEFORGE_RESOURCE:
-                        backend = ServiceBackend.CURSEFORGE;
-                        resource = resources.getResource(Integer.parseInt(settings.get("_resource_id")), backend);
-                        author = authors.getAuthor(resource.authorId(), backend);
-                        break;
-                    case MODRINTH_RESOURCE:
-                        backend = ServiceBackend.MODRINTH;
-                        resource = resources.getResource(settings.get("_resource_id"), backend);
-                        author = authors.getAuthor(resource.authorName(), backend);
-                        break;
-                    case BUILTBYBIT_RESOURCE:
-                        backend = ServiceBackend.BUILTBYBIT;
-                        resource = resources.getResource(Integer.parseInt(settings.get("_resource_id")), backend);
-                        author = authors.getAuthor(resource.authorId(), backend);
-                        break;
-                    case POLYMART_RESOURCE:
-                        backend = ServiceBackend.POLYMART;
-                        resource = resources.getResource(Integer.parseInt(settings.get("_resource_id")), backend);
-                        author = authors.getAuthor(resource.authorId(), Integer.parseInt(settings.get("_resource_id")), backend);
-                        break;
-                }
-
-                settings.remove("_resource_id");
-
-                if (backend == null) {
-                    throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Backend not set");
-                }
-
-                if (author == null) {
-                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Either the stored resource or author could not be found!");
-                }
-
-                layout = new ResourceLayout(resource, author, settings, backend);
-                break;
-            case MINECRAFT_SERVER:
-                String host = settings.get("_server_host");
-                if (host == null) {
-                    throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Host not specified in banner settings");
-                }
-
-                int port = 25565;
-                try {
-                    port = Integer.parseInt(settings.get("_server_port"));
-                } catch (NumberFormatException ignored) {
-                }
-
-                MinecraftServer server = servers.getServer(host, port);
-                if (server == null) {
-                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Server not found (or not pingable)!");
-                }
-
-                settings.remove("_server_host");
-                settings.remove("_server_port");
-
-                layout = new ServerLayout(server, settings);
-                break;
-            case BUILTBYBIT_MEMBER:
-                Member member = null;
-                if (banner.getBannerType() == BannerType.BUILTBYBIT_MEMBER) {
-                    backend = ServiceBackend.BUILTBYBIT;
-                    member = members.getMember(Integer.parseInt(settings.get("_member_id")), backend);
-                }
-
-                settings.remove("_member_id");
-
-                if (backend == null) {
-                    throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Backend not set");
-                }
-
-                if (member == null) {
-                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The member author could not be found!");
-                }
-
-                layout = new MemberLayout(member, settings, backend);
-                break;
-            case POLYMART_TEAM:
-                Team team = null;
-                if (banner.getBannerType() == BannerType.POLYMART_TEAM) {
-                    backend = ServiceBackend.POLYMART;
-                    team = teams.getTeam(Integer.parseInt(settings.get("_team_id")), backend);
-                }
-
-                settings.remove("_team_id");
-
-                if (backend == null) {
-                    throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Backend not set");
-                }
-
-                if (team == null) {
-                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The stored team could not be found!");
-                }
-
-                layout = new TeamLayout(team, settings, backend);
-                break;
-        }
+        final BannerType type = banner.getBannerType();
+        final Map<String, String> settings = banner.getSettings();
+        final Layout layout = switch (banner.getBannerType()) {
+            case SPIGOT_AUTHOR, SPONGE_AUTHOR, CURSEFORGE_AUTHOR, MODRINTH_AUTHOR, BUILTBYBIT_AUTHOR, POLYMART_AUTHOR -> getAuthorLayout(type, settings);
+            case SPIGOT_RESOURCE, SPONGE_RESOURCE, CURSEFORGE_RESOURCE, MODRINTH_RESOURCE, BUILTBYBIT_RESOURCE, POLYMART_RESOURCE -> getResourceLayout(type, settings);
+            case MINECRAFT_SERVER -> getMinecraftServerLayout(settings);
+            case BUILTBYBIT_MEMBER -> getBuiltByBitMemberLayout(settings);
+            case POLYMART_TEAM -> getPolymartTeamLayout(settings);
+            case DISCORD_USER -> throw new RuntimeException("Discord is not yet implemented.");
+        };
 
         return BannerImageWriter.write(layout.draw(outputType), outputType);
+    }
+
+    private Layout getAuthorLayout(BannerType type, Map<String, String> settings) {
+        ServiceBackend backend = type.getRelatedServiceBackend();
+
+        Author author = authors.getAuthor(settings.get("_author_id"), backend);
+        if (author == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The stored author could not be found!");
+        }
+
+        settings.remove("_author_id");
+
+        return new AuthorLayout(author, settings, backend);
+    }
+
+    private Layout getResourceLayout(BannerType type, Map<String, String> settings) {
+        ServiceBackend backend = type.getRelatedServiceBackend();
+
+        Resource resource = resources.getResource(settings.get("_resource_id"), backend);
+
+        // TODO: get rid of this
+        Author author;
+        if (backend == ServiceBackend.POLYMART) {
+            author = authors.getAuthor(resource.authorId(), Integer.parseInt(settings.get("_resource_id")));
+        } else {
+            author = authors.getAuthor(resource, backend);
+        }
+
+        if (author == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Either the stored resource or author could not be found!");
+        }
+
+        settings.remove("_resource_id");
+
+        return new ResourceLayout(resource, author, settings, backend);
+    }
+
+    private Layout getMinecraftServerLayout(Map<String, String> settings) {
+        String host = settings.get("_server_host");
+        if (host == null) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Host not specified in banner settings");
+        }
+
+        int port = 25565;
+        try {
+            port = Integer.parseInt(settings.get("_server_port"));
+        } catch (NumberFormatException ignored) {
+        }
+
+        MinecraftServer server = servers.getServer(host, port);
+        if (server == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Server not found (or not pingable)!");
+        }
+
+        settings.remove("_server_host");
+        settings.remove("_server_port");
+
+        return new ServerLayout(server, settings);
+    }
+
+    private Layout getBuiltByBitMemberLayout(Map<String, String> settings) {
+        ServiceBackend backend = ServiceBackend.BUILTBYBIT;
+
+        Member member = members.getMember(Integer.parseInt(settings.get("_member_id")), backend);;
+        if (member == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The member author could not be found!");
+        }
+
+        settings.remove("_member_id");
+
+        return new MemberLayout(member, settings, backend);
+    }
+
+    private Layout getPolymartTeamLayout(Map<String, String> settings) {
+        ServiceBackend backend = ServiceBackend.POLYMART;
+
+        Team team = teams.getTeam(Integer.parseInt(settings.get("_team_id")), backend);
+        if (team == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The stored team could not be found!");
+        }
+
+        settings.remove("_team_id");
+
+        return new TeamLayout(team, settings, backend);
     }
 }

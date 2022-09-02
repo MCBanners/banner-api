@@ -5,12 +5,13 @@ import com.mcbanners.bannerapi.net.error.FurtherProcessingRequiredException;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeResource;
 import com.mcbanners.bannerapi.obj.generic.RatingInformation;
 import com.mcbanners.bannerapi.obj.generic.Resource;
+import com.mcbanners.bannerapi.service.api.BasicHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CurseForgeResourceService {
+public class CurseForgeResourceService extends BasicHandler<Resource> {
     private final CurseForgeClient client;
 
     @Autowired
@@ -18,6 +19,7 @@ public class CurseForgeResourceService {
         this.client = client;
     }
 
+    @Override
     public Resource handle(int resourceId) throws FurtherProcessingRequiredException {
         CurseForgeResource curseForgeResource = loadResource(resourceId);
         if (curseForgeResource == null) {

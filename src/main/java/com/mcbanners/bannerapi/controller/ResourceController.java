@@ -35,37 +35,22 @@ public class ResourceController {
 
     @GetMapping(value = "/{platform}/{id}/isValid", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Boolean>> checkValid(@PathVariable ServiceBackend platform, @PathVariable String id) {
-        final Resource resource = switch (platform) {
-            case SPIGOT, POLYMART, BUILTBYBIT, CURSEFORGE -> this.resources.getResource(Integer.parseInt(id), platform);
-            case ORE, MODRINTH -> this.resources.getResource(id, platform);
-        };
+        final Resource resource = this.resources.getResource(id, platform);
         return new ResponseEntity<>(Collections.singletonMap("valid", resource != null), HttpStatus.OK);
     }
 
     @GetMapping(value = "/{platform}/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<byte[]> getBanner(@PathVariable ServiceBackend platform, @PathVariable String id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
-        final Resource resource = switch (platform) {
-            case SPIGOT, POLYMART, BUILTBYBIT, CURSEFORGE -> this.resources.getResource(Integer.parseInt(id), platform);
-            case ORE, MODRINTH -> this.resources.getResource(id, platform);
-        };
-
+    public ResponseEntity<byte[]> getBanner(@PathVariable ServiceBackend platform, @PathVariable String id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> requestParams) {
+        final Resource resource = this.resources.getResource(id, platform);
         if (resource == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        final Author author = switch (platform) {
-            case SPIGOT, POLYMART, BUILTBYBIT, CURSEFORGE -> this.authors.getAuthor(resource.authorId(), platform);
-            case ORE, MODRINTH -> this.authors.getAuthor(resource.authorName(), platform);
-        };
-
+        final Author author = this.authors.getAuthor(resource, platform);
         if (author == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return draw(resource, author, raw, platform, outputType);
-    }
-
-    private ResponseEntity<byte[]> draw(Resource resource, Author author, Map<String, String> raw, ServiceBackend backend, BannerOutputType outputType) {
-        return BannerImageWriter.write(new ResourceLayout(resource, author, raw, backend).draw(outputType), outputType);
+        return BannerImageWriter.write(new ResourceLayout(resource, author, requestParams, platform).draw(outputType), outputType);
     }
 }

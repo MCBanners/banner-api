@@ -43,5 +43,4 @@ public class DiscordController {
 
         return BannerImageWriter.write(new DiscordLayout(user, raw).draw(outputType), outputType);
     }
-
 }

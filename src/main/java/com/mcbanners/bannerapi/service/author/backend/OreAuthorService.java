@@ -5,12 +5,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mcbanners.bannerapi.net.OreClient;
 import com.mcbanners.bannerapi.obj.backend.ore.OreResource;
 import com.mcbanners.bannerapi.obj.generic.Author;
+import com.mcbanners.bannerapi.service.api.BasicHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
-public class OreAuthorService {
+public class OreAuthorService extends BasicHandler<Author> {
     private final OreClient client;
     private final ObjectMapper mapper;
 
@@ -20,6 +21,7 @@ public class OreAuthorService {
         this.mapper = new ObjectMapper();
     }
 
+    @Override
     public Author handle(String authorName) {
         OreResource[] resources = loadAllResourcesByAuthor(authorName);
         if (resources == null) {

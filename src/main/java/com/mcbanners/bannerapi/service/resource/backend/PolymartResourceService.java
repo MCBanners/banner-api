@@ -5,6 +5,7 @@ import com.mcbanners.bannerapi.obj.backend.polymart.PolymartResource;
 import com.mcbanners.bannerapi.obj.generic.PriceInformation;
 import com.mcbanners.bannerapi.obj.generic.RatingInformation;
 import com.mcbanners.bannerapi.obj.generic.Resource;
+import com.mcbanners.bannerapi.service.api.BasicHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.Locale;
 
 @Service
-public class PolymartResourceService {
+public class PolymartResourceService extends BasicHandler<Resource> {
     private final PolymartClient client;
 
     @Autowired

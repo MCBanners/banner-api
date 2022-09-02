@@ -42,29 +42,16 @@ public class ResourceService {
      * @return the Resource object or null if the service backend does not support the operation or the resource could not be found.
      */
     @Cacheable(unless = "#result == null")
-    public Resource getResource(int resourceId, ServiceBackend backend) throws FurtherProcessingRequiredException {
+    public Resource getResource(String resourceId, ServiceBackend backend) throws FurtherProcessingRequiredException {
+        // There's no good solution coming to mind for this
+        // noinspection DuplicatedCode
         return switch (backend) {
             case SPIGOT -> spigot.handle(resourceId);
             case CURSEFORGE -> curseForge.handle(resourceId);
             case BUILTBYBIT -> builtByBit.handle(resourceId);
             case POLYMART -> polymart.handle(resourceId);
-            case ORE, MODRINTH -> null;
-        };
-    }
-
-    /**
-     * Get a resource by its name on the specified service backend.
-     *
-     * @param pluginId the resource name
-     * @param backend  the service backend to query
-     * @return the Resource object or null if the service backend does not support the operation or the resource could not be found.
-     */
-    @Cacheable(unless = "#result == null")
-    public Resource getResource(String pluginId, ServiceBackend backend) {
-        return switch (backend) {
-            case ORE -> ore.handle(pluginId);
-            case MODRINTH -> modrinth.handle(pluginId);
-            case CURSEFORGE, SPIGOT, POLYMART, BUILTBYBIT -> null;
+            case ORE -> ore.handle(resourceId);
+            case MODRINTH -> modrinth.handle(resourceId);
         };
     }
 }

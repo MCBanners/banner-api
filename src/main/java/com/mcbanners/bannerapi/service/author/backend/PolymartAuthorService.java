@@ -4,12 +4,13 @@ import com.mcbanners.bannerapi.net.PolymartClient;
 import com.mcbanners.bannerapi.obj.backend.polymart.PolymartAuthor;
 import com.mcbanners.bannerapi.obj.backend.polymart.PolymartResource;
 import com.mcbanners.bannerapi.obj.generic.Author;
+import com.mcbanners.bannerapi.service.api.BasicHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
-public class PolymartAuthorService {
+public class PolymartAuthorService extends BasicHandler<Author> {
     private final PolymartClient client;
 
     @Autowired
@@ -17,6 +18,7 @@ public class PolymartAuthorService {
         this.client = client;
     }
 
+    @Override
     public Author handle(final int authorId) {
         final PolymartAuthor author = loadAuthor(authorId);
         if (author == null) {
@@ -36,6 +38,7 @@ public class PolymartAuthorService {
     }
 
     // Major Polymart Workaround
+    // TODO: can we get rid of this in any way?
     public Author handle(final int authorId, final int resourceId) {
         final PolymartResource resource = loadResource(resourceId);
         if (resource == null) {

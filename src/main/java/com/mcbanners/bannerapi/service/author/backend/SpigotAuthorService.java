@@ -4,12 +4,13 @@ import com.mcbanners.bannerapi.net.SpigotClient;
 import com.mcbanners.bannerapi.obj.backend.spigot.SpigotAuthor;
 import com.mcbanners.bannerapi.obj.backend.spigot.SpigotResource;
 import com.mcbanners.bannerapi.obj.generic.Author;
+import com.mcbanners.bannerapi.service.api.BasicHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
-public class SpigotAuthorService {
+public class SpigotAuthorService extends BasicHandler<Author> {
     private final SpigotClient client;
 
     @Autowired
@@ -17,6 +18,7 @@ public class SpigotAuthorService {
         this.client = client;
     }
 
+    @Override
     public Author handle(int authorId) {
         SpigotAuthor author = loadAuthor(authorId);
         SpigotResource[] resources = loadAllResourcesByAuthor(authorId);

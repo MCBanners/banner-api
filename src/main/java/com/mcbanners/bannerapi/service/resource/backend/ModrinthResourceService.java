@@ -5,12 +5,13 @@ import com.mcbanners.bannerapi.obj.backend.modrinth.ModrinthResource;
 import com.mcbanners.bannerapi.obj.backend.modrinth.ModrinthUser;
 import com.mcbanners.bannerapi.obj.generic.RatingInformation;
 import com.mcbanners.bannerapi.obj.generic.Resource;
+import com.mcbanners.bannerapi.service.api.BasicHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ModrinthResourceService {
+public class ModrinthResourceService extends BasicHandler<Resource> {
     private final ModrinthClient client;
 
     @Autowired
@@ -18,6 +19,7 @@ public class ModrinthResourceService {
         this.client = client;
     }
 
+    @Override
     public Resource handle(String pluginId) {
         ModrinthResource modrinthResource = loadResource(pluginId);
         if (modrinthResource == null) {

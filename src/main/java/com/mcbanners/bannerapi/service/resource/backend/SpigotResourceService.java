@@ -5,12 +5,13 @@ import com.mcbanners.bannerapi.obj.backend.spigot.SpigotResource;
 import com.mcbanners.bannerapi.obj.generic.PriceInformation;
 import com.mcbanners.bannerapi.obj.generic.RatingInformation;
 import com.mcbanners.bannerapi.obj.generic.Resource;
+import com.mcbanners.bannerapi.service.api.BasicHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
-public class SpigotResourceService {
+public class SpigotResourceService extends BasicHandler<Resource> {
     private final SpigotClient client;
 
     @Autowired
@@ -18,6 +19,7 @@ public class SpigotResourceService {
         this.client = client;
     }
 
+    @Override
     public Resource handle(int resourceId) {
         SpigotResource resource = loadResource(resourceId);
         if (resource == null) {

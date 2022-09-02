@@ -13,6 +13,8 @@ import com.mcbanners.bannerapi.banner.param.ServerParameter;
 import com.mcbanners.bannerapi.banner.param.TeamParameter;
 import com.mcbanners.bannerapi.util.ParamUtil;
 import com.mcbanners.bannerapi.util.StringUtil;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +36,9 @@ import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("svc")
+@CacheConfig(cacheNames = {"service"})
 public class ServiceController {
+    @Cacheable
     @GetMapping(value = "constants", produces = MediaType.APPLICATION_JSON_VALUE)
     public Map<String, Object> getTemplates() {
         Map<String, Object> out = new HashMap<>();
@@ -44,6 +48,8 @@ public class ServiceController {
         return out;
     }
 
+
+    @Cacheable
     @GetMapping(value = "defaults/{type}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getDefaults(@PathVariable String type) {
         Map<String, Class<? extends BannerParameter<Object>>> toSerialize = new HashMap<>();
@@ -71,6 +77,8 @@ public class ServiceController {
         return new ResponseEntity<>(out, HttpStatus.OK);
     }
 
+
+    @Cacheable
     @GetMapping(value = "template/{template}", produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<byte[]> getTemplate(@PathVariable("template") String name) {
         BannerTemplate template = BannerTemplate.fromString(name);

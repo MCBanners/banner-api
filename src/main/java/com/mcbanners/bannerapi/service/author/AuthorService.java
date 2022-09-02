@@ -1,6 +1,7 @@
 package com.mcbanners.bannerapi.service.author;
 
 import com.mcbanners.bannerapi.obj.generic.Author;
+import com.mcbanners.bannerapi.obj.generic.Resource;
 import com.mcbanners.bannerapi.service.ServiceBackend;
 import com.mcbanners.bannerapi.service.author.backend.BuiltByBitAuthorService;
 import com.mcbanners.bannerapi.service.author.backend.CurseForgeAuthorService;
@@ -34,6 +35,22 @@ public class AuthorService {
     }
 
     /**
+     * Get an author by inspecting a resource on the specified service backend
+     *
+     * @param resource the resource to find the author for
+     * @param backend the service backend to query
+     * @return the Author object or null if the author could not be found.
+     */
+    @Cacheable(unless = "#result == null")
+    public Author getAuthor(Resource resource, ServiceBackend backend) {
+        // Authors can be identified by an integer or by a String. We don't know which is being given to us
+        // sometimes, so the best we can do is check if they have an integer set and use that if so, otherwise
+        // falling back to their name.
+        final String authorId = resource.authorId() != -1 ? String.valueOf(resource.authorId()) : resource.authorName();
+        return getAuthor(authorId, backend);
+    }
+
+    /**
      * Get an author by its id on the specified service backend.
      *
      * @param authorId the author ID
@@ -41,13 +58,16 @@ public class AuthorService {
      * @return the Author object or null if the service backend does not support the operation or the author could not be found.
      */
     @Cacheable(unless = "#result == null")
-    public Author getAuthor(int authorId, ServiceBackend backend) {
+    public Author getAuthor(String authorId, ServiceBackend backend) {
+        // There's no good solution coming to mind for this
+        // noinspection DuplicatedCode
         return switch (backend) {
             case SPIGOT -> spigot.handle(authorId);
-            case CURSEFORGE -> curseForge.handle(authorId, null);
+            case CURSEFORGE -> curseForge.handle(authorId);
             case BUILTBYBIT -> builtByBit.handle(authorId);
             case POLYMART -> polymart.handle(authorId);
-            case ORE, MODRINTH -> null;
+            case ORE -> ore.handle(authorId);
+            case MODRINTH -> modrinth.handle(authorId);
         };
     }
 
@@ -56,28 +76,11 @@ public class AuthorService {
      *
      * @param authorId   the author ID
      * @param resourceId the resource ID
-     * @param backend    the service backend to query
      * @return the Author object or null if the author could not be found.
      */
+    // TODO: preferably want to get rid of this
     @Cacheable(unless = "#result == null")
-    public Author getAuthor(int authorId, int resourceId, ServiceBackend backend) {
+    public Author getAuthor(int authorId, int resourceId) {
         return polymart.handle(authorId, resourceId);
-    }
-
-    /**
-     * Get an author by its name on the specified service backend.
-     *
-     * @param authorName the author name
-     * @param backend    the service backend to query
-     * @return the Author object or null if the service bannerapi does not support the operation or the author could not be found.
-     */
-    @Cacheable(unless = "#result == null")
-    public Author getAuthor(String authorName, ServiceBackend backend) {
-        return switch (backend) {
-            case ORE -> ore.handle(authorName);
-            case CURSEFORGE -> curseForge.handle(0, authorName);
-            case MODRINTH -> modrinth.handle(authorName);
-            case SPIGOT, POLYMART, BUILTBYBIT -> null;
-        };
     }
 }
