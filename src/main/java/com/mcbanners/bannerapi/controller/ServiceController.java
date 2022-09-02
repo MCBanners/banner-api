@@ -54,7 +54,7 @@ public class ServiceController {
         if (bypass || type.equals("resource")) toSerialize.put("resource", ResourceParameter.class);
         if (bypass || type.equals("member")) toSerialize.put("member", MemberParameter.class);
         if (bypass || type.equals("team")) toSerialize.put("team", TeamParameter.class);
-        if (bypass || type.equalsIgnoreCase("discord")) toSerialize.put("discord", DiscordParameter.class);
+        if (bypass || type.equals("discord")) toSerialize.put("discord", DiscordParameter.class);
         if (bypass || type.equals("server")) toSerialize.put("server", ServerParameter.class);
 
         Object out;

@@ -31,20 +31,17 @@ public class DefaultMemberService implements MemberService {
     @Override
     @Cacheable(unless = "#result == null")
     public Member getMember(int memberId, ServiceBackend backend) {
-        if (backend == ServiceBackend.BUILTBYBIT) {
-            return handleBuiltByBit(memberId);
-        }
-        return null;
+        return backend == ServiceBackend.BUILTBYBIT ? handleBuiltByBit(memberId) : null;
     }
 
     private Member handleBuiltByBit(int memberId) {
-        BuiltByBitMember member = loadBuiltByBitClientMember(memberId);
+        BuiltByBitMember member = fetchMember(memberId);
 
         if (member == null) {
             return null;
         }
 
-        String avatarUrl = loadBuiltByBitClientMemberIcon(member.avatarUrl());
+        String avatarUrl = fetchIcon(member.avatarUrl());
 
         if (avatarUrl == null) {
             avatarUrl = "";
@@ -78,22 +75,13 @@ public class DefaultMemberService implements MemberService {
         );
     }
 
-    private BuiltByBitMember loadBuiltByBitClientMember(int memberId) {
-        ResponseEntity<BuiltByBitMember> resp = builtByBitClient.getMember(memberId);
-        if (resp == null) {
-            return null;
-        }
-
-        return resp.getBody();
+    private BuiltByBitMember fetchMember(int memberId) {
+        final ResponseEntity<BuiltByBitMember> resp = builtByBitClient.getMember(memberId);
+        return resp == null ? null : resp.getBody();
     }
 
-    private String loadBuiltByBitClientMemberIcon(String url) {
-        ResponseEntity<byte[]> resp = builtByBitClient.getImage(url);
-        if (resp == null) {
-            return null;
-        }
-
-        byte[] body = resp.getBody();
-        return Base64.getEncoder().encodeToString(body);
+    private String fetchIcon(String url) {
+        final ResponseEntity<byte[]> resp = builtByBitClient.getImage(url);
+        return resp == null ? null : Base64.getEncoder().encodeToString(resp.getBody());
     }
 }

@@ -26,23 +26,14 @@ public class DefaultTeamService implements TeamService {
     @Override
     @Cacheable(unless = "#result == null")
     public Team getTeam(int teamId, ServiceBackend backend) {
-        if (backend == ServiceBackend.POLYMART) {
-            return handlePolymart(teamId);
-        }
-        return null;
+        return backend == ServiceBackend.POLYMART ? handlePolymart(teamId) : null;
     }
 
     private Team handlePolymart(int teamId) {
-        final PolymartAuthor team = loadPolymartTeam(teamId);
-        if (team == null) {
-            return null;
-        }
-
-        final String image = loadPolymartTeamIcon(team.profilePictureURL());
-
-        return new Team(
+        final PolymartAuthor team = fetchTeam(teamId);
+        return team == null ? null : new Team(
                 team.username(),
-                image,
+                fetchIcon(team.profilePictureURL()),
                 team.resourceCount(),
                 team.resourceDownloads(),
                 team.resourceRatings(),
@@ -50,22 +41,13 @@ public class DefaultTeamService implements TeamService {
         );
     }
 
-    private PolymartAuthor loadPolymartTeam(int teamId) {
-        ResponseEntity<PolymartAuthor> resp = polymartClient.getTeam(teamId);
-        if (resp == null) {
-            return null;
-        }
-
-        return resp.getBody();
+    private PolymartAuthor fetchTeam(int teamId) {
+        final ResponseEntity<PolymartAuthor> resp = polymartClient.getTeam(teamId);
+        return resp == null ? null : resp.getBody();
     }
 
-    private String loadPolymartTeamIcon(String url) {
-        ResponseEntity<byte[]> resp = polymartClient.getImage(url);
-        if (resp == null) {
-            return null;
-        }
-
-        byte[] body = resp.getBody();
-        return Base64.getEncoder().encodeToString(body);
+    private String fetchIcon(String url) {
+        final ResponseEntity<byte[]> resp = polymartClient.getImage(url);
+        return resp == null ? null : Base64.getEncoder().encodeToString(resp.getBody());
     }
 }
