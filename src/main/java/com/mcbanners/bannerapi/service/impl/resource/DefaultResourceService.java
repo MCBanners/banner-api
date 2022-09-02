@@ -50,7 +50,7 @@ public class DefaultResourceService implements ResourceService {
             case CURSEFORGE -> curseForge.handleCurse(resourceId);
             case BUILTBYBIT -> builtByBit.handleBuiltByBit(resourceId);
             case POLYMART -> polymart.handlePolymart(resourceId);
-            case ORE, default -> null;
+            case ORE, MODRINTH -> null;
         };
     }
 
