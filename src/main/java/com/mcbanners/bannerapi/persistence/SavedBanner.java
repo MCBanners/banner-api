@@ -78,12 +78,4 @@ public class SavedBanner implements Serializable {
     public void setSettings(Map<String, String> settings) {
         this.settings = settings;
     }
-
-    public final boolean isAuthorBanner() {
-        return switch (bannerType) {
-            case SPIGOT_AUTHOR, SPONGE_AUTHOR, CURSEFORGE_AUTHOR, MODRINTH_AUTHOR, BUILTBYBIT_AUTHOR, POLYMART_AUTHOR ->
-                    true;
-            default -> false;
-        };
-    }
 }
