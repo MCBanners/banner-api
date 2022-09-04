@@ -54,12 +54,12 @@ public class OreClient extends BasicHttpClient {
         }
     }
 
-    public final ResponseEntity<byte[]> getAuthorIcon(String href) {
-        if (href.startsWith("/")) {
-            href = href.substring(1);
+    public final String getAuthorIcon(String authorName) {
+        if (authorName.startsWith("/")) {
+            authorName = authorName.substring(1);
         }
 
-        return getImage(IMAGE_BASE_URL + href + "?size=120x120");
+        return getBase64Image(IMAGE_BASE_URL + authorName + "?size=120x120");
     }
 
     private void authorize() {

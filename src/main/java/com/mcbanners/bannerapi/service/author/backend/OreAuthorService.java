@@ -36,7 +36,7 @@ public class OreAuthorService extends BasicHandler<Author> {
         }
 
         // Todo figure out why this is weird
-        String oreAuthorAvatar = client.getBase64Image(authorName);
+        String oreAuthorAvatar = client.getAuthorIcon(authorName);
         if (oreAuthorAvatar == null) {
             oreAuthorAvatar = "";
         }
