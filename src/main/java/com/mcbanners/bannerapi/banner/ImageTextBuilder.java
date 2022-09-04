@@ -101,13 +101,6 @@ public class ImageTextBuilder {
         return new ImageTextBuilder(builder);
     }
 
-    private static class TextWrapSettings {
-        private final int lineHeight;
-        private final int lineWidth;
-
-        private TextWrapSettings(int lineHeight, int lineWidth) {
-            this.lineHeight = lineHeight;
-            this.lineWidth = lineWidth;
-        }
+    private record TextWrapSettings(int lineHeight, int lineWidth) {
     }
 }

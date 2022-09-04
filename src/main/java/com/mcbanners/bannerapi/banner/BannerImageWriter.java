@@ -15,7 +15,7 @@ import java.io.IOException;
 public class BannerImageWriter {
     private static final ResponseEntity<byte[]> NULL = new ResponseEntity<>(new byte[]{}, HttpStatus.NO_CONTENT);
 
-    public static ResponseEntity<byte[]> write(Layout layout, BannerOutputFormat format) {
+    public static ResponseEntity<byte[]> write(Layout<?> layout, BannerOutputFormat format) {
         final ImageWriter writer = ImageIO.getImageWritersByFormatName(format.getName()).next();
         if (writer == null) {
             return NULL;

@@ -1,7 +1,5 @@
 package com.mcbanners.bannerapi.banner.layout;
 
-import com.mcbanners.bannerapi.banner.BannerOutputFormat;
-import com.mcbanners.bannerapi.banner.ImageBuilder;
 import com.mcbanners.bannerapi.banner.Sprite;
 import com.mcbanners.bannerapi.banner.component.BasicComponent;
 import com.mcbanners.bannerapi.banner.component.LogoComponent;
@@ -10,58 +8,44 @@ import com.mcbanners.bannerapi.obj.generic.Author;
 import com.mcbanners.bannerapi.service.ServiceBackend;
 import com.mcbanners.bannerapi.util.NumberUtil;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.Map;
 
-public class AuthorLayout extends Layout {
+public class AuthorLayout extends Layout<AuthorParameters> {
     private final Author author;
     private final ServiceBackend backend;
-    private final AuthorParameters authorParameters;
 
     public AuthorLayout(Author author, ServiceBackend backend, Map<String, String> rawParameters) {
+        super(new AuthorParameters(rawParameters));
+
         this.author = author;
         this.backend = backend;
-        this.authorParameters = new AuthorParameters(rawParameters);
     }
 
     @Override
     public List<BasicComponent> build() {
-        Color textColor = getTextColor(authorParameters.getBackground().readTemplate());
-
-        addComponent(new LogoComponent(
-                authorParameters.getLogo().readX(),
-                authorParameters.getLogo().readSize(),
+        component(new LogoComponent(
+                parameters().getLogo().readX(),
+                parameters().getLogo().readSize(),
                 author.icon(),
                 Sprite.DEFAULT_AUTHOR_LOGO
         ));
 
-        addComponent(authorParameters.getAuthorName().asTextComponent(textColor, author.name()));
+        text(parameters().getAuthorName(), author.name());
 
-        addComponent(authorParameters.getResourceCount().asTextComponent(textColor, author.resources() + " resources"));
+        text(parameters().getResourceCount(), "%d resources", author.resources());
 
         if (author.likes() != -1) {
-            addComponent(authorParameters.getLikes().asTextComponent(textColor, NumberUtil.abbreviate(author.likes()) + (backend == ServiceBackend.MODRINTH ? " followers" : " likes")));
+            final String word = backend == ServiceBackend.MODRINTH ? "followers" : "likes";
+            text(parameters().getLikes(), "%s %s", NumberUtil.abbreviate(author.likes()), word);
         }
 
-        addComponent(authorParameters.getDownloads().asTextComponent(textColor, NumberUtil.abbreviate(author.downloads()) + " downloads"));
+        text(parameters().getDownloads(), "%s downloads", NumberUtil.abbreviate(author.downloads()));
 
         if (author.rating() != -1) {
-            addComponent(authorParameters.getReviews().asTextComponent(textColor, NumberUtil.abbreviate(author.rating()) + " reviews"));
+            text(parameters().getReviews(), "%s reviews", author.rating());
         }
 
-        return getComponents();
-    }
-
-    @Override
-    public BufferedImage draw(BannerOutputFormat outputType) {
-        ImageBuilder builder = ImageBuilder.create(authorParameters.getBackground().readTemplate().getImage(), outputType);
-
-        for (BasicComponent component : build()) {
-            builder = component.draw(builder, outputType);
-        }
-
-        return builder.build();
+        return components();
     }
 }

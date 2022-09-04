@@ -31,7 +31,7 @@ public class ManageController {
 
     @GetMapping(value = "find/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<SavedBanner> getAllOwnedBanners(AuthedUserInformation authedUserInformation) {
-        return repository.findAllByOwner(authedUserInformation.getId());
+        return repository.findAllByOwner(authedUserInformation.id());
     }
 
     @PutMapping(value = "update/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -56,7 +56,7 @@ public class ManageController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Banner not found.");
         }
 
-        if (!banner.getOwner().equals(authedUserInformation.getId())) {
+        if (!banner.getOwner().equals(authedUserInformation.id())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You don't own that banner.");
         }
 

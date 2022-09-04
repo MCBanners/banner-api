@@ -37,17 +37,17 @@ public class ImageUtil {
 
         int textX = x;
         switch (textAlign) {
-            case LEFT:
-                graphics.drawString(text, textX, y);
-                break;
-            case CENTER:
+            case LEFT -> graphics.drawString(text, textX, y);
+
+            case CENTER -> {
                 textX = source.getMinX() + (source.getWidth() - fontMetrics.stringWidth(text)) / 2;
                 graphics.drawString(text, textX + x, y);
-                break;
-            case RIGHT:
+            }
+
+            case RIGHT -> {
                 textX = source.getWidth() - fontMetrics.stringWidth(text);
                 graphics.drawString(text, textX + x, y);
-                break;
+            }
         }
     }
 }

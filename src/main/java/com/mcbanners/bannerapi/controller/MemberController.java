@@ -42,6 +42,6 @@ public class MemberController {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
 
-        return BannerImageWriter.write(new MemberLayout(member, ServiceBackend.BUILTBYBIT, raw), outputType);
+        return BannerImageWriter.write(new MemberLayout(member, raw), outputType);
     }
 }

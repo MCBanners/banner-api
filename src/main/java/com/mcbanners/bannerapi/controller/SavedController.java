@@ -9,6 +9,11 @@ import com.mcbanners.bannerapi.banner.layout.MemberLayout;
 import com.mcbanners.bannerapi.banner.layout.ResourceLayout;
 import com.mcbanners.bannerapi.banner.layout.ServerLayout;
 import com.mcbanners.bannerapi.banner.layout.TeamLayout;
+import com.mcbanners.bannerapi.banner.parameter.AuthorParameters;
+import com.mcbanners.bannerapi.banner.parameter.MemberParameters;
+import com.mcbanners.bannerapi.banner.parameter.ResourceParameters;
+import com.mcbanners.bannerapi.banner.parameter.ServerParameters;
+import com.mcbanners.bannerapi.banner.parameter.TeamParameters;
 import com.mcbanners.bannerapi.obj.backend.mcapi.MinecraftServer;
 import com.mcbanners.bannerapi.obj.generic.Author;
 import com.mcbanners.bannerapi.obj.generic.Member;
@@ -65,7 +70,7 @@ public class SavedController {
         banner.setBannerType(type);
 
         if (user != null) {
-            banner.setOwner(user.getId());
+            banner.setOwner(user.id());
         }
 
         banner.setMnemonic(StringUtil.generateMnemonic());
@@ -89,7 +94,7 @@ public class SavedController {
 
         final BannerType type = banner.getBannerType();
         final Map<String, String> settings = banner.getSettings();
-        final Layout layout = switch (banner.getBannerType()) {
+        final Layout<?> layout = switch (banner.getBannerType()) {
             case SPIGOT_AUTHOR, SPONGE_AUTHOR, CURSEFORGE_AUTHOR, MODRINTH_AUTHOR, BUILTBYBIT_AUTHOR, POLYMART_AUTHOR ->
                     getAuthorLayout(type, settings);
             case SPIGOT_RESOURCE, SPONGE_RESOURCE, CURSEFORGE_RESOURCE, MODRINTH_RESOURCE, BUILTBYBIT_RESOURCE, POLYMART_RESOURCE ->
@@ -103,7 +108,7 @@ public class SavedController {
         return BannerImageWriter.write(layout, outputType);
     }
 
-    private Layout getAuthorLayout(BannerType type, Map<String, String> settings) {
+    private Layout<AuthorParameters> getAuthorLayout(BannerType type, Map<String, String> settings) {
         ServiceBackend backend = type.getRelatedServiceBackend();
 
         Author author = authors.getAuthor(settings.get("_author_id"), backend);
@@ -116,7 +121,7 @@ public class SavedController {
         return new AuthorLayout(author, backend, settings);
     }
 
-    private Layout getResourceLayout(BannerType type, Map<String, String> settings) {
+    private Layout<ResourceParameters> getResourceLayout(BannerType type, Map<String, String> settings) {
         ServiceBackend backend = type.getRelatedServiceBackend();
 
         Resource resource = resources.getResource(settings.get("_resource_id"), backend);
@@ -138,7 +143,7 @@ public class SavedController {
         return new ResourceLayout(resource, author, backend, settings);
     }
 
-    private Layout getMinecraftServerLayout(Map<String, String> settings) {
+    private Layout<ServerParameters> getMinecraftServerLayout(Map<String, String> settings) {
         String host = settings.get("_server_host");
         if (host == null) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Host not specified in banner settings");
@@ -161,7 +166,7 @@ public class SavedController {
         return new ServerLayout(server, settings);
     }
 
-    private Layout getBuiltByBitMemberLayout(Map<String, String> settings) {
+    private Layout<MemberParameters> getBuiltByBitMemberLayout(Map<String, String> settings) {
         ServiceBackend backend = ServiceBackend.BUILTBYBIT;
 
         Member member = members.getMember(Integer.parseInt(settings.get("_member_id")), backend);
@@ -171,10 +176,10 @@ public class SavedController {
 
         settings.remove("_member_id");
 
-        return new MemberLayout(member, backend, settings);
+        return new MemberLayout(member, settings);
     }
 
-    private Layout getPolymartTeamLayout(Map<String, String> settings) {
+    private Layout<TeamParameters> getPolymartTeamLayout(Map<String, String> settings) {
         Team team = teams.getTeam(Integer.parseInt(settings.get("_team_id")), ServiceBackend.POLYMART);
         if (team == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The stored team could not be found!");
