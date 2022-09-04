@@ -45,6 +45,10 @@ public abstract class Layout<T extends GlobalParameters> {
         components.add(component);
     }
 
+    protected final void text(TextParameterNamespace textParameterNamespace, String content) {
+        text(textParameterNamespace, "%s", content);
+    }
+
     protected final void text(TextParameterNamespace textParameterNamespace, String content, Object... replacements) {
         component(textParameterNamespace.asTextComponent(textColor(), String.format(content, replacements)));
     }
