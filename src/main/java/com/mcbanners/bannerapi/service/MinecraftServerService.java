@@ -1,6 +1,6 @@
 package com.mcbanners.bannerapi.service;
 
-import com.mcbanners.bannerapi.net.McAPIClient;
+import com.mcbanners.bannerapi.net.upstream.McAPIClient;
 import com.mcbanners.bannerapi.obj.backend.mcapi.MinecraftServer;
 import com.mcbanners.bannerapi.util.Log;
 import org.springframework.beans.factory.annotation.Autowired;

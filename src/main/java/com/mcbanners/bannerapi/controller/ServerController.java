@@ -1,8 +1,8 @@
 package com.mcbanners.bannerapi.controller;
 
-import com.mcbanners.bannerapi.banner.BannerOutputType;
-import com.mcbanners.bannerapi.image.BannerImageWriter;
-import com.mcbanners.bannerapi.image.layout.ServerLayout;
+import com.mcbanners.bannerapi.banner.BannerOutputFormat;
+import com.mcbanners.bannerapi.banner.BannerImageWriter;
+import com.mcbanners.bannerapi.banner.layout.ServerLayout;
 import com.mcbanners.bannerapi.obj.backend.mcapi.MinecraftServer;
 import com.mcbanners.bannerapi.service.MinecraftServerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,12 +34,12 @@ public class ServerController {
     }
 
     @GetMapping(value = "/{host}/{port}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<byte[]> getBanner(@PathVariable String host, @PathVariable int port, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
+    public ResponseEntity<byte[]> getBanner(@PathVariable String host, @PathVariable int port, @PathVariable BannerOutputFormat outputType, @RequestParam Map<String, String> raw) {
         final MinecraftServer server = this.servers.getServer(host, port);
         if (server == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return BannerImageWriter.write(new ServerLayout(server, raw).draw(outputType), outputType);
+        return BannerImageWriter.write(new ServerLayout(server, raw), outputType);
     }
 }

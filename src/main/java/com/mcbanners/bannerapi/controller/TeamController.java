@@ -1,8 +1,8 @@
 package com.mcbanners.bannerapi.controller;
 
-import com.mcbanners.bannerapi.banner.BannerOutputType;
-import com.mcbanners.bannerapi.image.BannerImageWriter;
-import com.mcbanners.bannerapi.image.layout.TeamLayout;
+import com.mcbanners.bannerapi.banner.BannerOutputFormat;
+import com.mcbanners.bannerapi.banner.BannerImageWriter;
+import com.mcbanners.bannerapi.banner.layout.TeamLayout;
 import com.mcbanners.bannerapi.obj.generic.Team;
 import com.mcbanners.bannerapi.service.ServiceBackend;
 import com.mcbanners.bannerapi.service.TeamService;
@@ -36,12 +36,12 @@ public class TeamController {
     }
 
     @GetMapping(value = "/polymart/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<byte[]> getBanner(@PathVariable int id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
+    public ResponseEntity<byte[]> getBanner(@PathVariable int id, @PathVariable BannerOutputFormat outputType, @RequestParam Map<String, String> raw) {
         final Team team = this.teams.getTeam(id, ServiceBackend.POLYMART);
         if (team == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return BannerImageWriter.write(new TeamLayout(team, raw, ServiceBackend.POLYMART).draw(outputType), outputType);
+        return BannerImageWriter.write(new TeamLayout(team, raw), outputType);
     }
 }

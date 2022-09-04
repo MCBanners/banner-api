@@ -1,8 +1,8 @@
 package com.mcbanners.bannerapi.controller;
 
-import com.mcbanners.bannerapi.banner.BannerOutputType;
-import com.mcbanners.bannerapi.image.BannerImageWriter;
-import com.mcbanners.bannerapi.image.layout.MemberLayout;
+import com.mcbanners.bannerapi.banner.BannerOutputFormat;
+import com.mcbanners.bannerapi.banner.BannerImageWriter;
+import com.mcbanners.bannerapi.banner.layout.MemberLayout;
 import com.mcbanners.bannerapi.obj.generic.Member;
 import com.mcbanners.bannerapi.service.MemberService;
 import com.mcbanners.bannerapi.service.ServiceBackend;
@@ -36,12 +36,12 @@ public class MemberController {
     }
 
     @GetMapping(value = "/builtbybit/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<byte[]> getBanner(@PathVariable int id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
+    public ResponseEntity<byte[]> getBanner(@PathVariable int id, @PathVariable BannerOutputFormat outputType, @RequestParam Map<String, String> raw) {
         final Member member = this.members.getMember(id, ServiceBackend.BUILTBYBIT);
         if (member == null) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
 
-        return BannerImageWriter.write(new MemberLayout(member, raw, ServiceBackend.BUILTBYBIT).draw(outputType), outputType);
+        return BannerImageWriter.write(new MemberLayout(member, ServiceBackend.BUILTBYBIT, raw), outputType);
     }
 }

@@ -1,6 +1,6 @@
 package com.mcbanners.bannerapi.service;
 
-import com.mcbanners.bannerapi.net.BuiltByBitClient;
+import com.mcbanners.bannerapi.net.upstream.BuiltByBitClient;
 import com.mcbanners.bannerapi.obj.backend.builtbybit.BuiltByBitMember;
 import com.mcbanners.bannerapi.obj.generic.Member;
 import org.springframework.beans.factory.annotation.Autowired;

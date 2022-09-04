@@ -1,6 +1,6 @@
 package com.mcbanners.bannerapi.service.resource.backend;
 
-import com.mcbanners.bannerapi.net.OreClient;
+import com.mcbanners.bannerapi.net.upstream.OreClient;
 import com.mcbanners.bannerapi.obj.backend.ore.OreResource;
 import com.mcbanners.bannerapi.obj.generic.RatingInformation;
 import com.mcbanners.bannerapi.obj.generic.Resource;

@@ -1,6 +1,6 @@
 package com.mcbanners.bannerapi.service.author.backend;
 
-import com.mcbanners.bannerapi.net.SpigotClient;
+import com.mcbanners.bannerapi.net.upstream.SpigotClient;
 import com.mcbanners.bannerapi.obj.backend.spigot.SpigotAuthor;
 import com.mcbanners.bannerapi.obj.backend.spigot.SpigotResource;
 import com.mcbanners.bannerapi.obj.generic.Author;

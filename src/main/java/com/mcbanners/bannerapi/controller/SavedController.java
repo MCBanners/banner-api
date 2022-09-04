@@ -1,14 +1,14 @@
 package com.mcbanners.bannerapi.controller;
 
-import com.mcbanners.bannerapi.banner.BannerOutputType;
+import com.mcbanners.bannerapi.banner.BannerOutputFormat;
 import com.mcbanners.bannerapi.banner.BannerType;
-import com.mcbanners.bannerapi.image.BannerImageWriter;
-import com.mcbanners.bannerapi.image.layout.AuthorLayout;
-import com.mcbanners.bannerapi.image.layout.Layout;
-import com.mcbanners.bannerapi.image.layout.MemberLayout;
-import com.mcbanners.bannerapi.image.layout.ResourceLayout;
-import com.mcbanners.bannerapi.image.layout.ServerLayout;
-import com.mcbanners.bannerapi.image.layout.TeamLayout;
+import com.mcbanners.bannerapi.banner.BannerImageWriter;
+import com.mcbanners.bannerapi.banner.layout.AuthorLayout;
+import com.mcbanners.bannerapi.banner.layout.Layout;
+import com.mcbanners.bannerapi.banner.layout.MemberLayout;
+import com.mcbanners.bannerapi.banner.layout.ResourceLayout;
+import com.mcbanners.bannerapi.banner.layout.ServerLayout;
+import com.mcbanners.bannerapi.banner.layout.TeamLayout;
 import com.mcbanners.bannerapi.obj.backend.mcapi.MinecraftServer;
 import com.mcbanners.bannerapi.obj.generic.Author;
 import com.mcbanners.bannerapi.obj.generic.Member;
@@ -81,7 +81,7 @@ public class SavedController {
     }
 
     @GetMapping(value = "/{mnemonic}.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<byte[]> recall(@PathVariable String mnemonic, @PathVariable BannerOutputType outputType) {
+    public ResponseEntity<byte[]> recall(@PathVariable String mnemonic, @PathVariable BannerOutputFormat outputType) {
         final SavedBanner banner = repository.findByMnemonic(mnemonic);
         if (banner == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Banner not found");
@@ -98,7 +98,7 @@ public class SavedController {
             case DISCORD_USER -> throw new RuntimeException("Discord is not yet implemented.");
         };
 
-        return BannerImageWriter.write(layout.draw(outputType), outputType);
+        return BannerImageWriter.write(layout, outputType);
     }
 
     private Layout getAuthorLayout(BannerType type, Map<String, String> settings) {
@@ -111,7 +111,7 @@ public class SavedController {
 
         settings.remove("_author_id");
 
-        return new AuthorLayout(author, settings, backend);
+        return new AuthorLayout(author, backend, settings);
     }
 
     private Layout getResourceLayout(BannerType type, Map<String, String> settings) {
@@ -133,7 +133,7 @@ public class SavedController {
 
         settings.remove("_resource_id");
 
-        return new ResourceLayout(resource, author, settings, backend);
+        return new ResourceLayout(resource, author, backend, settings);
     }
 
     private Layout getMinecraftServerLayout(Map<String, String> settings) {
@@ -169,19 +169,17 @@ public class SavedController {
 
         settings.remove("_member_id");
 
-        return new MemberLayout(member, settings, backend);
+        return new MemberLayout(member, backend, settings);
     }
 
     private Layout getPolymartTeamLayout(Map<String, String> settings) {
-        ServiceBackend backend = ServiceBackend.POLYMART;
-
-        Team team = teams.getTeam(Integer.parseInt(settings.get("_team_id")), backend);
+        Team team = teams.getTeam(Integer.parseInt(settings.get("_team_id")), ServiceBackend.POLYMART);
         if (team == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The stored team could not be found!");
         }
 
         settings.remove("_team_id");
 
-        return new TeamLayout(team, settings, backend);
+        return new TeamLayout(team, settings);
     }
 }

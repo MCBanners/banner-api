@@ -1,6 +1,6 @@
 package com.mcbanners.bannerapi.service.resource.backend;
 
-import com.mcbanners.bannerapi.net.BuiltByBitClient;
+import com.mcbanners.bannerapi.net.upstream.BuiltByBitClient;
 import com.mcbanners.bannerapi.obj.backend.builtbybit.BuiltByBitAuthor;
 import com.mcbanners.bannerapi.obj.backend.builtbybit.BuiltByBitResource;
 import com.mcbanners.bannerapi.obj.generic.PriceInformation;

@@ -1,6 +1,6 @@
 package com.mcbanners.bannerapi.service.author.backend;
 
-import com.mcbanners.bannerapi.net.PolymartClient;
+import com.mcbanners.bannerapi.net.upstream.PolymartClient;
 import com.mcbanners.bannerapi.obj.backend.polymart.PolymartAuthor;
 import com.mcbanners.bannerapi.obj.backend.polymart.PolymartResource;
 import com.mcbanners.bannerapi.obj.generic.Author;

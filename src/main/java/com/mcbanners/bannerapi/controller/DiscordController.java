@@ -1,8 +1,8 @@
 package com.mcbanners.bannerapi.controller;
 
-import com.mcbanners.bannerapi.banner.BannerOutputType;
-import com.mcbanners.bannerapi.image.BannerImageWriter;
-import com.mcbanners.bannerapi.image.layout.DiscordLayout;
+import com.mcbanners.bannerapi.banner.BannerOutputFormat;
+import com.mcbanners.bannerapi.banner.BannerImageWriter;
+import com.mcbanners.bannerapi.banner.layout.DiscordLayout;
 import com.mcbanners.bannerapi.obj.backend.discord.DiscordUser;
 import com.mcbanners.bannerapi.service.DiscordService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,12 +35,12 @@ public class DiscordController {
     }
 
     @GetMapping(value = "/user/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<byte[]> getBanner(@PathVariable String id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> raw) {
+    public ResponseEntity<byte[]> getBanner(@PathVariable String id, @PathVariable BannerOutputFormat outputType, @RequestParam Map<String, String> raw) {
         final DiscordUser user = this.discord.getUser(id);
         if (user == null) {
             return null;
         }
 
-        return BannerImageWriter.write(new DiscordLayout(user, raw).draw(outputType), outputType);
+        return BannerImageWriter.write(new DiscordLayout(user, raw), outputType);
     }
 }

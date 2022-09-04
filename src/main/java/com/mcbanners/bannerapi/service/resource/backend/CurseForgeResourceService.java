@@ -1,6 +1,6 @@
 package com.mcbanners.bannerapi.service.resource.backend;
 
-import com.mcbanners.bannerapi.net.CurseForgeClient;
+import com.mcbanners.bannerapi.net.upstream.CurseForgeClient;
 import com.mcbanners.bannerapi.net.error.FurtherProcessingRequiredException;
 import com.mcbanners.bannerapi.obj.backend.curseforge.CurseForgeResource;
 import com.mcbanners.bannerapi.obj.generic.RatingInformation;

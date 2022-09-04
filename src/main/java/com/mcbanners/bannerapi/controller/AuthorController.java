@@ -1,8 +1,8 @@
 package com.mcbanners.bannerapi.controller;
 
-import com.mcbanners.bannerapi.banner.BannerOutputType;
-import com.mcbanners.bannerapi.image.BannerImageWriter;
-import com.mcbanners.bannerapi.image.layout.AuthorLayout;
+import com.mcbanners.bannerapi.banner.BannerOutputFormat;
+import com.mcbanners.bannerapi.banner.BannerImageWriter;
+import com.mcbanners.bannerapi.banner.layout.AuthorLayout;
 import com.mcbanners.bannerapi.obj.generic.Author;
 import com.mcbanners.bannerapi.service.ServiceBackend;
 import com.mcbanners.bannerapi.service.author.AuthorService;
@@ -36,13 +36,13 @@ public class AuthorController {
     }
 
     @GetMapping(value = "/{platform}/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<byte[]> getBanner(@PathVariable ServiceBackend platform, @PathVariable String id, @PathVariable BannerOutputType outputType, @RequestParam Map<String, String> rawParams) {
+    public ResponseEntity<byte[]> getBanner(@PathVariable ServiceBackend platform, @PathVariable String id, @PathVariable BannerOutputFormat outputType, @RequestParam Map<String, String> rawParams) {
         final Author author = this.authors.getAuthor(id, platform);
         if (author == null) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
 
-        return BannerImageWriter.write(new AuthorLayout(author, rawParams, platform).draw(outputType), outputType);
+        return BannerImageWriter.write(new AuthorLayout(author, platform, rawParams), outputType);
     }
 }
 

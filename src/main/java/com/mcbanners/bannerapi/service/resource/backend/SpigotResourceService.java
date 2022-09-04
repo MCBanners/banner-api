@@ -1,6 +1,6 @@
 package com.mcbanners.bannerapi.service.resource.backend;
 
-import com.mcbanners.bannerapi.net.SpigotClient;
+import com.mcbanners.bannerapi.net.upstream.SpigotClient;
 import com.mcbanners.bannerapi.obj.backend.spigot.SpigotResource;
 import com.mcbanners.bannerapi.obj.generic.PriceInformation;
 import com.mcbanners.bannerapi.obj.generic.RatingInformation;

@@ -1,6 +1,6 @@
 package com.mcbanners.bannerapi.service;
 
-import com.mcbanners.bannerapi.net.DiscordClient;
+import com.mcbanners.bannerapi.net.upstream.DiscordClient;
 import com.mcbanners.bannerapi.obj.backend.discord.DiscordUser;
 import com.mcbanners.bannerapi.util.Log;
 import org.springframework.beans.factory.annotation.Autowired;

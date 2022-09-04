@@ -1,7 +1,7 @@
 package com.mcbanners.bannerapi.util;
 
-import com.mcbanners.bannerapi.banner.BannerOutputType;
-import com.mcbanners.bannerapi.banner.BannerTextAlign;
+import com.mcbanners.bannerapi.banner.BannerOutputFormat;
+import com.mcbanners.bannerapi.banner.TextAlign;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -16,11 +16,11 @@ public class ImageUtil {
         return graphics;
     }
 
-    public static BufferedImage resize(BufferedImage original, BannerOutputType outputType, int newWidth, int newHeight) {
+    public static BufferedImage resize(BufferedImage original, BannerOutputFormat outputType, int newWidth, int newHeight) {
         Image temp = original.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
 
         int colorDepth = BufferedImage.TYPE_INT_ARGB;
-        if (outputType == BannerOutputType.JPEG) {
+        if (outputType == BannerOutputFormat.JPEG) {
             colorDepth = BufferedImage.TYPE_INT_RGB;
         }
 
@@ -32,7 +32,7 @@ public class ImageUtil {
         return resized;
     }
 
-    public static void drawText(BufferedImage source, Graphics2D graphics, String text, int x, int y, BannerTextAlign textAlign) {
+    public static void drawText(BufferedImage source, Graphics2D graphics, String text, int x, int y, TextAlign textAlign) {
         FontMetrics fontMetrics = graphics.getFontMetrics();
 
         int textX = x;

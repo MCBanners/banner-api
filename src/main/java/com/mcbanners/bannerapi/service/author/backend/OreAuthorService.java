@@ -2,7 +2,7 @@ package com.mcbanners.bannerapi.service.author.backend;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mcbanners.bannerapi.net.OreClient;
+import com.mcbanners.bannerapi.net.upstream.OreClient;
 import com.mcbanners.bannerapi.obj.backend.ore.OreResource;
 import com.mcbanners.bannerapi.obj.generic.Author;
 import com.mcbanners.bannerapi.service.api.BasicHandler;

@@ -1,6 +1,6 @@
 package com.mcbanners.bannerapi.service.resource.backend;
 
-import com.mcbanners.bannerapi.net.PolymartClient;
+import com.mcbanners.bannerapi.net.upstream.PolymartClient;
 import com.mcbanners.bannerapi.obj.backend.polymart.PolymartResource;
 import com.mcbanners.bannerapi.obj.generic.PriceInformation;
 import com.mcbanners.bannerapi.obj.generic.RatingInformation;
