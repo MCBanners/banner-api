@@ -1,11 +1,11 @@
 package com.mcbanners.bannerapi.banner.layout;
 
 import com.mcbanners.bannerapi.banner.BannerOutputFormat;
-import com.mcbanners.bannerapi.banner.Sprite;
-import com.mcbanners.bannerapi.banner.parameter.AuthorParameters;
 import com.mcbanners.bannerapi.banner.ImageBuilder;
+import com.mcbanners.bannerapi.banner.Sprite;
 import com.mcbanners.bannerapi.banner.component.BasicComponent;
 import com.mcbanners.bannerapi.banner.component.LogoComponent;
+import com.mcbanners.bannerapi.banner.parameter.AuthorParameters;
 import com.mcbanners.bannerapi.obj.generic.Author;
 import com.mcbanners.bannerapi.service.ServiceBackend;
 import com.mcbanners.bannerapi.util.NumberUtil;

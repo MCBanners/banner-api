@@ -38,7 +38,7 @@ public class AuthorService {
      * Get an author by inspecting a resource on the specified service backend
      *
      * @param resource the resource to find the author for
-     * @param backend the service backend to query
+     * @param backend  the service backend to query
      * @return the Author object or null if the author could not be found.
      */
     @Cacheable(unless = "#result == null")

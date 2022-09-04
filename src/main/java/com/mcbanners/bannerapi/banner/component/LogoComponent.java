@@ -1,8 +1,8 @@
 package com.mcbanners.bannerapi.banner.component;
 
 import com.mcbanners.bannerapi.banner.BannerOutputFormat;
-import com.mcbanners.bannerapi.banner.Sprite;
 import com.mcbanners.bannerapi.banner.ImageBuilder;
+import com.mcbanners.bannerapi.banner.Sprite;
 import com.mcbanners.bannerapi.util.ImageUtil;
 
 import javax.imageio.ImageIO;

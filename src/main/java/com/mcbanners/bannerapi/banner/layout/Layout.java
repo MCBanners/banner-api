@@ -1,7 +1,7 @@
 package com.mcbanners.bannerapi.banner.layout;
 
-import com.mcbanners.bannerapi.banner.BannerOutputFormat;
 import com.mcbanners.bannerapi.banner.BackgroundTemplate;
+import com.mcbanners.bannerapi.banner.BannerOutputFormat;
 import com.mcbanners.bannerapi.banner.TextTheme;
 import com.mcbanners.bannerapi.banner.component.BasicComponent;
 

@@ -1,8 +1,8 @@
 package com.mcbanners.bannerapi.banner.layout;
 
 import com.mcbanners.bannerapi.banner.BannerOutputFormat;
-import com.mcbanners.bannerapi.banner.Sprite;
 import com.mcbanners.bannerapi.banner.ImageBuilder;
+import com.mcbanners.bannerapi.banner.Sprite;
 import com.mcbanners.bannerapi.banner.component.BasicComponent;
 import com.mcbanners.bannerapi.banner.component.ImageComponent;
 import com.mcbanners.bannerapi.banner.component.LogoComponent;
@@ -78,7 +78,6 @@ public class ResourceLayout extends Layout {
         } else {
             addComponent(resourceParameters.getReviews().asTextComponent(textColor, NumberUtil.abbreviate(resource.rating().count()) + " reviews"));
         }
-
 
 
         Double ratingAvg = resource.rating().averageRating();

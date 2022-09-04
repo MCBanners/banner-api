@@ -1,10 +1,10 @@
 package com.mcbanners.bannerapi.banner.component;
 
-import com.mcbanners.bannerapi.banner.FontFace;
 import com.mcbanners.bannerapi.banner.BannerOutputFormat;
-import com.mcbanners.bannerapi.banner.TextAlign;
+import com.mcbanners.bannerapi.banner.FontFace;
 import com.mcbanners.bannerapi.banner.ImageBuilder;
 import com.mcbanners.bannerapi.banner.ImageTextBuilder;
+import com.mcbanners.bannerapi.banner.TextAlign;
 
 import java.awt.*;
 

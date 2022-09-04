@@ -1,7 +1,7 @@
 package com.mcbanners.bannerapi.controller;
 
-import com.mcbanners.bannerapi.banner.BannerOutputFormat;
 import com.mcbanners.bannerapi.banner.BannerImageWriter;
+import com.mcbanners.bannerapi.banner.BannerOutputFormat;
 import com.mcbanners.bannerapi.banner.layout.TeamLayout;
 import com.mcbanners.bannerapi.obj.generic.Team;
 import com.mcbanners.bannerapi.service.ServiceBackend;

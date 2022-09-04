@@ -30,6 +30,7 @@ public abstract class ParameterNamespace {
     public final String namespacedKey(Parameter<?> parameter) {
         return namespacedKey(parameter.key());
     }
+
     public final String namespacedKey(String key) {
         if (namespace == null || namespace.isEmpty()) {
             return key;

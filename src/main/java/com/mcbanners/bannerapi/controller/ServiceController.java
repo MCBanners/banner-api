@@ -1,7 +1,7 @@
 package com.mcbanners.bannerapi.controller;
 
-import com.mcbanners.bannerapi.banner.FontFace;
 import com.mcbanners.bannerapi.banner.BackgroundTemplate;
+import com.mcbanners.bannerapi.banner.FontFace;
 import com.mcbanners.bannerapi.banner.TextAlign;
 import com.mcbanners.bannerapi.banner.parameter.AuthorParameters;
 import com.mcbanners.bannerapi.banner.parameter.DiscordParameters;

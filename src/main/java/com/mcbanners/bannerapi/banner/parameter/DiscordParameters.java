@@ -2,7 +2,6 @@ package com.mcbanners.bannerapi.banner.parameter;
 
 import com.mcbanners.bannerapi.banner.parameter.api.namespace.TextParameterNamespace;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public final class DiscordParameters extends GlobalParameters {

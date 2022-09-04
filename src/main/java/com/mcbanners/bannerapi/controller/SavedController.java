@@ -1,8 +1,8 @@
 package com.mcbanners.bannerapi.controller;
 
+import com.mcbanners.bannerapi.banner.BannerImageWriter;
 import com.mcbanners.bannerapi.banner.BannerOutputFormat;
 import com.mcbanners.bannerapi.banner.BannerType;
-import com.mcbanners.bannerapi.banner.BannerImageWriter;
 import com.mcbanners.bannerapi.banner.layout.AuthorLayout;
 import com.mcbanners.bannerapi.banner.layout.Layout;
 import com.mcbanners.bannerapi.banner.layout.MemberLayout;
@@ -90,8 +90,10 @@ public class SavedController {
         final BannerType type = banner.getBannerType();
         final Map<String, String> settings = banner.getSettings();
         final Layout layout = switch (banner.getBannerType()) {
-            case SPIGOT_AUTHOR, SPONGE_AUTHOR, CURSEFORGE_AUTHOR, MODRINTH_AUTHOR, BUILTBYBIT_AUTHOR, POLYMART_AUTHOR -> getAuthorLayout(type, settings);
-            case SPIGOT_RESOURCE, SPONGE_RESOURCE, CURSEFORGE_RESOURCE, MODRINTH_RESOURCE, BUILTBYBIT_RESOURCE, POLYMART_RESOURCE -> getResourceLayout(type, settings);
+            case SPIGOT_AUTHOR, SPONGE_AUTHOR, CURSEFORGE_AUTHOR, MODRINTH_AUTHOR, BUILTBYBIT_AUTHOR, POLYMART_AUTHOR ->
+                    getAuthorLayout(type, settings);
+            case SPIGOT_RESOURCE, SPONGE_RESOURCE, CURSEFORGE_RESOURCE, MODRINTH_RESOURCE, BUILTBYBIT_RESOURCE, POLYMART_RESOURCE ->
+                    getResourceLayout(type, settings);
             case MINECRAFT_SERVER -> getMinecraftServerLayout(settings);
             case BUILTBYBIT_MEMBER -> getBuiltByBitMemberLayout(settings);
             case POLYMART_TEAM -> getPolymartTeamLayout(settings);
@@ -162,7 +164,7 @@ public class SavedController {
     private Layout getBuiltByBitMemberLayout(Map<String, String> settings) {
         ServiceBackend backend = ServiceBackend.BUILTBYBIT;
 
-        Member member = members.getMember(Integer.parseInt(settings.get("_member_id")), backend);;
+        Member member = members.getMember(Integer.parseInt(settings.get("_member_id")), backend);
         if (member == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The member author could not be found!");
         }

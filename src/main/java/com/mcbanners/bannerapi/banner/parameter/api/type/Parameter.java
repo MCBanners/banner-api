@@ -12,6 +12,7 @@ public class Parameter<T> {
     public Parameter(String key, Class<T> type, Function<String, T> transformer) {
         this(key, type, null, transformer);
     }
+
     public Parameter(String key, Class<T> type, T defaultValue, Function<String, T> transformer) {
         this.type = type;
         this.key = key;
@@ -22,6 +23,7 @@ public class Parameter<T> {
     public final String key() {
         return key;
     }
+
     public final Class<T> type() {
         return type;
     }
