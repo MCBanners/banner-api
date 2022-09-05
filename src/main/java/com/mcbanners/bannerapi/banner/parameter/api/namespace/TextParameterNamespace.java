@@ -113,7 +113,7 @@ public class TextParameterNamespace extends OrientableParameterNamespace {
         Map<String, Object> output = super.defaults();
 
         output.put("font_size", fontSize.defaultValue());
-        output.put("bold", fontBold.defaultValue());
+        output.put("font_bold", fontBold.defaultValue());
         output.put("font_face", fontFace.defaultValue());
         output.put("text_align", textAlign.defaultValue());
         output.put("display", display.defaultValue());
