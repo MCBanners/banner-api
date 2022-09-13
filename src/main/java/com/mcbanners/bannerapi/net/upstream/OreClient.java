@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientResponseException;
 
 import java.time.Instant;
+import java.util.Locale;
 
 @Component
 public class OreClient extends BasicHttpClient {
@@ -46,7 +47,9 @@ public class OreClient extends BasicHttpClient {
 
     public final ResponseEntity<OreResource> getResource(String pluginId) {
         try {
-            return get(String.format("projects/%s", pluginId), OreResource.class, this::injectAuthorization);
+            // Fun fact - apparently resource name lowercase = ore's plugin id, so let's just lowercase it for them
+            // just in case...
+            return get(String.format("projects/%s", pluginId.toLowerCase(Locale.ROOT)), OreResource.class, this::injectAuthorization);
         } catch (RestClientResponseException ex) {
             Log.error("Failed to load Ore Resource by pluginId %s: %s", pluginId, ex.getMessage());
             ex.printStackTrace();

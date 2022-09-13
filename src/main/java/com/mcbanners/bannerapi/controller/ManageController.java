@@ -1,5 +1,7 @@
 package com.mcbanners.bannerapi.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mcbanners.bannerapi.persistence.SavedBanner;
 import com.mcbanners.bannerapi.persistence.SavedBannerRepository;
 import com.mcbanners.bannerapi.security.AuthedUserInformation;
@@ -23,10 +25,12 @@ import java.util.Map;
 @RequestMapping("manage_saved")
 public class ManageController {
     private final SavedBannerRepository repository;
+    private final ObjectMapper mapper;
 
     @Autowired
-    public ManageController(SavedBannerRepository repository) {
+    public ManageController(SavedBannerRepository repository, ObjectMapper mapper) {
         this.repository = repository;
+        this.mapper = mapper;
     }
 
     @GetMapping(value = "find/all", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -35,9 +39,9 @@ public class ManageController {
     }
 
     @PutMapping(value = "update/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public SavedBanner updateBanner(AuthedUserInformation authedUserInformation, @PathVariable Long id, @RequestParam Map<String, String> raw) {
+    public SavedBanner updateBanner(AuthedUserInformation authedUserInformation, @PathVariable Long id, @RequestParam Map<String, String> raw) throws JsonProcessingException {
         SavedBanner banner = verifyRequest(authedUserInformation, id);
-        banner.setSettings(raw);
+        banner.setSettings(mapper.writeValueAsString(raw));
 
         return repository.save(banner);
     }
@@ -56,7 +60,7 @@ public class ManageController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Banner not found.");
         }
 
-        if (!banner.getOwner().equals(authedUserInformation.id())) {
+        if (banner.getOwner() == null || !banner.getOwner().equals(authedUserInformation.id())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You don't own that banner.");
         }
 
