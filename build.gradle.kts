@@ -18,7 +18,7 @@ repositories {
 }
 
 dependencies {
-	implementation(platform("org.springframework.cloud:spring-cloud-dependencies:2021.0.3"))
+	implementation(platform("org.springframework.cloud:spring-cloud-dependencies:2022.0.1"))
 
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-cache")
