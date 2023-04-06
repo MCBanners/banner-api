@@ -1,34 +1,10 @@
 package com.mcbanners.bannerapi.obj.backend.ore;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.mcbanners.bannerapi.obj.deserializers.ore.OreAuthorizationDeserializer;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class OreAuthorization {
-    private String session;
-    private String expires;
-    private String type;
+import java.time.Instant;
 
-    public String getSession() {
-        return session;
-    }
-
-    public void setSession(String session) {
-        this.session = session;
-    }
-
-    public String getExpires() {
-        return expires;
-    }
-
-    public void setExpires(String expires) {
-        this.expires = expires;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
+@JsonDeserialize(using = OreAuthorizationDeserializer.class)
+public record OreAuthorization(String session, Instant expires) {
 }

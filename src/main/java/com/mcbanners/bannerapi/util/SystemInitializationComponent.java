@@ -1,6 +1,6 @@
 package com.mcbanners.bannerapi.util;
 
-import com.mcbanners.bannerapi.banner.BannerFontFace;
+import com.mcbanners.bannerapi.banner.FontFace;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -21,7 +21,7 @@ public class SystemInitializationComponent {
             throw new RuntimeException("Failed to create fonts directory on disk.");
         }
 
-        for (BannerFontFace face : BannerFontFace.values()) {
+        for (FontFace face : FontFace.values()) {
             try {
                 File regular = face.getFile(false);
                 if (!regular.exists()) {

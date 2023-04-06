@@ -14,7 +14,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/error")
 public class ErrorController extends AbstractErrorController {
-
     public ErrorController(ErrorAttributes attributes) {
         super(attributes, Collections.emptyList());
     }

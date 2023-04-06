@@ -1,20 +1,32 @@
 package com.mcbanners.bannerapi.banner;
 
+import com.mcbanners.bannerapi.service.ServiceBackend;
+
 public enum BannerType {
-    SPONGE_AUTHOR,
-    SPONGE_RESOURCE,
-    SPIGOT_AUTHOR,
-    SPIGOT_RESOURCE,
-    MINECRAFT_SERVER,
-    CURSEFORGE_AUTHOR,
-    CURSEFORGE_RESOURCE,
-    MODRINTH_AUTHOR,
-    MODRINTH_RESOURCE,
-    BUILTBYBIT_AUTHOR,
-    BUILTBYBIT_RESOURCE,
-    BUILTBYBIT_MEMBER,
-    POLYMART_AUTHOR,
-    POLYMART_RESOURCE,
-    POLYMART_TEAM,
-    DISCORD_USER,
+    SPONGE_AUTHOR(ServiceBackend.ORE),
+    SPONGE_RESOURCE(ServiceBackend.ORE),
+    SPIGOT_AUTHOR(ServiceBackend.SPIGOT),
+    SPIGOT_RESOURCE(ServiceBackend.SPIGOT),
+    MINECRAFT_SERVER(null),
+    CURSEFORGE_AUTHOR(ServiceBackend.CURSEFORGE),
+    CURSEFORGE_RESOURCE(ServiceBackend.CURSEFORGE),
+    MODRINTH_AUTHOR(ServiceBackend.MODRINTH),
+    MODRINTH_RESOURCE(ServiceBackend.MODRINTH),
+    BUILTBYBIT_AUTHOR(ServiceBackend.BUILTBYBIT),
+    BUILTBYBIT_RESOURCE(ServiceBackend.BUILTBYBIT),
+    BUILTBYBIT_MEMBER(ServiceBackend.BUILTBYBIT),
+    POLYMART_AUTHOR(ServiceBackend.POLYMART),
+    POLYMART_RESOURCE(ServiceBackend.POLYMART),
+    POLYMART_TEAM(ServiceBackend.POLYMART),
+    DISCORD_USER(null);
+
+    private final ServiceBackend relatedServiceBackend;
+
+    BannerType(ServiceBackend relatedServiceBackend) {
+        this.relatedServiceBackend = relatedServiceBackend;
+    }
+
+    public ServiceBackend getRelatedServiceBackend() {
+        return relatedServiceBackend;
+    }
 }

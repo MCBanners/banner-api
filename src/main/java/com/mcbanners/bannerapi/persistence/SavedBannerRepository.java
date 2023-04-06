@@ -9,8 +9,4 @@ public interface SavedBannerRepository extends CrudRepository<SavedBanner, Long>
     SavedBanner findByMnemonic(String mnemonic);
 
     List<SavedBanner> findAllByOwner(UUID owner);
-
-    boolean existsByIdAndOwner(Long id, UUID owner);
-
-    void deleteByOwner(UUID owner);
 }

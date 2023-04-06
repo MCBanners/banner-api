@@ -1,25 +1,19 @@
 package com.mcbanners.bannerapi.obj.backend.builtbybit;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.mcbanners.bannerapi.obj.deserializers.builtbybit.BuiltByBitResourceDeserializer;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class BuiltByBitResource {
-    private String result;
-    private BuiltByBitResourceData data;
+@JsonDeserialize(using = BuiltByBitResourceDeserializer.class)
+public record BuiltByBitResource(
+        int resourceId,
+        int authorId,
+        String title,
+        double price,
+        String currency,
+        int purchaseCount,
+        int downloadCount,
+        int reviewCount,
+        double reviewAverage
+) {
 
-    public String getResult() {
-        return result;
-    }
-
-    public void setResult(String result) {
-        this.result = result;
-    }
-
-    public BuiltByBitResourceData getData() {
-        return data;
-    }
-
-    public void setData(BuiltByBitResourceData data) {
-        this.data = data;
-    }
 }

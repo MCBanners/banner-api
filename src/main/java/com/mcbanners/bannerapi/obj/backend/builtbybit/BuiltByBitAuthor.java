@@ -1,25 +1,13 @@
 package com.mcbanners.bannerapi.obj.backend.builtbybit;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.mcbanners.bannerapi.obj.deserializers.builtbybit.BuiltByBitAuthorDeserializer;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class BuiltByBitAuthor {
-    private String result;
-    private BuiltByBitAuthorData data;
-
-    public String getResult() {
-        return result;
-    }
-
-    public void setResult(String result) {
-        this.result = result;
-    }
-
-    public BuiltByBitAuthorData getData() {
-        return data;
-    }
-
-    public void setData(BuiltByBitAuthorData data) {
-        this.data = data;
-    }
+@JsonDeserialize(using = BuiltByBitAuthorDeserializer.class)
+public record BuiltByBitAuthor(
+        int authorId,
+        String username,
+        int resourceCount,
+        String avatarUrl
+) {
 }

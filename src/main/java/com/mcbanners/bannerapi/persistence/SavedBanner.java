@@ -2,21 +2,16 @@ package com.mcbanners.bannerapi.persistence;
 
 import com.mcbanners.bannerapi.banner.BannerType;
 
-import javax.persistence.CollectionTable;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.MapKeyColumn;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import java.io.Serializable;
-import java.util.Map;
 import java.util.UUID;
 
 @Entity
@@ -28,20 +23,20 @@ public class SavedBanner implements Serializable {
     private long id;
 
     @Enumerated(EnumType.ORDINAL)
-    @Column(name = "type")
+    @Column(name = "type", nullable = false)
     private BannerType bannerType;
 
     @Column
     private UUID owner;
 
-    @Column
+    @Column(nullable = false)
     private String mnemonic;
 
-    @ElementCollection
-    @MapKeyColumn(name = "name")
-    @Column(name = "value")
-    @CollectionTable(name = "banner_settings", joinColumns = @JoinColumn(name = "id"))
-    private Map<String, String> settings;
+    @Column(nullable = false)
+    private String metadata;
+
+    @Column(nullable = false)
+    private String settings;
 
     public long getId() {
         return id;
@@ -71,11 +66,19 @@ public class SavedBanner implements Serializable {
         this.mnemonic = mnemonic;
     }
 
-    public Map<String, String> getSettings() {
+    public String getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(String metadata) {
+        this.metadata = metadata;
+    }
+
+    public String getSettings() {
         return settings;
     }
 
-    public void setSettings(Map<String, String> settings) {
+    public void setSettings(String settings) {
         this.settings = settings;
     }
 }

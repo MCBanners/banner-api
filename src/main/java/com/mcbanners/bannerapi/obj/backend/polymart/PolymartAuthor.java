@@ -1,16 +1,17 @@
 package com.mcbanners.bannerapi.obj.backend.polymart;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.mcbanners.bannerapi.obj.deserializers.polymart.PolymartAuthorDeserializer;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class PolymartAuthor {
-    private PolymartAuthorResponse response;
-
-    public PolymartAuthorResponse getResponse() {
-        return response;
-    }
-
-    public void setResponse(PolymartAuthorResponse response) {
-        this.response = response;
-    }
+@JsonDeserialize(using = PolymartAuthorDeserializer.class)
+public record PolymartAuthor(
+        int id,
+        String username,
+        String type,
+        String profilePictureURL,
+        int resourceCount,
+        int resourceDownloads,
+        int resourceRatings,
+        double resourceAverageRating
+) {
 }
