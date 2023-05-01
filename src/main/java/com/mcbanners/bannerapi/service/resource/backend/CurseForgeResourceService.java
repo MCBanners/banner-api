@@ -54,7 +54,7 @@ public class CurseForgeResourceService extends BasicHandler<Resource> {
             return null;
         }
 
-        if (resp.getStatusCodeValue() == 202) {
+        if (resp.getStatusCode().value() == 202) {
             throw new FurtherProcessingRequiredException(
                     "CurseForge is currently processing the requested resource and has asked us to wait while " +
                             "the processing completes. Please try your request again in about 30 seconds. Sorry " +

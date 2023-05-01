@@ -74,7 +74,7 @@ public class OreClient extends BasicHttpClient {
                 Log.error("Failed to Authenticate to Ore API");
                 ex.printStackTrace();
 
-                if (ex.getRawStatusCode() == 401 && !priorAuthorizationFailed) {
+                if (ex.getStatusCode().value() == 401 && !priorAuthorizationFailed) {
                     Log.warn("Retrying authentication process...");
                     priorAuthorizationFailed = true;
                     authorize();

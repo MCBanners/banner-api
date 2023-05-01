@@ -1,5 +1,5 @@
 plugins {
-	id("org.springframework.boot") version "2.7.11"
+	id("org.springframework.boot") version "3.0.6"
 	id("io.spring.dependency-management") version "1.1.0"
 	id("java")
 }
@@ -18,7 +18,7 @@ repositories {
 }
 
 dependencies {
-	implementation(platform("org.springframework.cloud:spring-cloud-dependencies:2021.0.7"))
+	implementation(platform("org.springframework.cloud:spring-cloud-dependencies:2022.0.2"))
 
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-cache")
@@ -26,8 +26,8 @@ dependencies {
 	implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
 	implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
 	implementation("com.github.ben-manes.caffeine:caffeine:3.1.6")
-	implementation("org.mariadb.jdbc:mariadb-java-client:3.0.7")
-	implementation("org.flywaydb:flyway-mysql:9.3.0")
+	implementation("org.mariadb.jdbc:mariadb-java-client:3.1.3")
+	implementation("org.flywaydb:flyway-mysql:9.17.0")
 	implementation("io.jsonwebtoken:jjwt-api:0.11.5")
 
 	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
