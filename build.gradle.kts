@@ -15,6 +15,7 @@ java {
 
 repositories {
 	mavenCentral()
+	maven("https://jitpack.io")
 }
 
 dependencies {
@@ -28,7 +29,13 @@ dependencies {
 	implementation("com.github.ben-manes.caffeine:caffeine:3.1.6")
 	implementation("org.mariadb.jdbc:mariadb-java-client:3.1.4")
 	implementation("org.flywaydb:flyway-mysql:9.17.0")
+	implementation("org.flywaydb:flyway-core:9.17.0")
 	implementation("io.jsonwebtoken:jjwt-api:0.11.5")
+	implementation("com.github.xMrAfonso:Hangar4J:fe92de2ab5") {
+		exclude(group = "com.google.code.gson", module = "gson")
+	}
+	implementation("com.google.code.gson:gson:2.10.1")
+	implementation("org.sejda.imageio:webp-imageio:0.1.6")
 
 	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
 	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")

@@ -47,6 +47,7 @@ public class ResourceLayout extends Layout<ResourceParameters> {
             case MODRINTH -> Sprite.DEFAULT_MODRINTH_RES_LOGO;
             case BUILTBYBIT -> Sprite.DEFAULT_BUILTBYBIT_RES_LOGO;
             case POLYMART -> Sprite.DEFAULT_POLYMART_RES_LOGO;
+            case HANGAR -> Sprite.DEFAULT_HANGAR_RES_LOGO;
         };
 
         component(new LogoComponent(

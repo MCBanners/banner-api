@@ -5,6 +5,7 @@ import com.mcbanners.bannerapi.obj.generic.Resource;
 import com.mcbanners.bannerapi.service.ServiceBackend;
 import com.mcbanners.bannerapi.service.author.backend.BuiltByBitAuthorService;
 import com.mcbanners.bannerapi.service.author.backend.CurseForgeAuthorService;
+import com.mcbanners.bannerapi.service.author.backend.HangarAuthorService;
 import com.mcbanners.bannerapi.service.author.backend.ModrinthAuthorService;
 import com.mcbanners.bannerapi.service.author.backend.OreAuthorService;
 import com.mcbanners.bannerapi.service.author.backend.PolymartAuthorService;
@@ -23,15 +24,17 @@ public class AuthorService {
     private final ModrinthAuthorService modrinth;
     private final PolymartAuthorService polymart;
     private final BuiltByBitAuthorService builtByBit;
+    private final HangarAuthorService hangar;
 
     @Autowired
-    public AuthorService(SpigotAuthorService spigot, OreAuthorService ore, CurseForgeAuthorService curseForge, ModrinthAuthorService modrinth, PolymartAuthorService polymart, BuiltByBitAuthorService builtByBit) {
+    public AuthorService(SpigotAuthorService spigot, OreAuthorService ore, CurseForgeAuthorService curseForge, ModrinthAuthorService modrinth, PolymartAuthorService polymart, BuiltByBitAuthorService builtByBit, HangarAuthorService hangar) {
         this.spigot = spigot;
         this.ore = ore;
         this.curseForge = curseForge;
         this.modrinth = modrinth;
         this.polymart = polymart;
         this.builtByBit = builtByBit;
+        this.hangar = hangar;
     }
 
     /**
@@ -68,6 +71,7 @@ public class AuthorService {
             case POLYMART -> polymart.handle(authorId);
             case ORE -> ore.handle(authorId);
             case MODRINTH -> modrinth.handle(authorId);
+            case HANGAR -> hangar.handle(authorId);
         };
     }
 

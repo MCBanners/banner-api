@@ -52,6 +52,7 @@ public class ResourceService {
             case POLYMART -> polymart.handle(resourceId);
             case ORE -> ore.handle(resourceId);
             case MODRINTH -> modrinth.handle(resourceId);
+            case HANGAR -> null;
         };
     }
 }

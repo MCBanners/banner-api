@@ -18,6 +18,7 @@ public enum BannerType {
     POLYMART_AUTHOR(ServiceBackend.POLYMART),
     POLYMART_RESOURCE(ServiceBackend.POLYMART),
     POLYMART_TEAM(ServiceBackend.POLYMART),
+    HANGAR_AUTHOR(ServiceBackend.HANGAR),
     DISCORD_USER(null);
 
     private final ServiceBackend relatedServiceBackend;

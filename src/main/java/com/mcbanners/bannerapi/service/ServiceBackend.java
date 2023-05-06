@@ -10,5 +10,6 @@ public enum ServiceBackend {
     CURSEFORGE,
     MODRINTH,
     BUILTBYBIT,
-    POLYMART
+    POLYMART,
+    HANGAR
 }
