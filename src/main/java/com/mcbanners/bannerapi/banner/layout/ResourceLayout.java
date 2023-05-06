@@ -61,10 +61,10 @@ public class ResourceLayout extends Layout<ResourceParameters> {
 
         text(parameters().getAuthorName(), "by %s", author.name());
 
-        if (backend == ServiceBackend.CURSEFORGE || backend == ServiceBackend.MODRINTH) {
-            date(parameters().getUpdated(), OffsetDateTime.parse(resource.lastUpdated()).toInstant(), "Updated:");
-        } else {
-            text(parameters().getReviews(), "%s reviews", NumberUtil.abbreviate(resource.rating().count()));
+        switch(backend) {
+            case CURSEFORGE, MODRINTH -> date(parameters().getUpdated(), OffsetDateTime.parse(resource.lastUpdated()).toInstant(), "Updated:");
+            case HANGAR -> text(parameters().getReviews(), "%s likes", NumberUtil.abbreviate(resource.rating().count()));
+            default -> text(parameters().getReviews(), "%s reviews", NumberUtil.abbreviate(resource.rating().count()));
         }
 
         Double ratingAvg = resource.rating().averageRating();
@@ -93,7 +93,7 @@ public class ResourceLayout extends Layout<ResourceParameters> {
                     toOverlay = starNone;
                 }
 
-                if (backend != ServiceBackend.CURSEFORGE && backend != ServiceBackend.MODRINTH) {
+                if (backend != ServiceBackend.CURSEFORGE && backend != ServiceBackend.MODRINTH && backend != ServiceBackend.HANGAR) {
                     image(starsX + ((int) starsGap * i), starsY, toOverlay);
                 }
             }

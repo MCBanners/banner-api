@@ -39,6 +39,12 @@ public class ResourceController {
         return new ResponseEntity<>(Collections.singletonMap("valid", resource != null), HttpStatus.OK);
     }
 
+    @GetMapping(value = "/hangar/{res}/{auth}/isValid", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Boolean>> checkValidForHangar(@PathVariable String res, @PathVariable String auth) {
+        final Resource resource = this.resources.getResource(res, auth);
+        return new ResponseEntity<>(Collections.singletonMap("valid", resource != null), HttpStatus.OK);
+    }
+
     @GetMapping(value = "/{platform}/{id}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<byte[]> getBanner(@PathVariable ServiceBackend platform, @PathVariable String id, @PathVariable BannerOutputFormat outputType, @RequestParam Map<String, String> requestParams) {
         final Resource resource = this.resources.getResource(id, platform);
@@ -52,5 +58,20 @@ public class ResourceController {
         }
 
         return BannerImageWriter.write(new ResourceLayout(resource, author, platform, requestParams), outputType);
+    }
+
+    @GetMapping(value = "/hangar/{res}/{auth}/banner.{outputType}", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<byte[]> getBannerForHangar(@PathVariable String res, @PathVariable String auth, @PathVariable BannerOutputFormat outputType, @RequestParam Map<String, String> requestParams) {
+        final Resource resource = this.resources.getResource(res, auth);
+        if (resource == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        final Author author = this.authors.getAuthor(resource, ServiceBackend.HANGAR);
+        if (author == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return BannerImageWriter.write(new ResourceLayout(resource, author, ServiceBackend.HANGAR, requestParams), outputType);
     }
 }
