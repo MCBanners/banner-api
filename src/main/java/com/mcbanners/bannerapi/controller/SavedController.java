@@ -120,7 +120,7 @@ public class SavedController {
         final Layout<?> layout = switch (banner.getBannerType()) {
             case SPIGOT_AUTHOR, SPONGE_AUTHOR, CURSEFORGE_AUTHOR, MODRINTH_AUTHOR, BUILTBYBIT_AUTHOR, POLYMART_AUTHOR, HANGAR_AUTHOR ->
                     getAuthorLayout(type, metadata, settings);
-            case SPIGOT_RESOURCE, SPONGE_RESOURCE, CURSEFORGE_RESOURCE, MODRINTH_RESOURCE, BUILTBYBIT_RESOURCE, POLYMART_RESOURCE ->
+            case SPIGOT_RESOURCE, SPONGE_RESOURCE, CURSEFORGE_RESOURCE, MODRINTH_RESOURCE, BUILTBYBIT_RESOURCE, POLYMART_RESOURCE, HANGAR_RESOURCE ->
                     getResourceLayout(type, metadata, settings);
             case MINECRAFT_SERVER -> getMinecraftServerLayout(metadata, settings);
             case BUILTBYBIT_MEMBER -> getBuiltByBitMemberLayout(metadata, settings);
@@ -145,7 +145,12 @@ public class SavedController {
     private Layout<ResourceParameters> getResourceLayout(BannerType type, Map<String, String> metadata, Map<String, String> settings) {
         ServiceBackend backend = type.getRelatedServiceBackend();
 
-        Resource resource = resources.getResource(metadata.get("resource_id"), backend);
+        Resource resource;
+        if (backend == ServiceBackend.HANGAR) {
+            resource = resources.getResource(metadata.get("resource_id"), metadata.get("author_name"));
+        } else {
+            resource = resources.getResource(metadata.get("resource_id"), backend);
+        }
 
         // TODO: get rid of this
         Author author;
