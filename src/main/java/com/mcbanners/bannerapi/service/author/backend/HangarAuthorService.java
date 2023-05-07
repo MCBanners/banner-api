@@ -1,9 +1,8 @@
 package com.mcbanners.bannerapi.service.author.backend;
 
-import com.mcbanners.bannerapi.net.upstream.DummyClient;
+import com.mcbanners.bannerapi.net.upstream.HangarClient;
 import com.mcbanners.bannerapi.obj.generic.Author;
 import com.mcbanners.bannerapi.service.api.BasicHandler;
-import me.mrafonso.hangar4j.HangarClient;
 import me.mrafonso.hangar4j.impl.project.HangarProject;
 import me.mrafonso.hangar4j.impl.project.HangarProjects;
 import me.mrafonso.hangar4j.impl.user.HangarUser;
@@ -12,23 +11,21 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class HangarAuthorService extends BasicHandler<Author> {
-    private final HangarClient hangarClient;
-    private final DummyClient dummyClient;
+    private final HangarClient hangar;
 
     @Autowired
-    public HangarAuthorService(DummyClient dummyClient) {
-        this.dummyClient = dummyClient;
-        this.hangarClient = new HangarClient("MCBanners");
+    public HangarAuthorService(HangarClient hangar) {
+        this.hangar = hangar;
     }
 
     @Override
     public Author handle(String username) {
-        final HangarUser user = hangarClient.getUser(username).join();
+        final HangarUser user = hangar.getUser(username);
         if (user == null) {
             return null;
         }
 
-        final HangarProjects projects = hangarClient.getProjectsOfUser(user).join();
+        final HangarProjects projects = hangar.getProjectsOfUser(user);
         if (projects == null || projects.result().isEmpty()) {
             return null;
         }
@@ -43,7 +40,7 @@ public class HangarAuthorService extends BasicHandler<Author> {
             totalWatchers = project.stats().watchers();
         }
 
-        String avatar = dummyClient.getBase64Image(user.avatarUrl());
+        String avatar = hangar.getBase64Image(user.avatarUrl());
         if (avatar == null) {
             avatar = "";
         }
