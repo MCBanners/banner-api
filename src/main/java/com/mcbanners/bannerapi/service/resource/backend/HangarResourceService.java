@@ -13,8 +13,8 @@ public class HangarResourceService extends BasicHandler<Resource> {
     private final HangarClient hangar;
 
     @Autowired
-    public HangarResourceService(HangarClient hangar1) {
-        this.hangar = hangar1;
+    public HangarResourceService(HangarClient hangar) {
+        this.hangar = hangar;
     }
 
     public Resource handle(String resource, String author) {
