@@ -32,12 +32,12 @@ public class HangarAuthorService extends BasicHandler<Author> {
 
         int totalDownloads = 0;
         int totalStars = 0;
-        int totalWatchers = 0;
+        int totalViews = 0;
 
         for (final HangarProject project : projects.result()) {
             totalDownloads += project.stats().downloads();
             totalStars += project.stats().stars();
-            totalWatchers = project.stats().watchers();
+            totalViews += project.stats().views();
         }
 
         String avatar = hangar.getBase64Image(user.avatarUrl());
@@ -51,7 +51,7 @@ public class HangarAuthorService extends BasicHandler<Author> {
                 avatar,
                 totalDownloads,
                 totalStars,
-                totalWatchers
+                totalViews
         );
     }
 }

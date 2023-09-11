@@ -48,8 +48,13 @@ public class AuthorLayout extends Layout<AuthorParameters> {
         text(parameters().getDownloads(), "%s downloads", NumberUtil.abbreviate(author.downloads()));
 
         if (author.rating() != -1) {
-            final String word = backend == ServiceBackend.HANGAR ? "watchers" : "reviews";
-            text(parameters().getReviews(), "%s %s", author.rating(), word);
+            String word;
+            if (backend == ServiceBackend.HANGAR) {
+                word = "views";
+            } else {
+                word = "reviews";
+            }
+            text(parameters().getReviews(), "%s %s", NumberUtil.abbreviate(author.rating()), word);
         }
 
         return components();
