@@ -15,8 +15,8 @@ public class HangarClient extends BasicHttpClient {
         this.internalClient = new me.mrafonso.hangar4j.HangarClient("MCBanners");
     }
 
-    public HangarProject getProject(String author, String resource) {
-        return internalClient.getProject(author, resource).join();
+    public HangarProject getProject(String resource) {
+        return internalClient.getProject(resource).join();
     }
 
     public HangarUser getUser(String username) {
@@ -24,6 +24,6 @@ public class HangarClient extends BasicHttpClient {
     }
 
     public HangarProjects getProjectsOfUser(HangarUser user) {
-        return internalClient.getProjectsOfUser(user).join();
+        return internalClient.getUserProjects(user).join();
     }
 }

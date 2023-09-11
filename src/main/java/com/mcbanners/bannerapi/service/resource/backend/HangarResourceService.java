@@ -17,8 +17,8 @@ public class HangarResourceService extends BasicHandler<Resource> {
         this.hangar = hangar;
     }
 
-    public Resource handle(String resource, String author) {
-        final HangarProject project = hangar.getProject(author, resource);
+    public Resource handle(String resource) {
+        final HangarProject project = hangar.getProject(resource);
         if (project == null) {
             return null;
         }

@@ -55,20 +55,7 @@ public class ResourceService {
             case POLYMART -> polymart.handle(resourceId);
             case ORE -> ore.handle(resourceId);
             case MODRINTH -> modrinth.handle(resourceId);
-            case HANGAR -> null;
+            case HANGAR -> hangar.handle(resourceId);
         };
-    }
-
-    /**
-     * Get a resource by its ID and author ID (Hangar)
-     *
-     * @param resourceId the resource ID
-     * @param authorId the author ID
-     * @return the Resource object or null if the service backend does not support the operation or the resource could not be found.
-     * @throws FurtherProcessingRequiredException if the resource could not be found on the service backend
-     */
-    @Cacheable(unless = "#result == null")
-    public Resource getResource(String resourceId, String authorId) throws FurtherProcessingRequiredException {
-        return hangar.handle(resourceId, authorId);
     }
 }

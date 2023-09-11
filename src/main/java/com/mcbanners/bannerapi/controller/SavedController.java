@@ -145,12 +145,7 @@ public class SavedController {
     private Layout<ResourceParameters> getResourceLayout(BannerType type, Map<String, String> metadata, Map<String, String> settings) {
         ServiceBackend backend = type.getRelatedServiceBackend();
 
-        Resource resource;
-        if (backend == ServiceBackend.HANGAR) {
-            resource = resources.getResource(metadata.get("resource_id"), metadata.get("author_name"));
-        } else {
-            resource = resources.getResource(metadata.get("resource_id"), backend);
-        }
+        Resource resource = resources.getResource(metadata.get("resource_id"), backend);
 
         // TODO: get rid of this
         Author author;
