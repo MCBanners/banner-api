@@ -63,7 +63,7 @@ public class ResourceLayout extends Layout<ResourceParameters> {
 
         switch(backend) {
             case CURSEFORGE, MODRINTH -> date(parameters().getUpdated(), OffsetDateTime.parse(resource.lastUpdated()).toInstant(), "Updated:");
-            case HANGAR -> text(parameters().getReviews(), "%s likes", NumberUtil.abbreviate(resource.rating().count()));
+            case HANGAR -> text(parameters().getReviews(), "%s stars", NumberUtil.abbreviate(resource.rating().count()));
             default -> text(parameters().getReviews(), "%s reviews", NumberUtil.abbreviate(resource.rating().count()));
         }
 

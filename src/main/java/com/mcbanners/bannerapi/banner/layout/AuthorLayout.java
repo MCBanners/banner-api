@@ -36,7 +36,12 @@ public class AuthorLayout extends Layout<AuthorParameters> {
         text(parameters().getResourceCount(), "%d resources", author.resources());
 
         if (author.likes() != -1) {
-            final String word = backend == ServiceBackend.MODRINTH ? "followers" : "likes";
+            String word;
+            switch(backend) {
+                case MODRINTH -> word = "followers";
+                case HANGAR -> word = "stars";
+                default -> word = "likes";
+            }
             text(parameters().getLikes(), "%s %s", NumberUtil.abbreviate(author.likes()), word);
         }
 
