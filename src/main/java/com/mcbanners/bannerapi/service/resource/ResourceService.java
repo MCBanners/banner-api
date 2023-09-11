@@ -5,6 +5,7 @@ import com.mcbanners.bannerapi.obj.generic.Resource;
 import com.mcbanners.bannerapi.service.ServiceBackend;
 import com.mcbanners.bannerapi.service.resource.backend.BuiltByBitResourceService;
 import com.mcbanners.bannerapi.service.resource.backend.CurseForgeResourceService;
+import com.mcbanners.bannerapi.service.resource.backend.HangarResourceService;
 import com.mcbanners.bannerapi.service.resource.backend.ModrinthResourceService;
 import com.mcbanners.bannerapi.service.resource.backend.OreResourceService;
 import com.mcbanners.bannerapi.service.resource.backend.PolymartResourceService;
@@ -23,15 +24,17 @@ public class ResourceService {
     private final ModrinthResourceService modrinth;
     private final BuiltByBitResourceService builtByBit;
     private final PolymartResourceService polymart;
+    private final HangarResourceService hangar;
 
     @Autowired
-    public ResourceService(SpigotResourceService spigot, OreResourceService ore, CurseForgeResourceService curseForge, ModrinthResourceService modrinth, BuiltByBitResourceService builtByBit, PolymartResourceService polymart) {
+    public ResourceService(SpigotResourceService spigot, OreResourceService ore, CurseForgeResourceService curseForge, ModrinthResourceService modrinth, BuiltByBitResourceService builtByBit, PolymartResourceService polymart, HangarResourceService hangar) {
         this.spigot = spigot;
         this.ore = ore;
         this.curseForge = curseForge;
         this.modrinth = modrinth;
         this.builtByBit = builtByBit;
         this.polymart = polymart;
+        this.hangar = hangar;
     }
 
     /**
@@ -52,6 +55,7 @@ public class ResourceService {
             case POLYMART -> polymart.handle(resourceId);
             case ORE -> ore.handle(resourceId);
             case MODRINTH -> modrinth.handle(resourceId);
+            case HANGAR -> hangar.handle(resourceId);
         };
     }
 }

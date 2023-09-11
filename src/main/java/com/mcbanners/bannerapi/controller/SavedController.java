@@ -118,9 +118,9 @@ public class SavedController {
         });
 
         final Layout<?> layout = switch (banner.getBannerType()) {
-            case SPIGOT_AUTHOR, SPONGE_AUTHOR, CURSEFORGE_AUTHOR, MODRINTH_AUTHOR, BUILTBYBIT_AUTHOR, POLYMART_AUTHOR ->
+            case SPIGOT_AUTHOR, SPONGE_AUTHOR, CURSEFORGE_AUTHOR, MODRINTH_AUTHOR, BUILTBYBIT_AUTHOR, POLYMART_AUTHOR, HANGAR_AUTHOR ->
                     getAuthorLayout(type, metadata, settings);
-            case SPIGOT_RESOURCE, SPONGE_RESOURCE, CURSEFORGE_RESOURCE, MODRINTH_RESOURCE, BUILTBYBIT_RESOURCE, POLYMART_RESOURCE ->
+            case SPIGOT_RESOURCE, SPONGE_RESOURCE, CURSEFORGE_RESOURCE, MODRINTH_RESOURCE, BUILTBYBIT_RESOURCE, POLYMART_RESOURCE, HANGAR_RESOURCE ->
                     getResourceLayout(type, metadata, settings);
             case MINECRAFT_SERVER -> getMinecraftServerLayout(metadata, settings);
             case BUILTBYBIT_MEMBER -> getBuiltByBitMemberLayout(metadata, settings);
