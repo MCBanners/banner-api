@@ -1,6 +1,7 @@
 plugins {
-	id("org.springframework.boot") version "3.0.6"
-	id("io.spring.dependency-management") version "1.1.0"
+	id("org.springframework.boot") version "3.1.4"
+	id("io.spring.dependency-management") version "1.1.3"
+	id("com.github.ben-manes.versions") version "0.48.0"
 	id("java")
 }
 
@@ -19,14 +20,14 @@ repositories {
 }
 
 dependencies {
-	implementation(platform("org.springframework.cloud:spring-cloud-dependencies:2022.0.2"))
+	implementation(platform("org.springframework.cloud:spring-cloud-dependencies:2022.0.4"))
 
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-cache")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
 	implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
-	implementation("com.github.ben-manes.caffeine:caffeine:3.1.6")
+	implementation("com.github.ben-manes.caffeine:caffeine:3.1.8")
 	implementation("org.mariadb.jdbc:mariadb-java-client:3.1.4")
 	implementation("org.flywaydb:flyway-mysql:9.17.0")
 	implementation("org.flywaydb:flyway-core:9.17.0")
