@@ -1,6 +1,6 @@
 # Prepare environment
-FROM alpine:3.18
-RUN apk add openjdk16
+FROM alpine:3.19
+RUN apk add openjdk21
 
 # Download source code
 RUN git clone https://github.com/MCBanners/banner-api.git /app
