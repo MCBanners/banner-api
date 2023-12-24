@@ -25,13 +25,13 @@ public class JwtHandler {
     private String secret;
 
     public Claims parse(String token) throws JwtException {
-        return parser.parseClaimsJws(token).getBody();
+        return parser.parseSignedClaims(token).getPayload();
     }
 
     @PostConstruct
     public void postConstruct() {
         SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes());
-        this.parser = Jwts.parserBuilder().setSigningKey(secretKey).build();
+        this.parser = Jwts.parser().verifyWith(secretKey).build();
     }
 
     public String getUri() {
