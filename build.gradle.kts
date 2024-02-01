@@ -38,7 +38,7 @@ dependencies {
 	implementation("com.google.code.gson:gson:2.10.1")
 	implementation("com.github.usefulness:webp-imageio:0.6.0")
 
-	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.3")
+	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.5")
 	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.3")
 
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
