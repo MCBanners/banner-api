@@ -39,7 +39,7 @@ dependencies {
 	implementation("com.github.usefulness:webp-imageio:0.6.0")
 
 	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.3")
-	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.3")
+	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.5")
 
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 }
