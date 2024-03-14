@@ -29,7 +29,7 @@ dependencies {
 	implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
 	implementation("com.github.ben-manes.caffeine:caffeine:3.1.8")
 	implementation("org.mariadb.jdbc:mariadb-java-client:3.3.2")
-	implementation("org.flywaydb:flyway-mysql:10.4.1")
+	implementation("org.flywaydb:flyway-mysql:10.10.0")
 	implementation("org.flywaydb:flyway-core:10.4.1")
 	implementation("io.jsonwebtoken:jjwt-api:0.12.3")
 	implementation("com.github.xMrAfonso:Hangar4J:1.2.3") {
