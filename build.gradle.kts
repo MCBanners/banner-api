@@ -36,7 +36,7 @@ dependencies {
 		exclude(group = "com.google.code.gson", module = "gson")
 	}
 	implementation("com.google.code.gson:gson:2.10.1")
-	implementation("com.github.usefulness:webp-imageio:0.6.0")
+	implementation("com.github.usefulness:webp-imageio:0.8.0")
 
 	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.3")
 	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.3")
