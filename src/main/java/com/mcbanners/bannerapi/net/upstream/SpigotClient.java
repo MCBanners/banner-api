@@ -8,6 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientResponseException;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 @Component
 public final class SpigotClient extends BasicHttpClient {
     public SpigotClient() {
@@ -35,12 +39,32 @@ public final class SpigotClient extends BasicHttpClient {
     }
 
     public ResponseEntity<SpigotResource[]> getAllByAuthor(int id) {
-        try {
-            return get(String.format("getResourcesByAuthor&id=%d", id), SpigotResource[].class);
-        } catch (RestClientResponseException ex) {
-            Log.error("Failed to load all Spigot Resources by author id %d: %s", id, ex.getMessage());
-            ex.printStackTrace();
-            return null;
+        final List<SpigotResource> resources = new ArrayList<>();
+        int page = 1;
+
+        while (true) {
+            try {
+                final String url = String.format("getResourcesByAuthor&id=%d&page=%d", id, page);
+                final ResponseEntity<SpigotResource[]> response = get(url, SpigotResource[].class);
+
+                if (response.getBody() == null || response.getBody().length == 0) {
+                    break;
+                }
+
+                resources.addAll(Arrays.asList(response.getBody()));
+
+                page++;
+            } catch (RestClientResponseException ex) {
+                Log.error("Failed to load Spigot Resources by author id %d on page %d: %s", id, page, ex.getMessage());
+                ex.printStackTrace();
+                return null;
+
+            }
         }
+
+        final SpigotResource[] resourcesArray = new SpigotResource[resources.size()];
+        resources.toArray(resourcesArray);
+
+        return ResponseEntity.ok(resourcesArray);
     }
 }
