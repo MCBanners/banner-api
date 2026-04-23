@@ -35,7 +35,7 @@ dependencies {
 	implementation("com.github.xMrAfonso:Hangar4J:1.2.3") {
 		exclude(group = "com.google.code.gson", module = "gson")
 	}
-	implementation("com.google.code.gson:gson:2.13.1")
+	implementation("com.google.code.gson:gson:2.14.0")
 	implementation("com.github.usefulness:webp-imageio:0.9.0")
 
 	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.6")
